@@ -1,0 +1,11 @@
+{
+  "name": "bloobelle/catalogo",
+  "description": "Catalogo interno de perfumes (MVC simple + API) sin framework",
+  "type": "project",
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    }
+  }
+}

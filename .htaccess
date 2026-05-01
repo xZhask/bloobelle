@@ -1,0 +1,11 @@
+# .htaccess RAÍZ — bloobelle.odindeveloper.net
+Options -Indexes -MultiViews
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{DOCUMENT_ROOT}/public/%{REQUEST_URI} -f
+    RewriteRule ^(.*)$ public/$1 [L]
+    RewriteCond %{DOCUMENT_ROOT}/public/%{REQUEST_URI} -d
+    RewriteRule ^(.*)$ public/$1 [L]
+    RewriteRule ^(.*)$ public/index.php [QSA,L]
+</IfModule>
