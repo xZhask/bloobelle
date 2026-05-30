@@ -1,0 +1,89 @@
+<?php
+namespace App\Controllers;
+
+use App\Core\Auth;
+use App\Core\Request;
+use App\Core\Response;
+use App\Repositories\FrascoRepository;
+
+class FrascoController {
+    private FrascoRepository $repo;
+
+    public function __construct() {
+        $this->repo = new FrascoRepository();
+    }
+
+    public function store(): void {
+        Auth::requireRole('admin');
+        $data = Request::json();
+
+        if (empty($data['nombre'])) {
+            Response::json(['error' => 'Nombre es requerido'], 400);
+            return;
+        }
+
+        try {
+            $id = $this->repo->create($data);
+            Response::json(['ok' => true, 'id' => $id]);
+        } catch (\Exception $e) {
+            Response::json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function uploadImage(): void {
+        Auth::requireRole('admin');
+
+        if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+            Response::json(['error' => 'Error subiendo la imagen'], 400);
+            return;
+        }
+
+        $file = $_FILES['image'];
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+
+        if (!in_array($ext, $allowed)) {
+            Response::json(['error' => 'Formato no permitido'], 400);
+            return;
+        }
+
+        $filename = uniqid('frasco_') . '.' . $ext;
+        $destPath = APP_ROOT . '/public/assets/images/frascos/' . $filename;
+
+        // Ensure directory exists
+        $dir = dirname($destPath);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        if (move_uploaded_file($file['tmp_name'], $destPath)) {
+            Response::json([
+                'ok' => true,
+                'path' => '/assets/images/frascos/' . $filename
+            ]);
+        } else {
+            Response::json(['error' => 'Error al mover archivo'], 500);
+        }
+    }
+
+    public function fijarPrecio(): void {
+        Auth::requireRole('admin');
+        $data = Request::json();
+
+        if (empty($data['sucursal_id']) || empty($data['frasco_id']) || !isset($data['precio'])) {
+            Response::json(['error' => 'Faltan datos'], 400);
+            return;
+        }
+
+        try {
+            $this->repo->fijarPrecio(
+                (int)$data['sucursal_id'], 
+                (int)$data['frasco_id'], 
+                (float)$data['precio']
+            );
+            Response::json(['ok' => true]);
+        } catch (\Exception $e) {
+            Response::json(['error' => $e->getMessage()], 500);
+        }
+    }
+}

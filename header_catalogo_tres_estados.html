@@ -1,0 +1,60 @@
+<style>
+  .demo{--text:#1a1614;--muted:#766f68;--accent:#b88e5d;--border:#e8e3dc;--soft:#f3efe9;--bg:#faf9f7;
+    font-family:'Jost',system-ui,sans-serif;display:flex;flex-direction:column;gap:1.1rem;padding:.5rem 0}
+  .demo .case{}
+  .demo .clbl{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem}
+  .demo .dot{width:7px;height:7px;border-radius:50%}
+  .demo .bar{background:var(--bg);border:1px solid var(--border);border-radius:14px;height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 1.1rem;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+  .demo .logo{font-family:'Playfair Display',Georgia,serif;font-size:1.4rem;color:var(--text)}
+  .demo .acts{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;justify-content:flex-end}
+  .demo .btn{font-size:.8rem;border:1px solid var(--border);background:#fff;color:var(--text);padding:.4rem .8rem;border-radius:999px;white-space:nowrap}
+  .demo .btn.acc{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .demo .btn.ghost{background:transparent;color:var(--muted)}
+  .demo .chip{display:flex;align-items:center;gap:.45rem;font-size:.78rem;color:var(--text)}
+  .demo .av{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:.72rem;font-weight:600}
+  .demo .role{font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .demo .note{font-size:.72rem;color:var(--muted);margin-top:.35rem;font-style:italic}
+</style>
+<div class="demo">
+  <div class="case">
+    <div class="clbl"><span class="dot" style="background:#9c9a92"></span>Sin sesión · catálogo público</div>
+    <div class="bar">
+      <span class="logo">BlooBelle</span>
+      <div class="acts">
+        <span class="btn ghost">Filtros</span>
+        <span class="btn acc">Iniciar sesión</span>
+      </div>
+    </div>
+    <div class="note">El catálogo se ve completo, pero sin botones de registro. El acceso a login es visible (ya no una URL oculta).</div>
+  </div>
+
+  <div class="case">
+    <div class="clbl"><span class="dot" style="background:#b88e5d"></span>Sesión admin</div>
+    <div class="bar">
+      <span class="logo">BlooBelle</span>
+      <div class="acts">
+        <span class="btn">+ Nuevo perfume</span>
+        <span class="btn">+ Nuevo frasco</span>
+        <span class="btn">Precios</span>
+        <span class="chip"><span class="av">A</span><span>Admin<br><span class="role">Administrador</span></span></span>
+        <span class="btn ghost">Salir</span>
+      </div>
+    </div>
+    <div class="note">Aparecen los registros de catálogo. El servidor además exige rol admin en cada endpoint.</div>
+  </div>
+
+  <div class="case">
+    <div class="clbl"><span class="dot" style="background:#4a7c59"></span>Sesión vendedor</div>
+    <div class="bar">
+      <span class="logo">BlooBelle</span>
+      <div class="acts">
+        <span class="btn acc">Registrar venta</span>
+        <span class="btn">Stock</span>
+        <span class="btn">Reporte</span>
+        <span class="chip"><span class="av">L</span><span>Lucía<br><span class="role">Vendedora</span></span></span>
+        <span class="btn ghost">Salir</span>
+      </div>
+    </div>
+    <div class="note">Ve el catálogo y sus formularios asignados (venta, stock, reporte). Sin botones de registro de catálogo.</div>
+  </div>
+</div>

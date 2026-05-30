@@ -11,6 +11,7 @@ class PerfumeController {
     $repo = new PerfumeRepository();
     $generos = $repo->getGeneros();
     $productos = $repo->listarInicial(30);
+    $user = \App\Core\Auth::user();
     require __DIR__ . '/../views/perfumes/index.php';
   }
 
