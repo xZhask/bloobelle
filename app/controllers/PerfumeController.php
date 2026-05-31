@@ -30,12 +30,56 @@ class PerfumeController {
     Response::json($repo->filtrar($filtros));
   }
 
+  public function detalle(): void {
+      $data = Request::json();
+      $id = (int)($data['id'] ?? 0);
+      if ($id <= 0) { 
+          Response::json(['error' => 'id inválido'], 400); 
+          return; 
+      }
+      $perfume = (new PerfumeRepository())->detalle($id);
+      if (!$perfume) { 
+          Response::json(['error' => 'No encontrado'], 404); 
+          return; 
+      }
+      Response::json($perfume);
+  }
+
   public function store(): void {
     $data = Request::json();
     $repo = new PerfumeRepository();
     try {
       $id = $repo->crearPerfume($data);
       Response::json(['ok' => true, 'id' => $id], 201);
+    } catch (\Throwable $e) {
+      Response::json(['ok' => false, 'error' => $e->getMessage()], 400);
+    }
+  }
+
+  public function edit(): void {
+    $id = (int)($_GET['id'] ?? 0);
+    if ($id <= 0) {
+        die('ID de perfume inválido');
+    }
+    $repo = new PerfumeRepository();
+    $perfume = $repo->detalle($id);
+    if (!$perfume) {
+        die('Perfume no encontrado');
+    }
+    $generos = $repo->getGeneros();
+    $designers = $repo->getDesigners();
+    $tiposAroma = $repo->getTiposAroma();
+    $componentes = $repo->getComponentes();
+    require __DIR__ . '/../views/perfumes/edit.php';
+  }
+
+  public function update(): void {
+    $data = Request::json();
+    $id = (int)($data['id'] ?? 0);
+    $repo = new PerfumeRepository();
+    try {
+      $repo->updatePerfume($id, $data);
+      Response::json(['ok' => true], 200);
     } catch (\Throwable $e) {
       Response::json(['ok' => false, 'error' => $e->getMessage()], 400);
     }

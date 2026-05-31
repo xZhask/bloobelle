@@ -5,13 +5,38 @@ $isAdmin = $user['rol'] === 'admin';
 $activeTab = 'reporte';
 ob_start();
 ?>
+<style>
+#rep .rep-header {
+  padding: 1.3rem 0 1.1rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1.2rem;
+}
+#rep .rep-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+#rep .rep-fecha {
+  font-family: var(--fd);
+  font-size: 1.45rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+</style>
 <div id="rep">
   <div class="body">
-    <div class="h">Reporte del día</div>
-    <p class="sub" id="lblFechaMovil">Cargando...</p>
+    <div class="rep-header">
+      <div class="rep-label">Reporte del día</div>
+      <div class="rep-fecha" id="lblFechaMovil">Cargando...</div>
+    </div>
 
     <div class="stats">
       <div class="stat a"><div class="num" id="statFrascos">0</div><div class="lbl">Frascos</div></div>
+      <div class="stat"><div class="num" id="statRellenos">0</div><div class="lbl">Rellenos</div></div>
       <div class="stat"><div class="num" id="statVentas">0</div><div class="lbl">Ventas</div></div>
       <div class="stat"><div class="num" id="statIngresos">0</div><div class="lbl">S/ ingresos</div></div>
     </div>
@@ -27,7 +52,12 @@ ob_start();
 <script>
 async function loadReporteMovil() {
     let hoyStr = new Date().toISOString().split('T')[0];
-    document.getElementById('lblFechaMovil').innerText = new Date().toLocaleDateString('es-PE', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+    const _d = new Date();
+    const _wd = _d.toLocaleDateString('es-PE', {weekday:'short'}).replace('.','');
+    const _dd = _d.getDate();
+    const _mo = _d.toLocaleDateString('es-PE', {month:'short'}).replace('.','');
+    const _yr = _d.getFullYear();
+    document.getElementById('lblFechaMovil').innerText = `${_wd.charAt(0).toUpperCase()+_wd.slice(1)} · ${_dd} ${_mo} ${_yr}`;
 
     const res = await fetch('/api/ventas/reporte', {
         method: 'POST',
@@ -41,8 +71,9 @@ async function loadReporteMovil() {
     const data = await res.json();
     if(data.error) return;
 
-    document.getElementById('statFrascos').innerText = data.resumen.frascos;
-    document.getElementById('statVentas').innerText = data.resumen.ventas;
+    document.getElementById('statFrascos').innerText  = data.resumen.frascos;
+    document.getElementById('statRellenos').innerText = data.resumen.rellenos ?? 0;
+    document.getElementById('statVentas').innerText   = data.resumen.ventas;
     document.getElementById('statIngresos').innerText = (data.resumen.ingresos/1000 >= 1) ? (data.resumen.ingresos/1000).toFixed(1)+'k' : data.resumen.ingresos.toFixed(0);
 
     document.getElementById('topFrascosMovil').innerHTML = data.topFrascos.map(f => `

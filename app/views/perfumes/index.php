@@ -8,28 +8,23 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="/assets/images/marca/favicon-2.png">
+  <link rel="stylesheet" href="/assets/css/theme.css">
+  <script>
+  (function(){try{
+    var t=localStorage.getItem('bb-theme');
+    if(!t){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
+    document.documentElement.setAttribute('data-theme',t);
+  }catch(e){}})();
+  </script>
   <style>
     :root {
-      --color-bg: #faf9f7;
-      --color-surface: #ffffff;
-      --color-text-primary: #1a1614;
-      --color-text-secondary: #766f68;
-      --color-accent: #b88e5d;
-      --color-accent-hover: #a07a4d;
-      --color-border: #e8e3dc;
-      --color-overlay: rgba(0, 0, 0, 0.5);
-      --color-success: #4a7c59;
-      --color-error: #c44536;
-      
       --font-display: 'Playfair Display', serif;
       --font-body: 'Jost', sans-serif;
       
       --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       --transition-spring: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
       
-      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
-      --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+      --transition-spring: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     * {
@@ -57,7 +52,7 @@
       top: 0;
       z-index: 100;
       backdrop-filter: blur(10px);
-      background: rgba(255, 255, 255, 0.95);
+      background: var(--color-surface);
     }
 
     .header-content {
@@ -83,17 +78,36 @@
       color: var(--color-accent);
     }
 
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: var(--transition-smooth);
+      letter-spacing: 0.5px;
+    }
+
+    .nav-link:hover {
+      color: var(--color-accent);
+    }
+
     .header-actions {
       display: flex;
       align-items: center;
       gap: 1rem;
     }
 
+    .header-actions .actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
     .btn-filters-mobile {
       display: none;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
+      padding: 0.5rem 1.2rem;
       background: var(--color-text-primary);
       color: var(--color-surface);
       border: none;
@@ -613,7 +627,10 @@
     .overlay {
       display: none;
       position: fixed;
-      inset: 0;
+      top: 70px;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: var(--color-overlay);
       z-index: 90;
       backdrop-filter: blur(4px);
@@ -654,10 +671,6 @@
         transform: rotate(360deg);
       }
     }
-
-    .user-chip{display:inline-flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--color-text-primary,#1a1614)}
-    .user-av{width:28px;height:28px;border-radius:50%;background:var(--color-accent,#b88e5d);color:#fff;display:grid;place-items:center;font-weight:600;font-size:.8rem}
-    .btn-logout{font-size:.82rem;color:var(--color-text-secondary,#766f68);text-decoration:none;border:1px solid var(--color-border,#e8e3dc);padding:.4rem .8rem;border-radius:999px;white-space:nowrap}
     .btn-logout:hover{color:#c44536;border-color:#c44536}
 
     /* Modal login */
@@ -675,6 +688,63 @@
     .login-card .b.cancel{background:var(--color-soft,#f3efe9);color:var(--color-text-primary,#1a1614)}
     .login-card .b.go{background:var(--color-accent,#b88e5d);color:#fff}
 
+    /* Modal de Perfume (Prefijo pm-) */
+    #pm-overlay {
+      position: fixed; inset: 0; background: rgba(26,22,20,.5); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center; padding: 1.2rem;
+      opacity: 0; pointer-events: none; transition: opacity .22s; z-index: 1000;
+    }
+    #pm-overlay.open { opacity: 1; pointer-events: auto; }
+    .pm-modal {
+      background: var(--color-surface); border-radius: 22px; width: min(840px, 100%); max-height: 88vh;
+      overflow: hidden; display: grid; grid-template-columns: 42% 1fr;
+      transform: translateY(12px) scale(.985); transition: .24s; box-shadow: 0 30px 80px rgba(0,0,0,.28);
+    }
+    #pm-overlay.open .pm-modal { transform: none; }
+    .pm-img {
+      background: var(--color-bg); display: flex; align-items: center; justify-content: center; position: relative;
+    }
+    .pm-img .flower { font-size: 5rem; opacity: .5; }
+    .pm-img img { width: 100%; height: 100%; object-fit: cover; }
+    .pm-content { padding: 2rem 2rem 2.2rem; overflow-y: auto; position: relative; }
+    .pm-close {
+      position: absolute; top: 1rem; right: 1rem; width: 38px; height: 38px; border: none; border-radius: 50%;
+      background: var(--color-bg); color: var(--color-text-primary); font-size: 1.3rem; cursor: pointer;
+      display: grid; place-items: center; transition: .2s;
+    }
+    .pm-close:hover { background: var(--color-border); }
+    .pm-top { display: flex; align-items: center; gap: .7rem; margin-bottom: .9rem; }
+    .pm-badge {
+      background: var(--color-accent); color: var(--color-on-accent); font-size: .64rem; letter-spacing: .12em; text-transform: uppercase;
+      padding: .3rem .7rem; border-radius: 999px; font-weight: 500;
+    }
+    .pm-code {
+      font-size: .74rem; letter-spacing: .08em; color: var(--color-text-secondary); background: var(--color-bg);
+      padding: .25rem .6rem; border-radius: 6px;
+    }
+    .pm-marca { font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: var(--color-accent); margin-bottom: .2rem; }
+    .pm-name { font-family: var(--font-display); font-size: 2rem; font-weight: 500; line-height: 1.1; color: var(--color-text-primary); }
+    .pm-div { height: 1px; background: var(--color-border); margin: 1.3rem 0; }
+    .pm-section { margin-bottom: 1.3rem; }
+    .pm-label { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: .55rem; }
+    .pm-desc { color: var(--color-text-primary); font-size: .96rem; line-height: 1.65; }
+    .pm-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .pm-chip { font-size: .82rem; padding: .4rem .8rem; border-radius: 999px; border: 1px solid var(--color-border); }
+    .pm-chip.pm-aroma { background: #fbf6ef; border-color: #ecdcc4; color: #9a703f; }
+    .pm-chip.pm-comp { background: var(--color-surface); color: var(--color-text-primary); }
+    .pm-skeleton { background: #eee; border-color: #eee; width: 60px; height: 28px; animation: pm-pulse 1.5s infinite ease-in-out; }
+    @keyframes pm-pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+    .pm-footer { margin-top: .4rem; }
+    .pm-edit {
+      font-family: var(--font-body); font-size: .85rem; border: 1px solid var(--color-border);
+      background: var(--color-surface); color: var(--color-text-primary); padding: .55rem 1rem; border-radius: 10px; cursor: pointer;
+    }
+    .pm-edit:hover { border-color: var(--color-accent); color: var(--color-accent); }
+    @media(max-width:680px){
+      .pm-modal { grid-template-columns: 1fr; max-height: 92vh; }
+      .pm-img { min-height: 200px; }
+    }
+
     /* Responsive */
     @media (max-width: 1024px) {
       .sidebar {
@@ -688,28 +758,22 @@
     }
 
     @media (max-width: 768px) {
-      .header-content {
-        height: 70px;
-        padding: 0 1rem;
-      }
-
-      .logo {
+.logo {
         font-size: 22px;
       }
 
-      .btn-filters-mobile {
-        display: flex;
-      }
-
-      .btn-new {
+.btn-new,
+      .nav-link,
+      .user-chip,
+      .btn-logout {
         display: none;
       }
 
       .sidebar {
         position: fixed;
-        top: 0;
+        top: 70px;
         left: 0;
-        height: 100vh;
+        height: calc(100vh - 70px);
         width: 85%;
         max-width: 360px;
         z-index: 100;
@@ -720,6 +784,205 @@
       .sidebar.active {
         transform: translateX(0);
       }
+
+
+      .main-content {
+        padding: 1.5rem 1rem;
+      }
+
+      .content-info h1 {
+        font-size: 32px;
+      }
+
+      .products-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      
+    }
+
+    @media (max-width: 480px) {
+      .content-info h1 {
+        font-size: 28px;
+color: var(--color-text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    /* Error State */
+    .error-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .error-state-icon {
+      font-size: 64px;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Overlay */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--color-overlay);
+      z-index: 90;
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay.active {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    .btn-logout:hover{color:#c44536;border-color:#c44536}
+
+    /* Modal login */
+    .login-overlay{position:fixed;inset:0;background:rgba(26,22,20,.45);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:1000}
+    .login-overlay.open{display:flex}
+    .login-card{background:#fff;border-radius:18px;padding:2rem 1.8rem;width:340px;max-width:92vw;box-shadow:0 24px 60px rgba(0,0,0,.22)}
+    .login-card h3{font-family:'Playfair Display',serif;font-weight:500;font-size:1.5rem;margin-bottom:.3rem}
+    .login-card p{color:var(--color-text-secondary,#766f68);font-size:.85rem;margin-bottom:1.2rem}
+    .login-card label{display:block;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-secondary,#766f68);margin-bottom:.35rem}
+    .login-card input{width:100%;padding:.8rem .9rem;border:1px solid var(--color-border,#e8e3dc);border-radius:10px;font-size:1rem;margin-bottom:1rem;font-family:inherit}
+    .login-card input:focus{outline:none;border-color:var(--color-accent,#b88e5d)}
+    .login-card .err{color:#c44536;font-size:.8rem;margin-bottom:.8rem;display:none}
+    .login-card .actions{display:flex;gap:.6rem;justify-content:flex-end;margin-top:.4rem}
+    .login-card .b{border:none;border-radius:10px;padding:.7rem 1.1rem;font-family:inherit;font-size:.9rem;cursor:pointer}
+    .login-card .b.cancel{background:var(--color-soft,#f3efe9);color:var(--color-text-primary,#1a1614)}
+    .login-card .b.go{background:var(--color-accent,#b88e5d);color:#fff}
+
+    /* Modal de Perfume (Prefijo pm-) */
+    #pm-overlay {
+      position: fixed; inset: 0; background: rgba(26,22,20,.5); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center; padding: 1.2rem;
+      opacity: 0; pointer-events: none; transition: opacity .22s; z-index: 1000;
+    }
+    #pm-overlay.open { opacity: 1; pointer-events: auto; }
+    .pm-modal {
+      background: var(--color-surface); border-radius: 22px; width: min(840px, 100%); max-height: 88vh;
+      overflow: hidden; display: grid; grid-template-columns: 42% 1fr;
+      transform: translateY(12px) scale(.985); transition: .24s; box-shadow: 0 30px 80px rgba(0,0,0,.28);
+    }
+    #pm-overlay.open .pm-modal { transform: none; }
+    .pm-img {
+      background: var(--color-bg); display: flex; align-items: center; justify-content: center; position: relative;
+    }
+    .pm-img .flower { font-size: 5rem; opacity: .5; }
+    .pm-img img { width: 100%; height: 100%; object-fit: cover; }
+    .pm-content { padding: 2rem 2rem 2.2rem; overflow-y: auto; position: relative; }
+    .pm-close {
+      position: absolute; top: 1rem; right: 1rem; width: 38px; height: 38px; border: none; border-radius: 50%;
+      background: var(--color-bg); color: var(--color-text-primary); font-size: 1.3rem; cursor: pointer;
+      display: grid; place-items: center; transition: .2s;
+    }
+    .pm-close:hover { background: var(--color-border); }
+    .pm-top { display: flex; align-items: center; gap: .7rem; margin-bottom: .9rem; }
+    .pm-badge {
+      background: var(--color-accent); color: var(--color-on-accent); font-size: .64rem; letter-spacing: .12em; text-transform: uppercase;
+      padding: .3rem .7rem; border-radius: 999px; font-weight: 500;
+    }
+    .pm-code {
+      font-size: .74rem; letter-spacing: .08em; color: var(--color-text-secondary); background: var(--color-bg);
+      padding: .25rem .6rem; border-radius: 6px;
+    }
+    .pm-marca { font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: var(--color-accent); margin-bottom: .2rem; }
+    .pm-name { font-family: var(--font-display); font-size: 2rem; font-weight: 500; line-height: 1.1; color: var(--color-text-primary); }
+    .pm-div { height: 1px; background: var(--color-border); margin: 1.3rem 0; }
+    .pm-section { margin-bottom: 1.3rem; }
+    .pm-label { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: .55rem; }
+    .pm-desc { color: var(--color-text-primary); font-size: .96rem; line-height: 1.65; }
+    .pm-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .pm-chip { font-size: .82rem; padding: .4rem .8rem; border-radius: 999px; border: 1px solid var(--color-border); }
+    .pm-chip.pm-aroma { background: #fbf6ef; border-color: #ecdcc4; color: #9a703f; }
+    .pm-chip.pm-comp { background: var(--color-surface); color: var(--color-text-primary); }
+    .pm-skeleton { background: #eee; border-color: #eee; width: 60px; height: 28px; animation: pm-pulse 1.5s infinite ease-in-out; }
+    @keyframes pm-pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+    .pm-footer { margin-top: .4rem; }
+    .pm-edit {
+      font-family: var(--font-body); font-size: .85rem; border: 1px solid var(--color-border);
+      background: var(--color-surface); color: var(--color-text-primary); padding: .55rem 1rem; border-radius: 10px; cursor: pointer;
+    }
+    .pm-edit:hover { border-color: var(--color-accent); color: var(--color-accent); }
+    @media(max-width:680px){
+      .pm-modal { grid-template-columns: 1fr; max-height: 92vh; }
+      .pm-img { min-height: 200px; }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 320px;
+      }
+
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+.logo {
+        font-size: 22px;
+      }
+
+.btn-new,
+      .nav-link,
+      .user-chip,
+      .btn-logout {
+        display: none;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        height: calc(100vh - 70px);
+        width: 85%;
+        max-width: 360px;
+        z-index: 100;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
 
       .main-content {
         padding: 1.5rem 1rem;
@@ -750,92 +1013,47 @@
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="header">
-    <div class="header-content">
-      <a href="/perfumes" class="logo">BlooBelle</a>
-      <div class="header-actions">
-        <button class="btn-filters-mobile" id="btn-toggle-filters">
-          <span>✦</span> Filtros
-        </button>
+  <?php $showFilters = true; $hideStoreSwitcher = true; include __DIR__ . '/../partials/app_header.php'; ?>
 
-        <?php if ($user === null): ?>
-          <!-- SIN SESIÓN: catálogo público, solo opción de entrar -->
-          <button class="btn-new" id="btn-open-login"><span>✦</span> Iniciar sesión</button>
-
-        <?php elseif ($user['rol'] === 'admin'): ?>
-          <!-- ADMIN: registros de catálogo -->
-          <a href="/perfumes/create" class="btn-new"><span>+</span> Nuevo Perfume</a>
-          <!-- <a href="/catalogo/frascos" class="btn-new"><span>+</span> Nuevo Frasco</a> -->
-          <!-- <a href="/catalogo/precios" class="btn-new">Precios</a> -->
-          <span class="user-chip">
-            <span class="user-av"><?= strtoupper(substr($user['nombre'], 0, 1)) ?></span>
-            <span style="display:flex;flex-direction:column;line-height:1">
-              <?= htmlspecialchars($user['nombre']) ?>
-              <span style="font-size:10px;text-transform:uppercase;color:var(--color-text-secondary)">Admin</span>
-            </span>
-          </span>
-          <a href="/logout" class="btn-logout">Salir</a>
-
-        <?php else: /* vendedor */ ?>
-          <!-- VENDEDOR: sus formularios asignados, sin registros de catálogo, sin reporte -->
-          <a href="/tienda?pos=1" class="btn-new"><span>+</span> Registrar venta</a>
-          <a href="/tienda/stock" class="btn-new">Stock</a>
-          <span class="user-chip">
-            <span class="user-av"><?= strtoupper(substr($user['nombre'], 0, 1)) ?></span>
-            <span style="display:flex;flex-direction:column;line-height:1">
-              <?= htmlspecialchars($user['nombre']) ?>
-              <span style="font-size:10px;text-transform:uppercase;color:var(--color-text-secondary)">Vendedora</span>
-            </span>
-          </span>
-          <a href="/logout" class="btn-logout">Salir</a>
-        <?php endif; ?>
-      </div>
-    </div>
-  </header>
-
-  <!-- Overlay -->
-  <div class="overlay" id="overlay"></div>
-
-  <!-- Main Layout -->
   <div class="main-layout">
-
-    <!-- Sidebar -->
+    <!-- Sidebar Filters -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
-        <h2 class="sidebar-title">Filtros</h2>
-        <p class="sidebar-subtitle">Refina tu búsqueda</p>
+        <h2 class="sidebar-title">Catálogo de Perfumes</h2>
+        <p class="sidebar-subtitle">Explora nuestra colección</p>
       </div>
 
-      <!-- Search -->
-      <div class="search-wrapper filter-section">
-        <span class="search-icon">🔍</span>
-        <input 
-          type="text" 
-          class="search-input" 
-          id="search-input"
-          placeholder="Buscar por nombre, código o marca..."
-        />
+      <div class="search-wrapper">
+        <span class="search-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        </span>
+        <input type="text" id="search-input" class="search-input" placeholder="Buscar por nombre, marca…">
       </div>
 
-      <!-- Filter: Disponibilidad -->
       <div class="filter-section">
         <label class="filter-label">Género</label>
         <div class="filter-options">
-          <?php foreach ($generos as $g): ?>
-            <label class="filter-option">
-              <input type="checkbox" name="genero[]" value="<?= htmlspecialchars($g['nombre']) ?>" />
-              <span class="checkbox-custom"></span>
-              <span class="filter-option-text"><?= htmlspecialchars(ucfirst(strtolower($g['nombre']))) ?></span>
-            </label>
-          <?php endforeach; ?>
+          <label class="filter-option">
+            <input type="checkbox" name="genero[]" value="Mujer">
+            <span class="checkbox-custom"></span>
+            <span class="filter-option-text">Mujer</span>
+          </label>
+          <label class="filter-option">
+            <input type="checkbox" name="genero[]" value="Hombre">
+            <span class="checkbox-custom"></span>
+            <span class="filter-option-text">Hombre</span>
+          </label>
+          <label class="filter-option">
+            <input type="checkbox" name="genero[]" value="Unisex">
+            <span class="checkbox-custom"></span>
+            <span class="filter-option-text">Unisex</span>
+          </label>
         </div>
       </div>
 
-      <!-- Filter Actions -->
       <div class="filter-actions">
-        <button class="btn-apply" id="btn-apply">Aplicar Filtros</button>
-        <button class="btn-clear" id="btn-clear">Limpiar Todo</button>
+        <button class="btn-apply" id="btn-apply">Aplicar</button>
+        <button class="btn-clear" id="btn-clear">Limpiar</button>
       </div>
     </aside>
 
@@ -861,12 +1079,12 @@
 
         <!-- Products (Initial Load) -->
         <?php foreach ($productos as $p): ?>
-          <div class="product-card">
+          <div class="product-card" data-id="<?= $p['id'] ?>" tabindex="0" role="button" aria-label="Ver detalle de <?= htmlspecialchars($p['referencia']) ?>">
             <div class="card-image">
               <?php if (!empty($p['ruta_img'])): ?>
                 <img src="<?= htmlspecialchars($p['ruta_img']) ?>" alt="<?= htmlspecialchars($p['referencia']) ?>" />
               <?php else: ?>
-                <span class="card-image-placeholder">🌸</span>
+                <span class="card-image-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32" style="opacity:0.5"><path d="M9 2h6v3l1 2v12a2 2 0 01-2 2H10a2 2 0 01-2-2V7l1-2V2z"/><path d="M9 11h6"/></svg></span>
               <?php endif; ?>
             </div>
             <div class="product-info">
@@ -882,10 +1100,14 @@
         <?php endforeach; ?>
       </div>
     </main>
-
-  </div>
+  </div><!-- /.main-layout -->
 
   <script>
+    window.__perfumes = {};
+    <?php foreach ($productos as $p): ?>
+      window.__perfumes[<?= $p['id'] ?>] = <?= json_encode($p) ?>;
+    <?php endforeach; ?>
+
     class CatalogManager {
       constructor() {
         this.init();
@@ -897,19 +1119,62 @@
       }
 
       setupEventListeners() {
-        // Toggle sidebar (mobile)
+        // Shared panels logic
+        const overlay = document.getElementById('overlay');
+        const sidebar = document.getElementById('sidebar');
+        const navDrawer = document.getElementById('nav-drawer');
+
+        const closePanels = () => {
+          sidebar?.classList.remove('active');
+          navDrawer?.classList.remove('open');
+          navDrawer?.setAttribute('aria-hidden', 'true');
+          overlay?.classList.remove('active');
+          document.body.style.overflow = '';
+        };
+
+        // Sidebar (Filters)
         document.getElementById('btn-toggle-filters')?.addEventListener('click', () => {
-          this.toggleSidebar(true);
+          closePanels();
+          sidebar?.classList.add('active');
+          overlay?.classList.add('active');
+          document.body.style.overflow = 'hidden';
         });
 
-        document.getElementById('overlay')?.addEventListener('click', () => {
-          this.toggleSidebar(false);
+        // Nav Drawer (Menu)
+        document.getElementById('btn-menu')?.addEventListener('click', () => {
+          closePanels();
+          navDrawer?.classList.add('open');
+          navDrawer?.setAttribute('aria-hidden', 'false');
+          overlay?.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          document.getElementById('btn-menu-close')?.focus();
         });
+
+        document.getElementById('btn-menu-close')?.addEventListener('click', closePanels);
+        overlay?.addEventListener('click', closePanels);
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closePanels();
+        });
+
+        const grid = document.getElementById('products-grid');
+        if (grid) {
+          grid.addEventListener('click', (e) => {
+            const card = e.target.closest('.product-card');
+            if (card && card.dataset.id) openModalPerfume(card.dataset.id, card);
+          });
+          grid.addEventListener('keydown', (e) => {
+            const card = e.target.closest('.product-card');
+            if (card && card.dataset.id && (e.key === 'Enter' || e.key === ' ')) {
+              e.preventDefault();
+              openModalPerfume(card.dataset.id, card);
+            }
+          });
+        }
 
         // Apply filters
         document.getElementById('btn-apply')?.addEventListener('click', async () => {
           await this.applyFilters();
-          this.toggleSidebar(false);
+          closePanels();
         });
 
         // Clear filters
@@ -933,18 +1198,6 @@
         });
       }
 
-      toggleSidebar(show) {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-
-        if (show) {
-          sidebar.classList.add('active');
-          overlay.classList.add('active');
-        } else {
-          sidebar.classList.remove('active');
-          overlay.classList.remove('active');
-        }
-      }
 
       async applyFilters() {
         this.showLoading(true);
@@ -994,7 +1247,7 @@
         if (!productos.length) {
           grid.insertAdjacentHTML('beforeend', `
             <div class="empty-state">
-              <div class="empty-state-icon">🔍</div>
+              <div class="empty-state-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="64" height="64"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
               <h3>No encontramos perfumes</h3>
               <p>Intenta ajustar los filtros o la búsqueda</p>
               <button onclick="catalogManager.clearFilters()" class="btn-new">
@@ -1007,6 +1260,7 @@
 
         // Add products with staggered animation
         productos.forEach((p, index) => {
+          window.__perfumes[p.id] = p;
           const card = this.createProductCard(p);
           card.style.animationDelay = `${index * 0.05}s`;
           grid.appendChild(card);
@@ -1016,10 +1270,14 @@
       createProductCard(p) {
         const card = document.createElement('div');
         card.className = 'product-card';
+        card.setAttribute('data-id', p.id);
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `Ver detalle de ${this.escapeHtml(p.referencia)}`);
         
         const imagen = p.ruta_img 
           ? `<img src="${this.escapeHtml(p.ruta_img)}" alt="${this.escapeHtml(p.referencia)}" />`
-          : `<span class="card-image-placeholder">🌸</span>`;
+          : `<span class="card-image-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32" style="opacity:0.5"><path d="M9 2h6v3l1 2v12a2 2 0 01-2 2H10a2 2 0 01-2-2V7l1-2V2z"/><path d="M9 11h6"/></svg></span>`;
         
         const descripcion = p.descripcion 
           ? `<p class="product-description">${this.escapeHtml(p.descripcion)}</p>`
@@ -1222,6 +1480,121 @@
   });
 })();
 </script>
+
+<div class="overlay" id="pm-overlay" role="dialog" aria-modal="true" aria-labelledby="pm-name">
+  <div class="pm-modal">
+    <div class="pm-img" id="pm-img"></div>
+    <div class="pm-content">
+      <button class="pm-close" id="pm-close" aria-label="Cerrar">✕</button>
+      <div class="pm-top">
+        <span class="pm-badge" id="pm-badge"></span>
+        <span class="pm-code" id="pm-code"></span>
+      </div>
+      <div class="pm-marca" id="pm-marca"></div>
+      <h2 class="pm-name" id="pm-name"></h2>
+      <div class="pm-div"></div>
+      <div class="pm-section">
+        <div class="pm-label">Descripción</div>
+        <p class="pm-desc" id="pm-desc"></p>
+      </div>
+      <div class="pm-section" id="pm-aromas-sec">
+        <div class="pm-label">Tipo de fragancia</div>
+        <div class="pm-chips" id="pm-aromas"></div>
+      </div>
+      <div class="pm-section" id="pm-comps-sec">
+        <div class="pm-label">Componentes / notas</div>
+        <div class="pm-chips" id="pm-comps"></div>
+      </div>
+      <?php if ($user !== null && $user['rol'] === 'admin'): ?>
+      <div class="pm-footer">
+        <button class="pm-edit" id="pm-edit">✎ Editar perfume</button>
+      </div>
+      <?php endif; ?>
+    </div>
+  </div>
+</div>
+
+<script>
+let pmLastFocus = null;
+const pmOverlay = document.getElementById('pm-overlay');
+
+async function openModalPerfume(id, card) {
+  const p = window.__perfumes[id];
+  if(!p) return;
+  
+  pmLastFocus = card || document.activeElement;
+  
+  document.getElementById('pm-badge').textContent = p.genero;
+  document.getElementById('pm-code').textContent = p.codigo;
+  document.getElementById('pm-marca').textContent = p.marca;
+  document.getElementById('pm-name').textContent = p.referencia;
+  document.getElementById('pm-desc').textContent = p.descripcion || 'Sin descripción disponible.';
+  
+  const imgContainer = document.getElementById('pm-img');
+  if (p.ruta_img) {
+      imgContainer.innerHTML = `<img src="${p.ruta_img}" alt="${p.referencia}">`;
+  } else {
+      imgContainer.innerHTML = `<span class="flower">🌸</span>`;
+  }
+  
+  // Skeleton
+  const skeletonHTML = '<span class="pm-chip pm-skeleton" style="width:70px"></span><span class="pm-chip pm-skeleton" style="width:90px"></span><span class="pm-chip pm-skeleton" style="width:60px"></span>';
+  document.getElementById('pm-aromas').innerHTML = skeletonHTML;
+  document.getElementById('pm-comps').innerHTML = skeletonHTML;
+  document.getElementById('pm-aromas-sec').style.display = 'block';
+  document.getElementById('pm-comps-sec').style.display = 'block';
+  
+  pmOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('pm-close').focus();
+  
+  const btnEdit = document.getElementById('pm-edit');
+  if (btnEdit) {
+      btnEdit.onclick = () => window.location.href = `/catalogo/perfumes/editar?id=${id}`;
+  }
+  
+  try {
+      const res = await fetch('/api/perfumes/detalle', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: id })
+      });
+      const data = await res.json();
+      if(res.ok && !data.error) {
+          const aromas = data.tipos_aroma || [];
+          const comps = data.componentes || [];
+          
+          if(aromas.length > 0) {
+              document.getElementById('pm-aromas').innerHTML = aromas.map(a => `<span class="pm-chip pm-aroma">${a.nombre}</span>`).join('');
+          } else {
+              document.getElementById('pm-aromas-sec').style.display = 'none';
+          }
+          
+          if(comps.length > 0) {
+              document.getElementById('pm-comps').innerHTML = comps.map(c => `<span class="pm-chip pm-comp">${c.nombre}</span>`).join('');
+          } else {
+              document.getElementById('pm-comps-sec').style.display = 'none';
+          }
+      } else {
+          throw new Error(data.error);
+      }
+  } catch (e) {
+      document.getElementById('pm-aromas').innerHTML = '<span style="font-size:0.8rem; color:var(--color-error)">No se pudo cargar.</span>';
+      document.getElementById('pm-comps').innerHTML = '<span style="font-size:0.8rem; color:var(--color-error)">No se pudo cargar.</span>';
+  }
+}
+
+function closeModalPerfume() {
+    pmOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    if(pmLastFocus) pmLastFocus.focus();
+}
+
+document.getElementById('pm-close')?.addEventListener('click', closeModalPerfume);
+pmOverlay?.addEventListener('click', e => { if (e.target === pmOverlay) closeModalPerfume(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && pmOverlay?.classList.contains('open')) closeModalPerfume(); });
+</script>
+
 
 </body>
 </html>

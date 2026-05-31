@@ -37,7 +37,6 @@ class StockController {
             foreach($list as &$item) {
                 $item['bajo'] = (bool)$item['bajo'];
                 $item['cantidad'] = (int)$item['cantidad'];
-                $item['precio'] = $item['precio'] !== null ? (float)$item['precio'] : null;
             }
             Response::json($list);
         } catch (\Exception $e) {

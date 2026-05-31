@@ -14,6 +14,7 @@ ob_start();
     </div>
 
     <label>Elegir frasco</label>
+    <div id="gridRelleno" style="margin-bottom:0.6rem;"></div>
     <div class="grouplbl">Genéricos</div>
     <div class="fgrid" id="gridGenericos"></div>
     <div class="grouplbl">Diseño</div>
@@ -46,8 +47,11 @@ ob_start();
         <option value="otro">Otro</option>
       </select>
     </div>
-    <div class="totrow"><span class="l">Total</span><span class="v" id="lblTotal">S/ 0.00</span></div>
-    <button class="pay" id="btnPay" disabled>Registrar venta</button>
+    <div class="field" style="margin-top:1rem;">
+      <label>Total de la venta (S/)</label>
+      <input type="number" id="inpTotal" class="inp" min="0" step="0.01" placeholder="0.00" style="font-size:1.5rem; font-weight:bold; text-align:right; padding:0.5rem;">
+    </div>
+    <button class="pay" id="btnPay" disabled style="margin-top:1rem;">Registrar venta</button>
   </div>
 </div>
 
@@ -77,24 +81,42 @@ function getIcon(n, cat) {
 }
 
 function renderFrascos() {
-    const gen = frascos.filter(f => f.categoria === 'generico');
-    const dis = frascos.filter(f => f.categoria === 'diseno');
-    
+    const relleno = frascos.filter(f => f.controla_stock == 0);
+    const gen     = frascos.filter(f => f.categoria === 'generico' && f.controla_stock != 0);
+    const dis     = frascos.filter(f => f.categoria === 'diseno'   && f.controla_stock != 0);
+
+    const relDiv = document.getElementById('gridRelleno');
+    if (relleno.length > 0) {
+        relDiv.innerHTML = `<div class="grouplbl" style="color:var(--color-accent);">Relleno (frasco del cliente)</div><div class="fgrid">${relleno.map(f => cardFrasco(f)).join('')}</div>`;
+    } else {
+        relDiv.innerHTML = '';
+    }
     document.getElementById('gridGenericos').innerHTML = gen.map(f => cardFrasco(f)).join('');
-    document.getElementById('gridDiseno').innerHTML = dis.map(f => cardFrasco(f)).join('');
+    document.getElementById('gridDiseno').innerHTML    = dis.map(f => cardFrasco(f)).join('');
 }
 
 function cardFrasco(f) {
-    if(!f.precio) return '';
-    const icon = getIcon(f.nombre, f.categoria);
-    const selClass = (frascoSeleccionado && frascoSeleccionado.id === f.id) ? 'on' : '';
-    let nm = f.nombre.replace('Genérico ', '');
+    const selClass   = (frascoSeleccionado && frascoSeleccionado.id === f.id) ? 'on' : '';
+    const sinStock   = f.controla_stock == 0;
+    const agotado    = !sinStock && f.cantidad <= 0;
+    const nm         = f.nombre.replace('Genérico ', '');
+    let thumbHTML = '';
+    if (f.imagen) {
+        let src = f.imagen.startsWith('/') ? f.imagen : '/' + f.imagen;
+        thumbHTML = `<img src="${src}" alt="${nm}" style="height:42px; object-fit:contain;">`;
+    } else {
+        const icon = getIcon(f.nombre, f.categoria);
+        thumbHTML = SVG[icon] || SVG.botella;
+    }
+    const qtyLabel = sinStock
+        ? `<div class="fqty" style="color:var(--color-accent);">Trae su frasco</div>`
+        : `<div class="fqty">${agotado ? '<span style="color:var(--color-error)">Agotado</span>' : 'quedan ' + f.cantidad}</div>`;
+    const disabledStyle = agotado ? 'opacity:0.45;pointer-events:none;' : '';
     return `
-    <div class="fcard ${selClass}" onclick="selFrasco(${f.id})">
-      <div class="fthumb">${SVG[icon] || SVG.botella}</div>
+    <div class="fcard ${selClass}" onclick="selFrasco(${f.id})" style="${disabledStyle}">
+      <div class="fthumb">${thumbHTML}</div>
       <div class="fname">${nm}</div>
-      <div class="fprice">S/ ${parseFloat(f.precio).toFixed(2)}</div>
-      <div class="fqty">quedan ${f.cantidad}</div>
+      ${qtyLabel}
     </div>`;
 }
 
@@ -107,13 +129,20 @@ function selFrasco(id) {
     const p = document.getElementById('previewFrasco');
     if(!frascoSeleccionado) { p.classList.add('hide'); return; }
 
-    const icon = getIcon(frascoSeleccionado.nombre, frascoSeleccionado.categoria);
+    let thumbHTML = '';
+    if (frascoSeleccionado.imagen) {
+        let src = frascoSeleccionado.imagen.startsWith('/') ? frascoSeleccionado.imagen : '/' + frascoSeleccionado.imagen;
+        thumbHTML = `<img src="${src}" alt="${frascoSeleccionado.nombre}" style="height:50px; object-fit:contain;">`;
+    } else {
+        const icon = getIcon(frascoSeleccionado.nombre, frascoSeleccionado.categoria);
+        thumbHTML = SVG[icon] || SVG.botella;
+    }
     p.innerHTML = `
-      <div class="pimg">${SVG[icon] || SVG.botella}</div>
+      <div class="pimg">${thumbHTML}</div>
       <div>
         <div class="pname">${frascoSeleccionado.nombre}</div>
         <div class="pdesc">${frascoSeleccionado.descripcion || ''}</div>
-        <div class="pprice">S/ ${parseFloat(frascoSeleccionado.precio).toFixed(2)} · quedan ${frascoSeleccionado.cantidad}</div>
+        <div class="pprice">${frascoSeleccionado.controla_stock == 0 ? 'El cliente trae su frasco' : 'quedan ' + frascoSeleccionado.cantidad}</div>
       </div>
     `;
     p.classList.remove('hide');
@@ -123,7 +152,8 @@ function selFrasco(id) {
 function cambiarCant(d) {
     if(!frascoSeleccionado) return;
     let nf = cantidadForm + d;
-    if(nf >= 1 && nf <= frascoSeleccionado.cantidad) {
+    const maxCant = frascoSeleccionado.controla_stock == 0 ? 99 : frascoSeleccionado.cantidad;
+    if(nf >= 1 && nf <= maxCant) {
         cantidadForm = nf;
         document.getElementById('qtySpan').innerText = cantidadForm;
     }
@@ -175,7 +205,8 @@ function selPerfume(id, ref, marca) {
 
 function validateAddBtn() {
     const btn = document.getElementById('btnAddCart');
-    if(perfumeSeleccionado && frascoSeleccionado && frascoSeleccionado.cantidad > 0) {
+    const frascoOk = frascoSeleccionado && (frascoSeleccionado.controla_stock == 0 || frascoSeleccionado.cantidad > 0);
+    if(perfumeSeleccionado && frascoOk) {
         btn.style.opacity = '1';
         btn.disabled = false;
     } else {
@@ -192,12 +223,13 @@ document.getElementById('btnAddCart').addEventListener('click', () => {
         perfume_ref: perfumeSeleccionado.ref,
         frasco_id: frascoSeleccionado.id,
         frasco_n: frascoSeleccionado.nombre,
-        cantidad: cantidadForm,
-        precio: parseFloat(frascoSeleccionado.precio)
+        cantidad: cantidadForm
     });
 
-    // Update local stock to prevent adding more than available
-    frascoSeleccionado.cantidad -= cantidadForm;
+    // Solo descontar stock local para frascos que controlan stock
+    if(frascoSeleccionado.controla_stock != 0) {
+        frascoSeleccionado.cantidad -= cantidadForm;
+    }
     
     perfumeSeleccionado = null;
     frascoSeleccionado = null;
@@ -210,9 +242,9 @@ document.getElementById('btnAddCart').addEventListener('click', () => {
 
 function rmCart(idx) {
     const it = carrito[idx];
-    // Return stock
+    // Devolver stock local solo si el frasco lo controla
     const f = frascos.find(x => x.id === it.frasco_id);
-    if(f) f.cantidad += it.cantidad;
+    if(f && f.controla_stock != 0) f.cantidad += it.cantidad;
 
     carrito.splice(idx, 1);
     renderFrascos();
@@ -223,39 +255,38 @@ function renderCart() {
     const sec = document.getElementById('cartSection');
     const itemsDiv = document.getElementById('cartItems');
     const btnPay = document.getElementById('btnPay');
-    const lblTotal = document.getElementById('lblTotal');
 
     if(carrito.length === 0) {
         sec.style.display = 'none';
         btnPay.disabled = true;
         btnPay.style.opacity = '0.5';
-        lblTotal.innerText = 'S/ 0.00';
         return;
     }
 
     sec.style.display = 'block';
-    let tot = 0;
     itemsDiv.innerHTML = carrito.map((c, i) => {
-        let sub = c.precio * c.cantidad;
-        tot += sub;
         return `
         <div class="line">
             <div class="info">
                 <div class="r">${c.perfume_ref}</div>
-                <div class="mm">${c.frasco_n} · S/ ${c.precio.toFixed(2)} × ${c.cantidad}</div>
+                <div class="mm">${c.frasco_n} × ${c.cantidad}</div>
             </div>
-            <div class="s">S/ ${sub.toFixed(2)}</div>
             <div class="x" onclick="rmCart(${i})">×</div>
         </div>`;
     }).join('');
 
-    lblTotal.innerText = `S/ ${tot.toFixed(2)}`;
     btnPay.disabled = false;
     btnPay.style.opacity = '1';
 }
 
 document.getElementById('btnPay').addEventListener('click', async () => {
     if(carrito.length === 0) return;
+    const inpTotal = document.getElementById('inpTotal').value;
+    if(inpTotal === '' || parseFloat(inpTotal) < 0) {
+        alert('Por favor ingrese un Total válido mayor o igual a 0.');
+        return;
+    }
+
     const btn = document.getElementById('btnPay');
     btn.disabled = true;
     btn.innerText = 'Registrando...';
@@ -263,6 +294,7 @@ document.getElementById('btnPay').addEventListener('click', async () => {
     const payload = {
         sucursal_id: getSucursalId(),
         metodo_pago: document.getElementById('metodoPago').value,
+        total: parseFloat(inpTotal),
         items: carrito.map(c => ({
             perfume_id: c.perfume_id,
             frasco_id: c.frasco_id,
@@ -281,6 +313,7 @@ document.getElementById('btnPay').addEventListener('click', async () => {
         if(data.ok) {
             alert('Venta registrada con éxito (ID: ' + data.venta_id + ')');
             carrito = [];
+            document.getElementById('inpTotal').value = '';
             renderCart();
             await loadStock();
         } else {

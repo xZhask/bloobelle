@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nuevo Perfume · BlooBelle</title>
+  <title>Editar Perfume · BlooBelle</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -698,12 +698,13 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>Nuevo Perfume</h1>
+      <h1>Editar Perfume</h1>
       <a href="/perfumes" class="btn-back">&#8592; Volver al Catálogo</a>
     </div>
 
     <div class="form-card">
       <form id="perfume-form">
+        <input type="hidden" id="perfume_id" value="<?= (int)$perfume['id'] ?>" />
         <!-- Información Básica -->
         <div class="form-section">
           <h2 class="section-title">Información Básica</h2>
@@ -711,11 +712,11 @@
           <div class="form-grid">
             <div class="form-group">
               <label class="form-label">Código del Perfume</label>
-              <input type="text" class="form-input" id="codigo" placeholder="Ej: CC999" required />
+              <input type="text" class="form-input" id="codigo" value="<?= htmlspecialchars($perfume['codigo']) ?>" placeholder="Ej: CC999" required />
             </div>
             <div class="form-group">
               <label class="form-label">Nombre / Referencia</label>
-              <input type="text" class="form-input" id="referencia" placeholder="Ej: COCO MADEMOISELLE" required />
+              <input type="text" class="form-input" id="referencia" value="<?= htmlspecialchars($perfume['referencia']) ?>" placeholder="Ej: COCO MADEMOISELLE" required />
             </div>
           </div>
 
@@ -723,7 +724,7 @@
             <label class="form-label">Imagen del Perfume</label>
             <div class="file-upload-area" id="file-upload-area">
               <input type="file" class="file-input" id="imagen_file" accept="image/jpeg,image/jpg,image/png,image/webp" />
-              <div class="file-upload-content" id="file-upload-content">
+              <div class="file-upload-content" id="file-upload-content" <?= !empty($perfume['ruta_img']) ? 'style="display:none;"' : '' ?>>
                 <div class="file-upload-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z" />
@@ -732,10 +733,10 @@
                 <p class="file-upload-text">Arrastra una imagen o haz click aquí</p>
                 <p class="file-upload-formats">JPG, PNG o WebP · máx. 2MB</p>
               </div>
-              <div class="file-preview" id="file-preview" style="display: none;">
-                <img id="preview-image" src="" alt="Preview" />
+              <div class="file-preview" id="file-preview" <?= !empty($perfume['ruta_img']) ? 'style="display:flex;"' : 'style="display:none;"' ?>>
+                <img id="preview-image" src="<?= htmlspecialchars($perfume['ruta_img'] ?? '') ?>" alt="Preview" />
                 <div class="file-preview-info">
-                  <p class="file-preview-name" id="file-preview-name"></p>
+                  <p class="file-preview-name" id="file-preview-name">Imagen actual</p>
                   <p class="file-preview-size" id="file-preview-size"></p>
                 </div>
                 <button type="button" class="btn-remove-image" id="btn-remove-image" title="Quitar imagen">&#10005;</button>
@@ -746,7 +747,7 @@
 
           <div class="form-group">
             <label class="form-label">Descripción</label>
-            <textarea class="form-input" id="descripcion" rows="3" placeholder="Fragancia elegante con notas florales y cítricas..."></textarea>
+            <textarea class="form-input" id="descripcion" rows="3" placeholder="Fragancia elegante con notas florales y cítricas..."><?= htmlspecialchars($perfume['descripcion'] ?? '') ?></textarea>
             <p class="form-help">Breve descripción del perfume (opcional)</p>
           </div>
 
@@ -756,7 +757,7 @@
               <select class="form-select" id="genero_id" required>
                 <option value="">Seleccione género</option>
                 <?php foreach ($generos as $g): ?>
-                  <option value="<?= (int)$g['id'] ?>"><?= htmlspecialchars($g['nombre']) ?></option>
+                  <option value="<?= (int)$g['id'] ?>" <?= $g['id'] == $perfume['genero_id'] ? 'selected' : '' ?>><?= htmlspecialchars($g['nombre']) ?></option>
                 <?php endforeach; ?>
               </select>
             </div>
@@ -766,7 +767,7 @@
                 <select class="form-select" id="designer_id" required>
                   <option value="">Seleccione marca</option>
                   <?php foreach ($designers as $d): ?>
-                    <option value="<?= (int)$d['id'] ?>"><?= htmlspecialchars($d['nombre']) ?></option>
+                    <option value="<?= (int)$d['id'] ?>" <?= $d['id'] == $perfume['designer_id'] ? 'selected' : '' ?>><?= htmlspecialchars($d['nombre']) ?></option>
                   <?php endforeach; ?>
                 </select>
                 <button type="button" class="btn-add-inline" onclick="openModal('designer')" title="Agregar nueva marca">+</button>
@@ -788,9 +789,12 @@
             </div>
           </div>
           <div class="checkbox-grid" id="tipos-grid">
-            <?php foreach ($tiposAroma as $t): ?>
+            <?php 
+              $tiposSeleccionados = array_column($perfume['tipos_aroma'] ?? [], 'id');
+              foreach ($tiposAroma as $t): 
+            ?>
               <label class="checkbox-option" data-name="<?= htmlspecialchars(strtolower($t['nombre'])) ?>">
-                <input type="checkbox" name="tipos_ids[]" value="<?= (int)$t['id'] ?>" onchange="updateCount('tipos')">
+                <input type="checkbox" name="tipos_ids[]" value="<?= (int)$t['id'] ?>" <?= in_array($t['id'], $tiposSeleccionados) ? 'checked' : '' ?> onchange="updateCount('tipos')">
                 <span class="checkbox-custom"></span>
                 <span class="checkbox-label"><?= htmlspecialchars($t['nombre']) ?></span>
               </label>
@@ -820,9 +824,12 @@
             </div>
           </div>
           <div class="checkbox-grid" id="componentes-grid">
-            <?php foreach ($componentes as $c): ?>
+            <?php 
+              $compsSeleccionados = array_column($perfume['componentes'] ?? [], 'id');
+              foreach ($componentes as $c): 
+            ?>
               <label class="checkbox-option" data-name="<?= htmlspecialchars(strtolower($c['nombre'])) ?>">
-                <input type="checkbox" name="componentes_ids[]" value="<?= (int)$c['id'] ?>" onchange="updateCount('componentes')">
+                <input type="checkbox" name="componentes_ids[]" value="<?= (int)$c['id'] ?>" <?= in_array($c['id'], $compsSeleccionados) ? 'checked' : '' ?> onchange="updateCount('componentes')">
                 <span class="checkbox-custom"></span>
                 <span class="checkbox-label"><?= htmlspecialchars($c['nombre']) ?></span>
               </label>
@@ -842,7 +849,7 @@
         <!-- Acciones -->
         <div class="form-actions">
           <button type="button" class="btn-reset" onclick="resetForm()">Limpiar</button>
-          <button type="submit" class="btn-submit" id="btn-submit">Guardar Perfume</button>
+          <button type="submit" class="btn-submit" id="btn-submit">Guardar Cambios</button>
         </div>
         <div class="message" id="message"></div>
       </form>
@@ -1081,7 +1088,12 @@
       btnSubmit.disabled = true;
       btnSubmit.textContent = 'Guardando...';
 
+      let keepExistingImage = <?= !empty($perfume['ruta_img']) ? 'true' : 'false' ?>;
       let rutaImagen = '';
+      if (keepExistingImage && !selectedFile && document.getElementById('preview-image').src.indexOf('<?= htmlspecialchars($perfume['ruta_img'] ?? '') ?>') !== -1) {
+        rutaImagen = '<?= htmlspecialchars($perfume['ruta_img'] ?? '') ?>';
+      }
+
       if (selectedFile) {
         try {
           const formData = new FormData();
@@ -1093,12 +1105,13 @@
         } catch (error) {
           showMessage('Error al subir la imagen: ' + error.message, 'error');
           btnSubmit.disabled = false;
-          btnSubmit.textContent = 'Guardar Perfume';
+          btnSubmit.textContent = 'Guardar Cambios';
           return;
         }
       }
 
       const payload = {
+        id: Number(document.getElementById('perfume_id').value),
         codigo: document.getElementById('codigo').value.trim(),
         referencia: document.getElementById('referencia').value.trim(),
         ruta_img: rutaImagen,
@@ -1110,21 +1123,27 @@
       };
 
       try {
-        const response = await fetch('/api/perfumes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const response = await fetch('/api/perfumes/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         const data = await response.json();
         if (data.ok) {
-          showMessage('Perfume guardado correctamente · ID: ' + data.id, 'success');
+          showMessage('Perfume actualizado correctamente', 'success');
           setTimeout(() => window.location.href = '/perfumes', 1200);
         } else {
-          showMessage(data.error || 'Error al guardar el perfume', 'error');
+          showMessage(data.error || 'Error al actualizar el perfume', 'error');
           btnSubmit.disabled = false;
-          btnSubmit.textContent = 'Guardar Perfume';
+          btnSubmit.textContent = 'Guardar Cambios';
         }
       } catch (error) {
         showMessage('Error de conexión. Intenta nuevamente.', 'error');
         btnSubmit.disabled = false;
-        btnSubmit.textContent = 'Guardar Perfume';
+        btnSubmit.textContent = 'Guardar Cambios';
       }
+    });
+
+    // Init counts on load
+    document.addEventListener('DOMContentLoaded', () => {
+        updateCount('tipos');
+        updateCount('componentes');
     });
   </script>
 </body>

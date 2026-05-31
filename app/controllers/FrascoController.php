@@ -13,6 +13,18 @@ class FrascoController {
         $this->repo = new FrascoRepository();
     }
 
+    public function index(): void {
+        Auth::requireRole('admin');
+        $user = Auth::user();
+        $frascos = $this->repo->all();
+        require __DIR__ . '/../views/frascos/index.php';
+    }
+
+    public function create(): void {
+        Auth::requireRole('admin');
+        require __DIR__ . '/../views/frascos/create.php';
+    }
+
     public function store(): void {
         Auth::requireRole('admin');
         $data = Request::json();
@@ -66,21 +78,34 @@ class FrascoController {
         }
     }
 
-    public function fijarPrecio(): void {
+    public function update(): void {
         Auth::requireRole('admin');
         $data = Request::json();
 
-        if (empty($data['sucursal_id']) || empty($data['frasco_id']) || !isset($data['precio'])) {
+        if (empty($data['id']) || empty($data['nombre'])) {
+            Response::json(['error' => 'Faltan datos obligatorios'], 400);
+            return;
+        }
+
+        try {
+            $this->repo->update((int)$data['id'], $data);
+            Response::json(['ok' => true]);
+        } catch (\Exception $e) {
+            Response::json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function toggleEstado(): void {
+        Auth::requireRole('admin');
+        $data = Request::json();
+
+        if (empty($data['id']) || !isset($data['activo'])) {
             Response::json(['error' => 'Faltan datos'], 400);
             return;
         }
 
         try {
-            $this->repo->fijarPrecio(
-                (int)$data['sucursal_id'], 
-                (int)$data['frasco_id'], 
-                (float)$data['precio']
-            );
+            $this->repo->setActivo((int)$data['id'], (bool)$data['activo']);
             Response::json(['ok' => true]);
         } catch (\Exception $e) {
             Response::json(['error' => $e->getMessage()], 500);

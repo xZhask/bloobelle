@@ -14,13 +14,12 @@ class StockRepository {
     public function listar(int $sucursal_id): array {
         $stmt = $this->pdo->prepare("
             SELECT f.id, f.nombre, f.categoria, f.imagen, f.descripcion, f.capacidad_ml,
-                   COALESCE(s.cantidad, 0) as cantidad, 
+                   f.controla_stock,
+                   COALESCE(s.cantidad, 0) as cantidad,
                    COALESCE(s.umbral_bajo, 5) as umbral_bajo,
-                   p.precio,
                    (COALESCE(s.cantidad, 0) <= COALESCE(s.umbral_bajo, 5)) as bajo
             FROM frascos f
             LEFT JOIN stock s ON s.frasco_id = f.id AND s.sucursal_id = :sucursal_id
-            LEFT JOIN precios p ON p.frasco_id = f.id AND p.sucursal_id = :sucursal_id
             WHERE f.activo = 1
             ORDER BY (f.categoria = 'diseno') ASC, f.orden ASC, f.nombre ASC
         ");

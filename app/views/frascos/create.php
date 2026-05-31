@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nuevo Perfume · BlooBelle</title>
+  <title>Nuevo Perfume Â· BlooBelle</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -151,7 +151,7 @@
       gap: 1.5rem;
     }
 
-    /* ── File Upload ── */
+    /* â”€â”€ File Upload â”€â”€ */
     .file-upload-area {
       position: relative;
       border: 2px dashed var(--color-border);
@@ -280,7 +280,7 @@
       transform: scale(1.1);
     }
 
-    /* ── Select + Add ── */
+    /* â”€â”€ Select + Add â”€â”€ */
     .select-with-add {
       display: flex;
       gap: 0.5rem;
@@ -312,7 +312,7 @@
       transform: scale(1.05);
     }
 
-    /* ── Checkbox Section ── */
+    /* â”€â”€ Checkbox Section â”€â”€ */
     .checkbox-section-header {
       display: flex;
       justify-content: space-between;
@@ -471,7 +471,7 @@
 
     .btn-add-to-grid svg { width: 16px; height: 16px; }
 
-    /* ── Inline Add Form ── */
+    /* â”€â”€ Inline Add Form â”€â”€ */
     .inline-add-form {
       display: none;
       align-items: center;
@@ -536,7 +536,7 @@
 
     .btn-inline-cancel:hover { border-color: var(--color-error); color: var(--color-error); }
 
-    /* ── Actions ── */
+    /* â”€â”€ Actions â”€â”€ */
     .form-actions {
       display: flex;
       gap: 1rem;
@@ -583,7 +583,7 @@
 
     .btn-reset:hover { border-color: var(--color-text-primary); color: var(--color-text-primary); }
 
-    /* ── Messages ── */
+    /* â”€â”€ Messages â”€â”€ */
     .message {
       margin-top: 1rem;
       padding: 1rem 1.25rem;
@@ -598,7 +598,7 @@
     .message.success { display: block; background: var(--color-success-light); color: var(--color-success); border: 1px solid var(--color-success); }
     .message.error { display: block; background: var(--color-error-light); color: var(--color-error); border: 1px solid var(--color-error); }
 
-    /* ── Modal ── */
+    /* â”€â”€ Modal â”€â”€ */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -653,7 +653,7 @@
     .btn-modal-confirm:hover { background: var(--color-accent-hover); }
     .btn-modal-confirm:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* ── Toast ── */
+    /* â”€â”€ Toast â”€â”€ */
     .toast {
       position: fixed;
       bottom: 2rem;
@@ -671,14 +671,14 @@
       pointer-events: none;
     }
 
-    /* ── Animations ── */
+    /* â”€â”€ Animations â”€â”€ */
     @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes toastIn { from { opacity: 0; transform: translateY(16px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
     @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(8px); } }
 
-    /* ── Responsive ── */
+    /* â”€â”€ Responsive â”€â”€ */
     @media (max-width: 768px) {
       .container { padding: 2rem 1rem; }
       .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
@@ -698,29 +698,39 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>Nuevo Perfume</h1>
+      <h1>Nuevo Frasco</h1>
       <a href="/perfumes" class="btn-back">&#8592; Volver al Catálogo</a>
     </div>
 
     <div class="form-card">
-      <form id="perfume-form">
-        <!-- Información Básica -->
+      <form id="frasco-form">
         <div class="form-section">
-          <h2 class="section-title">Información Básica</h2>
+          <h2 class="section-title">Información del Frasco</h2>
           
           <div class="form-grid">
             <div class="form-group">
-              <label class="form-label">Código del Perfume</label>
-              <input type="text" class="form-input" id="codigo" placeholder="Ej: CC999" required />
+              <label class="form-label">Nombre del Frasco</label>
+              <input type="text" class="form-input" id="nombre" placeholder="Ej: Frasco Genérico 50ml" required />
             </div>
             <div class="form-group">
-              <label class="form-label">Nombre / Referencia</label>
-              <input type="text" class="form-input" id="referencia" placeholder="Ej: COCO MADEMOISELLE" required />
+              <label class="form-label">Categoría</label>
+              <input type="text" class="form-input" id="categoria" placeholder="Ej: generico, lujo..." value="generico" required />
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Capacidad (ml)</label>
+              <input type="number" class="form-input" id="capacidad_ml" placeholder="Ej: 50" min="1" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Orden (Prioridad)</label>
+              <input type="number" class="form-input" id="orden" placeholder="0" value="0" />
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Imagen del Perfume</label>
+            <label class="form-label">Imagen del Frasco</label>
             <div class="file-upload-area" id="file-upload-area">
               <input type="file" class="file-input" id="imagen_file" accept="image/jpeg,image/jpg,image/png,image/webp" />
               <div class="file-upload-content" id="file-upload-content">
@@ -741,131 +751,25 @@
                 <button type="button" class="btn-remove-image" id="btn-remove-image" title="Quitar imagen">&#10005;</button>
               </div>
             </div>
-            <p class="form-help">Opcional · Se guardará en /assets/images/perfumes/</p>
+            <p class="form-help">Opcional · Se guardará en /assets/images/frascos/</p>
           </div>
 
           <div class="form-group">
             <label class="form-label">Descripción</label>
-            <textarea class="form-input" id="descripcion" rows="3" placeholder="Fragancia elegante con notas florales y cítricas..."></textarea>
-            <p class="form-help">Breve descripción del perfume (opcional)</p>
-          </div>
-
-          <div class="form-grid">
-            <div class="form-group">
-              <label class="form-label">Disponibilidad / Género</label>
-              <select class="form-select" id="genero_id" required>
-                <option value="">Seleccione género</option>
-                <?php foreach ($generos as $g): ?>
-                  <option value="<?= (int)$g['id'] ?>"><?= htmlspecialchars($g['nombre']) ?></option>
-                <?php endforeach; ?>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Diseñador / Marca</label>
-              <div class="select-with-add">
-                <select class="form-select" id="designer_id" required>
-                  <option value="">Seleccione marca</option>
-                  <?php foreach ($designers as $d): ?>
-                    <option value="<?= (int)$d['id'] ?>"><?= htmlspecialchars($d['nombre']) ?></option>
-                  <?php endforeach; ?>
-                </select>
-                <button type="button" class="btn-add-inline" onclick="openModal('designer')" title="Agregar nueva marca">+</button>
-              </div>
-            </div>
+            <textarea class="form-input" id="descripcion" rows="3" placeholder="Descripción breve del frasco..."></textarea>
           </div>
         </div>
 
-        <!-- Tipos de Fragancia -->
-        <div class="form-section">
-          <div class="checkbox-section-header">
-            <h2 class="section-title">Tipos de Fragancia</h2>
-            <div style="display:flex;align-items:center;gap:0.75rem;">
-              <span class="selection-count" id="tipos-count">0 seleccionados</span>
-              <div class="search-inline">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
-                <input type="text" placeholder="Buscar tipo..." oninput="filterCheckboxes('tipos-grid', this.value)" />
-              </div>
-            </div>
-          </div>
-          <div class="checkbox-grid" id="tipos-grid">
-            <?php foreach ($tiposAroma as $t): ?>
-              <label class="checkbox-option" data-name="<?= htmlspecialchars(strtolower($t['nombre'])) ?>">
-                <input type="checkbox" name="tipos_ids[]" value="<?= (int)$t['id'] ?>" onchange="updateCount('tipos')">
-                <span class="checkbox-custom"></span>
-                <span class="checkbox-label"><?= htmlspecialchars($t['nombre']) ?></span>
-              </label>
-            <?php endforeach; ?>
-          </div>
-          <button type="button" class="btn-add-to-grid" onclick="showInlineAdd('tipos')">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-            Agregar nuevo tipo
-          </button>
-          <div class="inline-add-form" id="inline-add-tipos">
-            <input type="text" placeholder="Nombre del nuevo tipo de fragancia" id="new-tipo-name" />
-            <button type="button" class="btn-inline-confirm" onclick="saveInline('tipos')">Agregar</button>
-            <button type="button" class="btn-inline-cancel" onclick="hideInlineAdd('tipos')">&#10005;</button>
-          </div>
-        </div>
-
-        <!-- Componentes -->
-        <div class="form-section">
-          <div class="checkbox-section-header">
-            <h2 class="section-title">Componentes</h2>
-            <div style="display:flex;align-items:center;gap:0.75rem;">
-              <span class="selection-count" id="componentes-count">0 seleccionados</span>
-              <div class="search-inline">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
-                <input type="text" placeholder="Buscar componente..." oninput="filterCheckboxes('componentes-grid', this.value)" />
-              </div>
-            </div>
-          </div>
-          <div class="checkbox-grid" id="componentes-grid">
-            <?php foreach ($componentes as $c): ?>
-              <label class="checkbox-option" data-name="<?= htmlspecialchars(strtolower($c['nombre'])) ?>">
-                <input type="checkbox" name="componentes_ids[]" value="<?= (int)$c['id'] ?>" onchange="updateCount('componentes')">
-                <span class="checkbox-custom"></span>
-                <span class="checkbox-label"><?= htmlspecialchars($c['nombre']) ?></span>
-              </label>
-            <?php endforeach; ?>
-          </div>
-          <button type="button" class="btn-add-to-grid" onclick="showInlineAdd('componentes')">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-            Agregar nuevo componente
-          </button>
-          <div class="inline-add-form" id="inline-add-componentes">
-            <input type="text" placeholder="Nombre del nuevo componente" id="new-componente-name" />
-            <button type="button" class="btn-inline-confirm" onclick="saveInline('componentes')">Agregar</button>
-            <button type="button" class="btn-inline-cancel" onclick="hideInlineAdd('componentes')">&#10005;</button>
-          </div>
-        </div>
-
-        <!-- Acciones -->
         <div class="form-actions">
           <button type="button" class="btn-reset" onclick="resetForm()">Limpiar</button>
-          <button type="submit" class="btn-submit" id="btn-submit">Guardar Perfume</button>
+          <button type="submit" class="btn-submit" id="btn-submit">Guardar Frasco</button>
         </div>
         <div class="message" id="message"></div>
       </form>
     </div>
   </div>
 
-  <!-- Modal Diseñador -->
-  <div class="modal-overlay" id="modal-designer">
-    <div class="modal-content">
-      <h3 class="modal-title">Nueva Marca / Diseñador</h3>
-      <div class="form-group" style="margin-bottom:0">
-        <label class="form-label">Nombre</label>
-        <input type="text" class="form-input" id="new-designer-name" placeholder="Ej: PARFUMS DE MARLY" />
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="btn-modal-cancel" onclick="closeModal('designer')">Cancelar</button>
-        <button type="button" class="btn-modal-confirm" id="btn-save-designer" onclick="saveDesigner()">Guardar</button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    // ── Image Upload ──
     let selectedFile = null;
     const fileInput = document.getElementById('imagen_file');
     const fileUploadArea = document.getElementById('file-upload-area');
@@ -897,7 +801,6 @@
     }
 
     fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
-
     ['dragenter', 'dragover'].forEach(ev => {
       fileUploadArea.addEventListener(ev, (e) => { e.preventDefault(); fileUploadArea.classList.add('drag-over'); });
     });
@@ -915,128 +818,6 @@
       fileUploadContent.style.display = 'flex';
     });
 
-    // ── Checkbox Filter & Count ──
-    function filterCheckboxes(gridId, query) {
-      const grid = document.getElementById(gridId);
-      const q = query.toLowerCase().trim();
-      grid.querySelectorAll('.checkbox-option').forEach(item => {
-        item.classList.toggle('hidden', q !== '' && !(item.getAttribute('data-name') || '').includes(q));
-      });
-    }
-
-    function updateCount(type) {
-      const name = type === 'tipos' ? 'tipos_ids[]' : 'componentes_ids[]';
-      const count = document.querySelectorAll('input[name="' + name + '"]:checked').length;
-      document.getElementById(type + '-count').textContent = count + ' seleccionado' + (count !== 1 ? 's' : '');
-    }
-
-    // ── Inline Add ──
-    function showInlineAdd(type) {
-      const form = document.getElementById('inline-add-' + type);
-      form.classList.add('active');
-      form.querySelector('input').focus();
-    }
-
-    function hideInlineAdd(type) {
-      const form = document.getElementById('inline-add-' + type);
-      form.classList.remove('active');
-      form.querySelector('input').value = '';
-    }
-
-    async function saveInline(type) {
-      const inputId = type === 'tipos' ? 'new-tipo-name' : 'new-componente-name';
-      const nombre = document.getElementById(inputId).value.trim().toUpperCase();
-      if (!nombre) return;
-
-      const endpoint = type === 'tipos' ? '/api/tipos-aroma' : '/api/componentes';
-      try {
-        const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nombre }) });
-        const data = await res.json();
-        if (data.ok) {
-          const gridId = type === 'tipos' ? 'tipos-grid' : 'componentes-grid';
-          const checkboxName = type === 'tipos' ? 'tipos_ids[]' : 'componentes_ids[]';
-          const grid = document.getElementById(gridId);
-          const label = document.createElement('label');
-          label.className = 'checkbox-option';
-          label.setAttribute('data-name', nombre.toLowerCase());
-          label.style.animation = 'slideDown 0.3s ease';
-          label.innerHTML = '<input type="checkbox" name="' + checkboxName + '" value="' + data.id + '" checked onchange="updateCount(\'' + type + '\')">'
-            + '<span class="checkbox-custom"></span>'
-            + '<span class="checkbox-label">' + nombre + '</span>';
-          grid.appendChild(label);
-          updateCount(type);
-          hideInlineAdd(type);
-          showToast('"' + nombre + '" agregado correctamente');
-        } else {
-          showToast(data.error || 'Error al guardar', true);
-        }
-      } catch (err) {
-        showToast('Error de conexión', true);
-      }
-    }
-
-    document.getElementById('new-tipo-name').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); saveInline('tipos'); }
-      if (e.key === 'Escape') hideInlineAdd('tipos');
-    });
-    document.getElementById('new-componente-name').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); saveInline('componentes'); }
-      if (e.key === 'Escape') hideInlineAdd('componentes');
-    });
-
-    // ── Modal (Designer) ──
-    function openModal(type) {
-      document.getElementById('modal-' + type).classList.add('active');
-      setTimeout(() => document.getElementById('new-' + type + '-name').focus(), 100);
-    }
-
-    function closeModal(type) {
-      document.getElementById('modal-' + type).classList.remove('active');
-      document.getElementById('new-' + type + '-name').value = '';
-    }
-
-    async function saveDesigner() {
-      const input = document.getElementById('new-designer-name');
-      const nombre = input.value.trim().toUpperCase();
-      if (!nombre) return;
-      const btn = document.getElementById('btn-save-designer');
-      btn.disabled = true;
-      btn.textContent = 'Guardando...';
-      try {
-        const res = await fetch('/api/designers', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nombre }) });
-        const data = await res.json();
-        if (data.ok) {
-          const select = document.getElementById('designer_id');
-          const option = new Option(nombre, data.id, true, true);
-          const options = Array.from(select.options).slice(1);
-          let inserted = false;
-          for (const opt of options) {
-            if (opt.textContent.localeCompare(nombre) > 0) { select.insertBefore(option, opt); inserted = true; break; }
-          }
-          if (!inserted) select.appendChild(option);
-          closeModal('designer');
-          showToast('"' + nombre + '" agregado como diseñador');
-        } else {
-          showToast(data.error || 'Error al guardar', true);
-        }
-      } catch (err) {
-        showToast('Error de conexión', true);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Guardar';
-      }
-    }
-
-    document.getElementById('new-designer-name').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); saveDesigner(); }
-      if (e.key === 'Escape') closeModal('designer');
-    });
-
-    document.getElementById('modal-designer').addEventListener('click', (e) => {
-      if (e.target === e.currentTarget) closeModal('designer');
-    });
-
-    // ── Toast ──
     function showToast(text, isError) {
       const existing = document.querySelector('.toast');
       if (existing) existing.remove();
@@ -1048,12 +829,6 @@
       setTimeout(() => toast.remove(), 3000);
     }
 
-    // ── Form Submit ──
-    function getCheckedIds(name) {
-      return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked'))
-        .map(el => Number(el.value)).filter(n => Number.isFinite(n) && n > 0);
-    }
-
     function showMessage(text, type) {
       const msg = document.getElementById('message');
       msg.textContent = text;
@@ -1063,18 +838,16 @@
     function hideMessage() { document.getElementById('message').className = 'message'; }
 
     function resetForm() {
-      document.getElementById('perfume-form').reset();
+      document.getElementById('frasco-form').reset();
       selectedFile = null;
       fileInput.value = '';
       previewImage.src = '';
       filePreview.style.display = 'none';
       fileUploadContent.style.display = 'flex';
-      updateCount('tipos');
-      updateCount('componentes');
       hideMessage();
     }
 
-    document.getElementById('perfume-form').addEventListener('submit', async (e) => {
+    document.getElementById('frasco-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       hideMessage();
       const btnSubmit = document.getElementById('btn-submit');
@@ -1085,47 +858,47 @@
       if (selectedFile) {
         try {
           const formData = new FormData();
-          formData.append('imagen', selectedFile);
-          const uploadResponse = await fetch('/api/perfumes/upload-image', { method: 'POST', body: formData });
+          formData.append('image', selectedFile);
+          const uploadResponse = await fetch('/api/frascos/upload-image', { method: 'POST', body: formData });
           if (!uploadResponse.ok) throw new Error('Error al subir la imagen');
           const uploadData = await uploadResponse.json();
-          rutaImagen = uploadData.ruta || '';
+          if(uploadData.error) throw new Error(uploadData.error);
+          rutaImagen = uploadData.path || '';
         } catch (error) {
           showMessage('Error al subir la imagen: ' + error.message, 'error');
           btnSubmit.disabled = false;
-          btnSubmit.textContent = 'Guardar Perfume';
+          btnSubmit.textContent = 'Guardar Frasco';
           return;
         }
       }
 
       const payload = {
-        codigo: document.getElementById('codigo').value.trim(),
-        referencia: document.getElementById('referencia').value.trim(),
-        ruta_img: rutaImagen,
+        nombre: document.getElementById('nombre').value.trim(),
+        categoria: document.getElementById('categoria').value.trim(),
+        capacidad_ml: document.getElementById('capacidad_ml').value ? Number(document.getElementById('capacidad_ml').value) : null,
+        imagen: rutaImagen,
         descripcion: document.getElementById('descripcion').value.trim(),
-        genero_id: Number(document.getElementById('genero_id').value),
-        designer_id: Number(document.getElementById('designer_id').value),
-        tipos_ids: getCheckedIds('tipos_ids[]'),
-        componentes_ids: getCheckedIds('componentes_ids[]')
+        orden: document.getElementById('orden').value ? Number(document.getElementById('orden').value) : 0
       };
 
       try {
-        const response = await fetch('/api/perfumes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const response = await fetch('/api/frascos', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         const data = await response.json();
         if (data.ok) {
-          showMessage('Perfume guardado correctamente · ID: ' + data.id, 'success');
+          showMessage('Frasco guardado correctamente · ID: ' + data.id, 'success');
           setTimeout(() => window.location.href = '/perfumes', 1200);
         } else {
-          showMessage(data.error || 'Error al guardar el perfume', 'error');
+          showMessage(data.error || 'Error al guardar el frasco', 'error');
           btnSubmit.disabled = false;
-          btnSubmit.textContent = 'Guardar Perfume';
+          btnSubmit.textContent = 'Guardar Frasco';
         }
       } catch (error) {
         showMessage('Error de conexión. Intenta nuevamente.', 'error');
         btnSubmit.disabled = false;
-        btnSubmit.textContent = 'Guardar Perfume';
+        btnSubmit.textContent = 'Guardar Frasco';
       }
     });
   </script>
 </body>
 </html>
+

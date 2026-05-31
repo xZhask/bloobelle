@@ -153,6 +153,56 @@ class PerfumeRepository {
     }
   }
 
+  public function updatePerfume(int $id, array $data): void {
+    $codigo = trim((string)($data['codigo'] ?? ''));
+    $ref = trim((string)($data['referencia'] ?? ''));
+    $rutaImg = trim((string)($data['ruta_img'] ?? ''));
+    $descripcion = trim((string)($data['descripcion'] ?? ''));
+    $generoId = (int)($data['genero_id'] ?? 0);
+    $designerId = (int)($data['designer_id'] ?? 0);
+    $tipos = $data['tipos_ids'] ?? [];
+    $comps = $data['componentes_ids'] ?? [];
+
+    if ($id <= 0 || $codigo === '' || $ref === '' || $generoId <= 0 || $designerId <= 0) {
+      throw new \Exception("Campos obligatorios: codigo, referencia, genero_id, designer_id.");
+    }
+
+    $this->db->beginTransaction();
+    try {
+      if ($rutaImg !== '') {
+          $stmt = $this->db->prepare("UPDATE perfumes SET codigo=?, referencia=?, ruta_img=?, descripcion=?, genero_id=?, designer_id=? WHERE id=?");
+          $stmt->execute([$codigo, $ref, $rutaImg, $descripcion ?: null, $generoId, $designerId, $id]);
+      } else {
+          $stmt = $this->db->prepare("UPDATE perfumes SET codigo=?, referencia=?, descripcion=?, genero_id=?, designer_id=? WHERE id=?");
+          $stmt->execute([$codigo, $ref, $descripcion ?: null, $generoId, $designerId, $id]);
+      }
+
+      $this->db->prepare("DELETE FROM perfume_tipos_aroma WHERE perfume_id=?")->execute([$id]);
+      $this->db->prepare("DELETE FROM perfume_componentes WHERE perfume_id=?")->execute([$id]);
+
+      if (is_array($tipos) && count($tipos)) {
+        $stmtT = $this->db->prepare("INSERT IGNORE INTO perfume_tipos_aroma(perfume_id, tipo_aroma_id) VALUES(?, ?)");
+        foreach ($tipos as $tid) {
+          $tid = (int)$tid;
+          if ($tid > 0) $stmtT->execute([$id, $tid]);
+        }
+      }
+
+      if (is_array($comps) && count($comps)) {
+        $stmtC = $this->db->prepare("INSERT IGNORE INTO perfume_componentes(perfume_id, componente_id) VALUES(?, ?)");
+        foreach ($comps as $cid) {
+          $cid = (int)$cid;
+          if ($cid > 0) $stmtC->execute([$id, $cid]);
+        }
+      }
+
+      $this->db->commit();
+    } catch (\Throwable $e) {
+      $this->db->rollBack();
+      throw $e;
+    }
+  }
+
   public function crearDesigner(array $data): int {
     $nombre = trim(strtoupper((string)($data['nombre'] ?? '')));
     if ($nombre === '') {
@@ -203,5 +253,38 @@ class PerfumeRepository {
     $stmt = $this->db->prepare("INSERT INTO tipos_aroma(nombre, categoria) VALUES(?, 'perfil')");
     $stmt->execute([$nombre]);
     return (int)$this->db->lastInsertId();
+  }
+
+  public function detalle(int $id): ?array {
+      $stmt = $this->db->prepare("
+          SELECT p.id, p.codigo, p.referencia, p.ruta_img, p.descripcion,
+                 p.genero_id, p.designer_id,
+                 g.nombre AS genero, d.nombre AS marca
+          FROM perfumes p
+          JOIN designers d ON d.id = p.designer_id
+          JOIN generos  g ON g.id = p.genero_id
+          WHERE p.id = :id
+      ");
+      $stmt->execute(['id' => $id]);
+      $perfume = $stmt->fetch();
+      if (!$perfume) return null;
+
+      $c = $this->db->prepare("
+          SELECT c.nombre, c.id FROM perfume_componentes pc
+          JOIN componentes c ON c.id = pc.componente_id
+          WHERE pc.perfume_id = :id ORDER BY c.nombre
+      ");
+      $c->execute(['id' => $id]);
+      $perfume['componentes'] = $c->fetchAll(\PDO::FETCH_ASSOC);
+
+      $t = $this->db->prepare("
+          SELECT ta.nombre, ta.id FROM perfume_tipos_aroma pta
+          JOIN tipos_aroma ta ON ta.id = pta.tipo_aroma_id
+          WHERE pta.perfume_id = :id ORDER BY ta.nombre
+      ");
+      $t->execute(['id' => $id]);
+      $perfume['tipos_aroma'] = $t->fetchAll(\PDO::FETCH_ASSOC);
+
+      return $perfume;
   }
 }

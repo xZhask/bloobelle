@@ -1,0 +1,504 @@
+<?php
+use App\Core\Auth;
+$user = Auth::user();
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BlooBelle Â· Gestión de frascos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/theme.css">
+  <script>
+  (function(){try{
+    var t=localStorage.getItem('bb-theme');
+    if(!t){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
+    document.documentElement.setAttribute('data-theme',t);
+  }catch(e){}})();
+  </script>
+  <style>
+    :root{
+      --fd:'Playfair Display',serif;--fb:'Jost',sans-serif;
+    }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--fb);background:var(--color-bg);color:var(--color-text-primary);-webkit-font-smoothing:antialiased}
+  .header{background:var(--color-surface);backdrop-filter:blur(10px);border-bottom:1px solid var(--color-border);padding:0 2rem;position:sticky;top:0;z-index:50}
+  .hc{max-width:1240px;margin:0 auto;height:70px;display:flex;align-items:center;gap:1rem}
+  .logo{font-family:var(--fd);font-size:1.55rem; text-decoration:none; color:var(--color-text-primary);}
+  .crumb{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--color-text-secondary);border-left:1px solid var(--color-border);padding-left:.8rem}
+  .crumb b{color:var(--color-accent);font-weight:500}
+  .nav{display:flex;gap:1.4rem;margin-left:auto}
+  .nav a{text-decoration:none;color:var(--color-text-secondary);font-size:.92rem;font-weight:500;padding:.4rem 0;border-bottom:2px solid transparent}
+  .nav a.active{color:var(--color-text-primary);border-bottom-color:var(--color-accent)}
+  .nav a:hover{color:var(--color-text-primary)}
+  .btn-new{background:var(--color-accent);color:var(--color-on-accent);border:none;border-radius:999px;padding:.6rem 1.1rem;font-family:var(--fb);font-size:.88rem;font-weight:500;cursor:pointer;white-space:nowrap; text-decoration:none; display:inline-block;}
+  .btn-new:hover{background:var(--color-accent-hover)}
+
+  .wrap{max-width:1240px;margin:0 auto;padding:2rem}
+  .h1{font-family:var(--fd);font-size:1.9rem;font-weight:500;margin-bottom:.2rem}
+  .h1sub{color:var(--color-text-secondary);font-size:.9rem;margin-bottom:1.4rem}
+
+  /* Toolbar */
+  .toolbar{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:1.1rem}
+  .search{position:relative;flex:1;min-width:240px;max-width:380px}
+  .search input{width:100%;padding:.7rem .9rem .7rem 2.3rem;border:1px solid var(--color-border);border-radius:12px;font-family:var(--fb);font-size:.95rem;background:var(--color-surface)}
+  .search input:focus{outline:none;border-color:var(--color-accent)}
+  .search svg{position:absolute;left:.8rem;top:50%;transform:translateY(-50%);opacity:.5}
+  .segs{display:flex;gap:.35rem;background:var(--color-soft);padding:.25rem;border-radius:999px}
+  .segs button{border:none;background:transparent;font-family:var(--fb);font-size:.82rem;padding:.4rem .85rem;border-radius:999px;color:var(--color-text-secondary);cursor:pointer}
+  .segs button.on{background:var(--color-surface);color:var(--color-text-primary);box-shadow:0 1px 3px rgba(0,0,0,.08);font-weight:500}
+  .count{margin-left:auto;font-size:.82rem;color:var(--color-text-secondary)}
+
+  .card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:16px;box-shadow:var(--shadow-sm);overflow:hidden}
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-secondary);font-weight:500;padding:.9rem 1rem;border-bottom:1px solid var(--color-border);background:#fcfbf9}
+  td{padding:.75rem 1rem;border-bottom:1px solid var(--color-soft);font-size:.92rem;vertical-align:middle}
+  tbody tr:hover{background:#fcfaf7}
+  tbody tr:last-child td{border-bottom:none}
+  .num{text-align:right;font-variant-numeric:tabular-nums}
+  .center{text-align:center}
+
+  .grouprow td{background:#f7f3ed;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-secondary);font-weight:600;padding:.5rem 1rem}
+
+  .thumb{width:46px;height:46px;border-radius:10px;background:var(--color-soft);display:flex;align-items:center;justify-content:center}
+  .thumb.dis{background:#fbf0ef}
+  .thumb svg{height:34px}
+  .name{font-weight:500;color:var(--color-text-primary)}
+  .chip{display:inline-block;font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;padding:.12rem .5rem;border-radius:999px;margin-top:.25rem}
+  .chip.gen{background:var(--color-soft);color:var(--color-text-secondary)}
+  .chip.dis{background:#fbf0ef;color:#b06a5e;border:1px solid #f0dcd8}
+  .desc{color:var(--color-text-secondary);font-size:.86rem;max-width:280px}
+  .ord{display:inline-flex;align-items:center;gap:.4rem;color:var(--color-text-secondary)}
+  .drag{cursor:grab;opacity:.4;font-size:.9rem}
+
+  /* Toggle (estado) */
+  .estado{display:inline-flex;align-items:center;gap:.55rem}
+  .switch{position:relative;width:42px;height:24px;border-radius:999px;background:var(--color-border-strong);cursor:pointer;transition:.2s;flex:none}
+  .switch::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--color-surface);transition:.2s;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+  .switch.on{background:var(--color-success)}
+  .switch.on::after{left:21px}
+  .estado .lbl{font-size:.78rem;color:var(--color-success);font-weight:500;min-width:54px}
+  .estado .lbl.off{color:var(--color-text-secondary)}
+
+  .iconbtn{border:1px solid var(--color-border);background:var(--color-surface);border-radius:10px;padding:.45rem .55rem;cursor:pointer;color:var(--color-text-primary);display:inline-flex;align-items:center;gap:.35rem;font-family:var(--fb);font-size:.82rem}
+  .iconbtn:hover{border-color:var(--color-accent);color:var(--color-accent)}
+
+  tr.inactive{opacity:.5}
+  tr.inactive .name{text-decoration:none}
+
+  @media(max-width:820px){
+    .nav{display:none}.desc{display:none}
+  }
+
+  /* MODAL (Added for Edit) */
+  .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);
+      display: none; align-items: center; justify-content: center; z-index: 1000;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+      background: var(--color-surface); padding: 2rem; border-radius: 16px;
+      width: 100%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      max-height: 90vh; overflow-y: auto;
+  }
+  .modal h3 { font-family: var(--fd); font-size: 1.5rem; margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-label { display: block; font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 1px; }
+  .form-input { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--color-border); border-radius: 8px; font-family: var(--fb); font-size: 1rem; background: var(--color-surface); transition: border-color 0.2s; }
+  .form-input:focus { outline: none; border-color: var(--color-accent); }
+  .file-upload-area { border: 1px dashed var(--color-border); border-radius: 8px; padding: 1.5rem; text-align: center; position: relative; cursor: pointer; transition: all 0.2s; background: #fafafa; }
+  .file-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+  .modal-actions button {
+      padding: 0.6rem 1.25rem; font-family: var(--fb); font-size: 0.95rem;
+      font-weight: 500; border-radius: 999px; cursor: pointer; border: none;
+  }
+  .btn-cancel { background: transparent; color: var(--color-text-secondary); }
+  .btn-cancel:hover { color: var(--color-text-primary); }
+  .btn-save { background: var(--color-accent); color: white; }
+  .btn-save:hover { background: var(--color-accent-hover); }
+</style>
+</head>
+<body>
+  <header class="header">
+    <div class="hc">
+      <a href="/perfumes" class="logo">BlooBelle</a>
+      <span class="crumb">Catálogo â€º <b>Frascos</b></span>
+      <nav class="nav">
+        <a href="/tienda/reporte">Dashboard</a>
+        <a href="/tienda/stock">Stock</a>
+        <a href="/tienda?pos=1">Punto de Venta</a>
+      </nav>
+      <a href="/perfumes" class="btn-new" style="background:var(--color-surface); color:var(--color-accent); border:1px solid var(--color-accent); margin-right:0.5rem; text-decoration:none;">Catálogo de Perfumes</a>
+      <button class="btn-new" onclick="openCreateModal()">+ Nuevo frasco</button>
+      <button class="theme-toggle" id="theme-toggle-desktop" aria-label="Cambiar tema" title="Cambiar tema" style="background:transparent;border:1px solid var(--color-border);border-radius:50%;width:32px;height:32px;cursor:pointer;color:var(--color-text-primary);display:grid;place-items:center;margin-left:0.5rem">
+        <span id="theme-icon-desktop">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <h1 class="h1">Frascos</h1>
+    <p class="h1sub">Datos del frasco (imagen, nombre, estado) aplican a todas las sucursales.</p>
+
+    <div class="toolbar">
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="searchInput" placeholder="Buscar por nombre o descripciónâ€¦" onkeyup="filterTable()">
+      </div>
+      <div class="segs" id="catFilter">
+        <button class="on" onclick="filterCat('todas')">Todas</button>
+        <button onclick="filterCat('generico')">Genéricos</button>
+        <button onclick="filterCat('diseno')">Diseño</button>
+      </div>
+      <div class="segs" id="stateFilter">
+        <button class="on" onclick="filterState('todos')">Todos</button>
+        <button onclick="filterState('activos')">Activos</button>
+        <button onclick="filterState('inactivos')">Inactivos</button>
+      </div>
+      <span class="count"><?= count($frascos) ?> frascos Â· <?= count(array_filter($frascos, fn($f) => $f['activo'])) ?> activos</span>
+    </div>
+
+    <div class="card">
+      <table id="frascosTable">
+        <thead>
+          <tr>
+            <th style="width:64px">Img</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th class="num" style="width:90px">Capacidad</th>
+            <th class="center" style="width:90px">Orden</th>
+            <th style="width:150px">Estado</th>
+            <th style="width:90px"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php 
+          $currentCat = ''; 
+          foreach($frascos as $f): 
+            if($f['categoria'] !== $currentCat): 
+                $currentCat = $f['categoria'];
+          ?>
+            <tr class="grouprow" data-cat="group"><td colspan="7"><?= $currentCat === 'generico' ? 'Genéricos' : 'Diseño' ?></td></tr>
+          <?php endif; ?>
+
+          <?php
+            $icon = '<svg viewBox="0 0 40 56"><rect x="16" y="2" width="8" height="7" rx="2" fill="#b88e5d"/><rect x="14" y="9" width="12" height="5" fill="#cdab82"/><rect x="9" y="14" width="22" height="40" rx="6" fill="#e7d6bd" stroke="#b88e5d" stroke-width="1.2"/></svg>';
+            $lower = strtolower($f['nombre']);
+            if (str_contains($lower, 'coraz')) {
+                $icon = '<svg viewBox="0 0 40 56"><rect x="17" y="2" width="6" height="6" rx="2" fill="#b88e5d"/><path d="M20 52C6 40 8 22 20 26C32 22 34 40 20 52Z" fill="#f0c9c0" stroke="#b88e5d" stroke-width="1.2"/></svg>';
+            } elseif (str_contains($lower, 'paris') || str_contains($lower, 'parís')) {
+                $icon = '<svg viewBox="0 0 40 56"><rect x="17" y="2" width="6" height="6" rx="2" fill="#b88e5d"/><path d="M20 10 L27 30 L30 54 L10 54 L13 30 Z" fill="#e7d6bd" stroke="#b88e5d" stroke-width="1.2"/></svg>';
+            } elseif (str_contains($lower, 'camara') || str_contains($lower, 'cámara')) {
+                $icon = '<svg viewBox="0 0 40 56"><rect x="16" y="4" width="8" height="6" rx="2" fill="#b88e5d"/><rect x="8" y="12" width="24" height="40" rx="6" fill="#e7d6bd" stroke="#b88e5d" stroke-width="1.2"/><circle cx="20" cy="32" r="8" fill="#fff" stroke="#b88e5d" stroke-width="1.2"/></svg>';
+            }
+          ?>
+          <tr class="itemrow <?= $f['activo'] ? '' : 'inactive' ?>" data-cat="<?= htmlspecialchars($f['categoria']) ?>" data-state="<?= $f['activo'] ? '1' : '0' ?>" data-name="<?= htmlspecialchars(strtolower($f['nombre'])) ?>" data-desc="<?= htmlspecialchars(strtolower($f['descripcion'] ?? '')) ?>">
+            <td>
+              <div class="thumb <?= $f['categoria'] === 'diseno' ? 'dis' : '' ?>">
+                <?php if(!empty($f['imagen'])): ?>
+                  <img src="<?= htmlspecialchars($f['imagen']) ?>" style="width:100%; height:100%; object-fit:cover; border-radius:10px;" alt="">
+                <?php else: ?>
+                  <?= $icon ?>
+                <?php endif; ?>
+              </div>
+            </td>
+            <td>
+                <div class="name"><?= htmlspecialchars($f['nombre']) ?></div>
+                <span class="chip <?= $f['categoria'] === 'diseno' ? 'dis' : 'gen' ?>"><?= $f['categoria'] === 'generico' ? 'Genérico' : 'Diseño' ?></span>
+            </td>
+            <td class="desc"><?= htmlspecialchars($f['descripcion'] ?? '-') ?></td>
+            <td class="num"><?= $f['capacidad_ml'] ? $f['capacidad_ml'].' ml' : '-' ?></td>
+            <td class="center"><span class="ord"><span class="drag">â‹®â‹®</span><?= $f['orden'] ?></span></td>
+            <td>
+              <div class="estado">
+                <div class="switch <?= $f['activo'] ? 'on' : '' ?>" onclick="togAPI(this, <?= $f['id'] ?>)"></div>
+                <span class="lbl <?= $f['activo'] ? '' : 'off' ?>"><?= $f['activo'] ? 'Activo' : 'Inactivo' ?></span>
+              </div>
+            </td>
+            <td><button class="iconbtn" onclick="openEditModal(<?= htmlspecialchars(json_encode($f)) ?>)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path opacity="0.4" d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13"/>
+                <path d="M16.0399 3.01976L8.15988 10.8998C7.85988 11.1998 7.55988 11.7898 7.49988 12.2198L7.06988 15.2298C6.90988 16.3198 7.67988 17.0798 8.76988 16.9298L11.7799 16.4998C12.1999 16.4398 12.7899 16.1398 13.0999 15.8398L20.9799 7.95976C22.3399 6.59976 22.9799 5.01976 20.9799 3.01976C18.9799 1.01976 17.3999 1.65976 16.0399 3.01976Z"/>
+                <path opacity="0.4" d="M14.9102 4.1499C15.5802 6.5399 17.4502 8.4099 19.8502 9.0899"/>
+              </svg>
+              Editar
+            </button></td>
+          </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal Edit / Create -->
+  <div class="modal-overlay" id="modalEdit">
+    <div class="modal">
+      <h3 id="modalTitle">Editar Frasco</h3>
+      <form id="editForm">
+        <input type="hidden" id="e_id">
+        
+        <div class="form-group">
+          <label class="form-label">Nombre</label>
+          <input type="text" id="e_nombre" class="form-input" required>
+        </div>
+        
+        <div style="display:flex; gap:1rem;">
+            <div class="form-group" style="flex:1">
+            <label class="form-label">Categoría</label>
+            <select id="e_categoria" class="form-input" required>
+                <option value="generico">Genérico</option>
+                <option value="diseno">Diseño</option>
+            </select>
+            </div>
+            <div class="form-group" style="flex:1">
+            <label class="form-label">Capacidad (ml)</label>
+            <input type="number" id="e_capacidad" class="form-input">
+            </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Imagen (opcional)</label>
+          <div class="file-upload-area" id="file-upload-area" style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+            <input type="file" id="e_file" class="file-input" accept="image/jpeg,image/png,image/webp">
+            <img id="e_img_preview" src="" alt="Vista previa" style="display:none; max-width:80px; max-height:80px; border-radius:8px; object-fit:cover; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+            <span style="font-size:0.85rem; color:var(--color-text-secondary);" id="file-name">Click o arrastrar para subir imagen</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Descripción</label>
+          <input type="text" id="e_descripcion" class="form-input">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Orden</label>
+          <input type="number" id="e_orden" class="form-input" value="0">
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="document.getElementById('modalEdit').classList.remove('open')">Cancelar</button>
+          <button type="submit" class="btn-save" id="btnSave">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<script>
+  let currentCatFilter = 'todas';
+  let currentStateFilter = 'todos';
+
+  function filterCat(cat) {
+      currentCatFilter = cat;
+      const btns = document.querySelectorAll('#catFilter button');
+      btns.forEach(b => b.classList.remove('on'));
+      event.target.classList.add('on');
+      applyFilters();
+  }
+
+  function filterState(state) {
+      currentStateFilter = state;
+      const btns = document.querySelectorAll('#stateFilter button');
+      btns.forEach(b => b.classList.remove('on'));
+      event.target.classList.add('on');
+      applyFilters();
+  }
+
+  function filterTable() {
+      applyFilters();
+  }
+
+  function applyFilters() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const rows = document.querySelectorAll('.itemrow');
+      rows.forEach(r => {
+          const cat = r.getAttribute('data-cat');
+          const state = r.getAttribute('data-state');
+          const name = r.getAttribute('data-name');
+          const desc = r.getAttribute('data-desc');
+
+          let show = true;
+          if (currentCatFilter !== 'todas' && cat !== currentCatFilter) show = false;
+          if (currentStateFilter === 'activos' && state !== '1') show = false;
+          if (currentStateFilter === 'inactivos' && state !== '0') show = false;
+          if (q && !name.includes(q) && !desc.includes(q)) show = false;
+
+          r.style.display = show ? '' : 'none';
+      });
+  }
+
+  async function togAPI(sw, id) {
+      const on = sw.classList.contains('on');
+      const nuevoEstado = !on; // toggle
+      if(!confirm('Â¿Deseas ' + (nuevoEstado ? 'activar' : 'desactivar') + ' este frasco?')) return;
+      
+      try {
+          const res = await fetch('/api/frascos/estado', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: id, activo: nuevoEstado })
+          });
+          const data = await res.json();
+          if(data.ok) {
+              sw.classList.toggle('on', nuevoEstado);
+              const lbl = sw.parentElement.querySelector('.lbl');
+              lbl.textContent = nuevoEstado ? 'Activo' : 'Inactivo';
+              lbl.classList.toggle('off', !nuevoEstado);
+              sw.closest('tr').classList.toggle('inactive', !nuevoEstado);
+              sw.closest('tr').setAttribute('data-state', nuevoEstado ? '1' : '0');
+              applyFilters();
+          } else {
+              alert(data.error);
+          }
+      } catch(e) {
+          alert('Error de conexión');
+      }
+  }
+
+  document.getElementById('e_file').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('e_img_preview');
+      const nameLabel = document.getElementById('file-name');
+      
+      if (file) {
+          nameLabel.innerText = file.name;
+          preview.src = URL.createObjectURL(file);
+          preview.style.display = 'block';
+      } else {
+          nameLabel.innerText = 'Click o arrastrar para subir imagen';
+          preview.src = '';
+          preview.style.display = 'none';
+      }
+  });
+
+  function openCreateModal() {
+      let maxOrden = 0;
+      document.querySelectorAll('.ord').forEach(el => {
+          const val = parseInt(el.textContent.replace(/[^0-9]/g, ''), 10);
+          if (!isNaN(val) && val > maxOrden) {
+              maxOrden = val;
+          }
+      });
+      const nextOrden = maxOrden + 1;
+
+      document.getElementById('modalTitle').innerText = 'Nuevo Frasco';
+      document.getElementById('e_id').value = '';
+      document.getElementById('e_nombre').value = '';
+      document.getElementById('e_categoria').value = 'generico';
+      document.getElementById('e_capacidad').value = '';
+      document.getElementById('e_descripcion').value = '';
+      document.getElementById('e_orden').value = nextOrden;
+      document.getElementById('e_file').value = '';
+      document.getElementById('file-name').innerText = 'Click o arrastrar para subir imagen';
+      document.getElementById('e_img_preview').src = '';
+      document.getElementById('e_img_preview').style.display = 'none';
+      document.getElementById('modalEdit').classList.add('open');
+  }
+
+  function openEditModal(f) {
+      document.getElementById('modalTitle').innerText = 'Editar Frasco';
+      document.getElementById('e_id').value = f.id;
+      document.getElementById('e_nombre').value = f.nombre;
+      document.getElementById('e_categoria').value = f.categoria;
+      document.getElementById('e_capacidad').value = f.capacidad_ml || '';
+      document.getElementById('e_descripcion').value = f.descripcion || '';
+      document.getElementById('e_orden').value = f.orden || 0;
+      document.getElementById('e_file').value = '';
+      document.getElementById('file-name').innerText = 'Click o arrastrar para subir nueva imagen';
+      
+      const preview = document.getElementById('e_img_preview');
+      if (f.imagen) {
+          preview.src = f.imagen;
+          preview.style.display = 'block';
+      } else {
+          preview.src = '';
+          preview.style.display = 'none';
+      }
+      
+      document.getElementById('modalEdit').classList.add('open');
+  }
+
+  document.getElementById('editForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSave');
+      btn.disabled = true;
+      btn.innerText = 'Guardando...';
+
+      let rutaImagen = null;
+      const fileInput = document.getElementById('e_file');
+      
+      if (fileInput.files.length > 0) {
+          const fd = new FormData();
+          fd.append('image', fileInput.files[0]);
+          try {
+              const uploadRes = await fetch('/api/frascos/upload-image', { method: 'POST', body: fd });
+              const uploadData = await uploadRes.json();
+              if(!uploadData.ok) throw new Error(uploadData.error);
+              rutaImagen = uploadData.path;
+          } catch(err) {
+              alert('Error subiendo imagen: ' + err.message);
+              btn.disabled = false;
+              btn.innerText = 'Guardar';
+              return;
+          }
+      }
+
+      const id = document.getElementById('e_id').value;
+      const isCreate = !id;
+
+      const payload = {
+          nombre: document.getElementById('e_nombre').value.trim(),
+          categoria: document.getElementById('e_categoria').value.trim(),
+          capacidad_ml: document.getElementById('e_capacidad').value || null,
+          descripcion: document.getElementById('e_descripcion').value.trim(),
+          orden: document.getElementById('e_orden').value || 0
+      };
+      if (rutaImagen) payload.imagen = rutaImagen;
+      if (!isCreate) payload.id = id;
+
+      try {
+          const endpoint = isCreate ? '/api/frascos' : '/api/frascos/update';
+          const res = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if(data.ok) window.location.reload();
+          else {
+              alert(data.error);
+              btn.disabled = false;
+              btn.innerText = 'Guardar';
+          }
+      } catch(err) {
+          alert('Error de conexión');
+          btn.disabled = false;
+          btn.innerText = 'Guardar';
+      }
+  });
+</script>
+</script>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  function paint(t){ 
+    var id = document.getElementById('theme-icon-desktop'); if(id) id.textContent = (t==='dark'?'☀️':'🌙'); 
+  }
+  paint(root.getAttribute('data-theme'));
+  function toggleTheme() {
+    var n = root.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', n);
+    try{ localStorage.setItem('bb-theme', n); }catch(e){}
+    paint(n);
+  }
+  var bd = document.getElementById('theme-toggle-desktop'); if(bd) bd.addEventListener('click', toggleTheme);
+})();
+</script>
+
+</body>
+</html>
+

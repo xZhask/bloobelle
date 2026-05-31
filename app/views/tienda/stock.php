@@ -13,7 +13,6 @@ ob_start();
     <?php if($isAdmin): ?>
     <div style="margin-bottom:1rem; display:flex; gap:0.5rem">
         <button class="cbtn acc" onclick="openEntradaModal()">+ Registrar entrada</button>
-        <button class="cbtn" onclick="promptPrecio()">Fijar precio</button>
     </div>
     <?php endif; ?>
 
@@ -35,23 +34,42 @@ async function loadStockList() {
     const frascos = await res.json();
     allFrascos = frascos;
     
-    document.getElementById('stocklist').innerHTML = frascos.map(f => {
-        let icon = SVG.botella;
-        let lower = f.nombre.toLowerCase();
-        if(lower.includes('coraz')) icon = SVG.corazon;
-        else if(lower.includes('paris') || lower.includes('parís')) icon = SVG.paris;
-        else if(lower.includes('camara') || lower.includes('cámara')) icon = SVG.camara;
+    document.getElementById('stocklist').innerHTML = frascos.filter(f => f.controla_stock != 0).map(f => {
+        let thumbHTML = '';
+        if (f.imagen) {
+            let src = f.imagen.startsWith('/') ? f.imagen : '/' + f.imagen;
+            thumbHTML = `<img src="${src}" alt="${f.nombre}" style="height:100%; max-height:40px; object-fit:contain;">`;
+        } else {
+            let icon = SVG.botella;
+            let lower = f.nombre.toLowerCase();
+            if(lower.includes('coraz')) icon = SVG.corazon;
+            else if(lower.includes('paris') || lower.includes('parís')) icon = SVG.paris;
+            else if(lower.includes('camara') || lower.includes('cámara')) icon = SVG.camara;
+            thumbHTML = icon;
+        }
 
         let badge = f.bajo ? '<span class="badge low">Bajo</span>' : '<span class="badge ok">OK</span>';
         let desc = f.descripcion || '';
         let catBadge = f.categoria === 'diseno' ? '<span class="tipo">diseño</span>' : '';
 
+        let actionBtn = '';
+        let editGlobalLink = '';
+        <?php if($isAdmin): ?>
+        editGlobalLink = `<a href="/catalogo/frascos" onclick="alert('Los cambios de imagen, nombre y estado aplican a todas las sucursales.')" style="color:var(--text); text-decoration:none; margin-left:0.5rem; display:inline-flex; align-items:center;" title="Editar Frasco Global">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.6; transition:color 0.2s;" onmouseover="this.style.color='var(--accent)'; this.style.opacity='1'" onmouseout="this.style.color='currentColor'; this.style.opacity='0.6'">
+                <path opacity="0.4" d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13"/>
+                <path d="M16.0399 3.01976L8.15988 10.8998C7.85988 11.1998 7.55988 11.7898 7.49988 12.2198L7.06988 15.2298C6.90988 16.3198 7.67988 17.0798 8.76988 16.9298L11.7799 16.4998C12.1999 16.4398 12.7899 16.1398 13.0999 15.8398L20.9799 7.95976C22.3399 6.59976 22.9799 5.01976 20.9799 3.01976C18.9799 1.01976 17.3999 1.65976 16.0399 3.01976Z"/>
+                <path opacity="0.4" d="M14.9102 4.1499C15.5802 6.5399 17.4502 8.4099 19.8502 9.0899"/>
+            </svg>
+        </a>`;
+        <?php endif; ?>
+
         return `
         <div class="srow">
-            <span class="mini">${icon}</span>
+            <span class="mini">${thumbHTML}</span>
             <span class="sinfo">
-                <div class="ml">${f.nombre} ${catBadge}</div>
-                <div class="sd">${desc} · S/ ${f.precio ? parseFloat(f.precio).toFixed(2) : '0.00'}</div>
+                <div class="ml">${f.nombre} ${catBadge} ${editGlobalLink}</div>
+                <div class="sd">${desc}</div>
             </span>
             <span class="q">${f.cantidad}${badge}</span>
         </div>`;
@@ -61,7 +79,7 @@ async function loadStockList() {
 <?php if($isAdmin): ?>
 function openEntradaModal() {
     const sel = document.getElementById('mdlFrasco');
-    sel.innerHTML = allFrascos.map(f => `<option value="${f.id}">${f.nombre} (S/ ${f.precio ? parseFloat(f.precio).toFixed(2) : '0.00'})</option>`).join('');
+    sel.innerHTML = allFrascos.filter(f => f.controla_stock != 0).map(f => `<option value="${f.id}">${f.nombre}</option>`).join('');
     document.getElementById('mdlCant').value = 1;
     document.getElementById('modalEntrada').classList.add('open');
 }
@@ -94,28 +112,6 @@ async function submitEntrada() {
         alert(data.error);
     }
 }
-
-async function promptPrecio() {
-    let frasco_id = prompt("ID del Frasco:");
-    if(!frasco_id) return;
-    let precio = prompt("Nuevo Precio (ej: 45.00):");
-    if(!precio) return;
-
-    const res = await fetch('/api/precios', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            sucursal_id: getSucursalId(),
-            frasco_id: parseInt(frasco_id),
-            precio: parseFloat(precio)
-        })
-    });
-    const data = await res.json();
-    if(data.ok) {
-        loadStockList();
-        if(typeof loadDesktopStock === 'function') loadDesktopStock();
-    } else alert(data.error);
-}
 <?php endif; ?>
 
 loadStockList();
@@ -131,12 +127,15 @@ if ($isAdmin) {
     <p class="csub">Revisión general de existencias</p>
 
     <div class="card">
-        <div class="chead"><h2>Stock de frascos</h2><button class="cbtn acc" onclick="openEntradaModal()">+ Registrar entrada</button></div>
+        <div class="chead">
+            <h2>Stock de frascos</h2>
+            <button class="cbtn acc" onclick="openEntradaModal()">+ Registrar entrada</button>
+        </div>
         <div class="cbody">
           <table id="desktopStockTable">
-            <thead><tr><th>Frasco</th><th>Precio</th><th style="text-align:right">Quedan</th><th>Estado</th></tr></thead>
+            <thead><tr><th>Frasco</th><th style="text-align:right">Quedan</th><th>Estado</th></tr></thead>
             <tbody>
-              <tr><td colspan="4" style="text-align:center">Cargando...</td></tr>
+              <tr><td colspan="3" style="text-align:center">Cargando...</td></tr>
             </tbody>
           </table>
         </div>
@@ -149,13 +148,36 @@ if ($isAdmin) {
             body: JSON.stringify({sucursal_id: getSucursalId()})
         });
         const frascos = await res.json();
-        document.querySelector('#desktopStockTable tbody').innerHTML = frascos.map(f => {
+        document.querySelector('#desktopStockTable tbody').innerHTML = frascos.filter(f => f.controla_stock != 0).map(f => {
+            let thumbHTML = '';
+            if (f.imagen) {
+                let src = f.imagen.startsWith('/') ? f.imagen : '/' + f.imagen;
+                thumbHTML = `<img src="${src}" alt="${f.nombre}" style="height:24px; object-fit:contain;">`;
+            } else {
+                let icon = SVG.botella;
+                let lower = f.nombre.toLowerCase();
+                if(lower.includes('coraz')) icon = SVG.corazon;
+                else if(lower.includes('paris') || lower.includes('parís')) icon = SVG.paris;
+                else if(lower.includes('camara') || lower.includes('cámara')) icon = SVG.camara;
+                thumbHTML = icon;
+            }
+
             let badge = f.bajo ? '<span class="badge low">Bajo</span>' : '<span class="badge ok">OK</span>';
             let catBadge = f.categoria === 'diseno' ? '<span class="tipo">diseño</span>' : '';
+            let editGlobalLink = `<a href="/catalogo/frascos" onclick="alert('Los cambios de imagen, nombre y estado aplican a todas las sucursales.')" style="color:var(--text); text-decoration:none; margin-left:0.5rem; display:inline-flex; align-items:center;" title="Editar Frasco Global">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.6; transition:color 0.2s;" onmouseover="this.style.color='var(--accent)'; this.style.opacity='1'" onmouseout="this.style.color='currentColor'; this.style.opacity='0.6'">
+                    <path opacity="0.4" d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13"/>
+                    <path d="M16.0399 3.01976L8.15988 10.8998C7.85988 11.1998 7.55988 11.7898 7.49988 12.2198L7.06988 15.2298C6.90988 16.3198 7.67988 17.0798 8.76988 16.9298L11.7799 16.4998C12.1999 16.4398 12.7899 16.1398 13.0999 15.8398L20.9799 7.95976C22.3399 6.59976 22.9799 5.01976 20.9799 3.01976C18.9799 1.01976 17.3999 1.65976 16.0399 3.01976Z"/>
+                    <path opacity="0.4" d="M14.9102 4.1499C15.5802 6.5399 17.4502 8.4099 19.8502 9.0899"/>
+                </svg>
+            </a>`;
+            
             return `
             <tr>
-                <td>${f.nombre} ${catBadge}</td>
-                <td class="price">S/ ${f.precio ? parseFloat(f.precio).toFixed(2) : '0.00'}</td>
+                <td style="display: flex; align-items: center; gap: 0.8rem;">
+                    <span style="display:inline-block; width:24px; height:24px;">${thumbHTML}</span>
+                    <span>${f.nombre} ${catBadge} ${editGlobalLink}</span>
+                </td>
                 <td class="num">${f.cantidad}</td>
                 <td>${badge}</td>
             </tr>`;
@@ -164,6 +186,13 @@ if ($isAdmin) {
     loadDesktopStock();
     </script>
     
+    <?php
+    $desktopContent = ob_get_clean();
+}
+
+if ($isAdmin) {
+    ob_start();
+    ?>
     <!-- Modal para Admin Desktop -->
     <div class="modal-overlay" id="modalEntrada">
       <div class="modal">
@@ -186,9 +215,8 @@ if ($isAdmin) {
         </div>
       </div>
     </div>
-    
     <?php
-    $desktopContent = ob_get_clean();
+    $modals = ob_get_clean();
 }
 
 require APP_ROOT . '/app/views/tienda/layout.php';

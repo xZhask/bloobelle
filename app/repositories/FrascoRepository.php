@@ -27,16 +27,48 @@ class FrascoRepository {
         return (int)$this->pdo->lastInsertId();
     }
 
-    public function fijarPrecio(int $sucursal_id, int $frasco_id, float $precio): void {
+    public function all(): array {
+        return $this->pdo->query("
+            SELECT id, nombre, categoria, capacidad_ml, imagen, descripcion, orden, activo, controla_stock
+            FROM frascos
+            ORDER BY (categoria='diseno') ASC, orden ASC, nombre ASC
+        ")->fetchAll();
+    }
+
+    public function find(int $id): ?array {
+        $stmt = $this->pdo->prepare("SELECT * FROM frascos WHERE id = ?");
+        $stmt->execute([$id]);
+        $row = $stmt->fetch();
+        return $row ?: null;
+    }
+
+    public function update(int $id, array $d): void {
         $stmt = $this->pdo->prepare("
-            INSERT INTO precios (sucursal_id, frasco_id, precio)
-            VALUES (:sucursal_id, :frasco_id, :precio)
-            ON DUPLICATE KEY UPDATE precio = VALUES(precio)
+            UPDATE frascos 
+            SET nombre = :nombre, 
+                categoria = :categoria, 
+                capacidad_ml = :capacidad_ml,
+                imagen = COALESCE(:imagen, imagen), 
+                descripcion = :descripcion, 
+                orden = :orden 
+            WHERE id = :id
         ");
         $stmt->execute([
-            'sucursal_id' => $sucursal_id,
-            'frasco_id' => $frasco_id,
-            'precio' => $precio
+            'id' => $id,
+            'nombre' => $d['nombre'],
+            'categoria' => $d['categoria'] ?? 'generico',
+            'capacidad_ml' => $d['capacidad_ml'] ?? null,
+            'imagen' => $d['imagen'] ?? null,
+            'descripcion' => $d['descripcion'] ?? null,
+            'orden' => $d['orden'] ?? 0
+        ]);
+    }
+
+    public function setActivo(int $id, bool $activo): void {
+        $stmt = $this->pdo->prepare("UPDATE frascos SET activo = :activo WHERE id = :id");
+        $stmt->execute([
+            'activo' => $activo ? 1 : 0,
+            'id' => $id
         ]);
     }
 }

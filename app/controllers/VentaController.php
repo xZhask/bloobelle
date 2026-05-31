@@ -51,11 +51,17 @@ class VentaController {
             return;
         }
 
+        if (!isset($data['total']) || !is_numeric($data['total']) || (float)$data['total'] < 0) {
+            Response::json(['error' => 'El total de la venta es inválido o falta'], 400);
+            return;
+        }
+
         $ventaData = [
             'sucursal_id' => (int)$sucursal_id,
             'vendedor_id' => $user['id'],
             'metodo_pago' => $data['metodo_pago'] ?? 'efectivo',
-            'nota' => $data['nota'] ?? null
+            'nota' => $data['nota'] ?? null,
+            'total' => (float)$data['total']
         ];
 
         try {
