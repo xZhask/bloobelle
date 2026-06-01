@@ -66,6 +66,66 @@ $activeTab = $activeTab ?? 'venta';
 
 <div id="toastContainer"></div>
 
+<!-- Session expiry warning overlay -->
+<?php if ($user !== null): ?>
+<div id="session-expire-overlay" style="display:none;position:fixed;inset:0;background:rgba(26,22,20,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;z-index:3000;">
+  <div style="background:var(--color-surface);border-radius:18px;padding:2rem 1.8rem;width:320px;max-width:90vw;box-shadow:0 24px 60px rgba(0,0,0,.4);border:1px solid var(--color-border);text-align:center;">
+    <div style="font-size:2.2rem;margin-bottom:.6rem;">⏱</div>
+    <h3 style="font-family:var(--font-display,'Playfair Display',serif);font-weight:500;font-size:1.3rem;margin-bottom:.4rem;color:var(--color-text-primary);">Sesión por expirar</h3>
+    <p style="color:var(--color-text-secondary);font-size:.88rem;margin-bottom:1.4rem;">Por inactividad, la sesión se cerrará en <strong id="session-countdown" style="color:var(--color-accent);">60</strong> segundos.</p>
+    <button id="session-continue" style="background:var(--color-accent);color:var(--color-on-accent,#fff);border:none;border-radius:10px;padding:.8rem 1.6rem;font-family:inherit;font-size:.95rem;cursor:pointer;width:100%;">Continuar sesión</button>
+  </div>
+</div>
+<script>
+(function () {
+  var WARN_AFTER  = 29 * 60 * 1000; // mostrar aviso a los 29 min
+  var EXPIRE_AFTER = 60 * 1000;     // cerrar 60 s después del aviso
+
+  var overlay     = document.getElementById('session-expire-overlay');
+  var countdownEl = document.getElementById('session-countdown');
+  var continueBtn = document.getElementById('session-continue');
+  var warnTimer, expireInterval, secsLeft;
+
+  function startWarnTimer() {
+    clearTimeout(warnTimer);
+    warnTimer = setTimeout(showWarning, WARN_AFTER);
+  }
+
+  function showWarning() {
+    secsLeft = 60;
+    countdownEl.textContent = secsLeft;
+    overlay.style.display = 'flex';
+
+    expireInterval = setInterval(function () {
+      secsLeft--;
+      countdownEl.textContent = secsLeft;
+      if (secsLeft <= 0) {
+        clearInterval(expireInterval);
+        window.location.href = '/login';
+      }
+    }, 1000);
+  }
+
+  function keepAlive() {
+    if (overlay.style.display === 'flex') return; // no interrumpir el countdown
+    startWarnTimer();
+  }
+
+  continueBtn.addEventListener('click', function () {
+    clearInterval(expireInterval);
+    overlay.style.display = 'none';
+    startWarnTimer();
+  });
+
+  ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function (evt) {
+    document.addEventListener(evt, keepAlive, { passive: true });
+  });
+
+  startWarnTimer();
+})();
+</script>
+<?php endif; ?>
+
 <script>
   const SVG = {
     botella:'<svg viewBox="0 0 40 56"><rect x="16" y="2" width="8" height="7" rx="2" fill="#b88e5d"/><rect x="14" y="9" width="12" height="5" fill="#cdab82"/><rect x="9" y="14" width="22" height="40" rx="6" fill="#e7d6bd" stroke="#b88e5d" stroke-width="1.2"/></svg>',

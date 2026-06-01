@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 date_default_timezone_set('America/Lima');
+ini_set('session.gc_maxlifetime', 1800);
+session_set_cookie_params(['lifetime' => 1800, 'samesite' => 'Lax']);
 session_start();
 
 define('APP_ROOT', dirname(__DIR__));

@@ -2,19 +2,22 @@
 namespace App\Core;
 
 class Auth {
+    private const TIMEOUT = 1800; // 30 minutos de inactividad
+
     public static function login(array $user): void {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_nombre'] = $user['nombre'];
-        $_SESSION['user_rol'] = $user['rol'];
+        $_SESSION['user_id']          = $user['id'];
+        $_SESSION['user_nombre']      = $user['nombre'];
+        $_SESSION['user_rol']         = $user['rol'];
         $_SESSION['user_sucursal_id'] = $user['sucursal_id'];
+        $_SESSION['last_activity']    = time();
     }
 
     public static function user(): ?array {
         if (self::check()) {
             return [
-                'id' => $_SESSION['user_id'],
-                'nombre' => $_SESSION['user_nombre'],
-                'rol' => $_SESSION['user_rol'],
+                'id'          => $_SESSION['user_id'],
+                'nombre'      => $_SESSION['user_nombre'],
+                'rol'         => $_SESSION['user_rol'],
                 'sucursal_id' => $_SESSION['user_sucursal_id'],
             ];
         }
@@ -22,7 +25,15 @@ class Auth {
     }
 
     public static function check(): bool {
-        return isset($_SESSION['user_id']);
+        if (!isset($_SESSION['user_id'])) return false;
+
+        if (time() - ($_SESSION['last_activity'] ?? 0) > self::TIMEOUT) {
+            self::logout();
+            return false;
+        }
+
+        $_SESSION['last_activity'] = time();
+        return true;
     }
 
     public static function requireLogin(): void {
