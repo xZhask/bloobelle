@@ -38,6 +38,7 @@ class FrascoController {
             $id = $this->repo->create($data);
             Response::json(['ok' => true, 'id' => $id]);
         } catch (\Exception $e) {
+            \App\Core\Logger::error("Error in store Frasco: " . $e->getMessage());
             Response::json(['error' => $e->getMessage()], 500);
         }
     }
@@ -85,6 +86,7 @@ class FrascoController {
             $this->repo->update((int)$data['id'], $data);
             Response::json(['ok' => true]);
         } catch (\Exception $e) {
+            \App\Core\Logger::error("Error in update Frasco: " . $e->getMessage());
             Response::json(['error' => $e->getMessage()], 500);
         }
     }
@@ -102,6 +104,7 @@ class FrascoController {
             $this->repo->setActivo((int)$data['id'], (bool)$data['activo']);
             Response::json(['ok' => true]);
         } catch (\Exception $e) {
+            \App\Core\Logger::error("Error in toggleEstado Frasco: " . $e->getMessage());
             Response::json(['error' => $e->getMessage()], 500);
         }
     }

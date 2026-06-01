@@ -1099,8 +1099,9 @@
           const formData = new FormData();
           formData.append('imagen', selectedFile);
           const uploadResponse = await fetch('/api/perfumes/upload-image', { method: 'POST', body: formData });
-          if (!uploadResponse.ok) throw new Error('Error al subir la imagen');
-          const uploadData = await uploadResponse.json();
+          let uploadData;
+          try { uploadData = await uploadResponse.json(); } catch(e) {}
+          if (!uploadResponse.ok) throw new Error((uploadData && uploadData.error) ? uploadData.error : 'Error interno al subir la imagen (Status: ' + uploadResponse.status + ')');
           rutaImagen = uploadData.ruta || '';
         } catch (error) {
           showMessage('Error al subir la imagen: ' + error.message, 'error');

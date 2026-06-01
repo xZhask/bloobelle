@@ -9,15 +9,44 @@ spl_autoload_register(function (string $class): void {
     $prefix  = 'App\\';
     $baseDir = APP_ROOT . '/app/';
     if (strncmp($class, $prefix, strlen($prefix)) !== 0) return;
-    $file = $baseDir . str_replace('\\', '/', substr($class, strlen($prefix))) . '.php';
+    
+    $relativeClass = substr($class, strlen($prefix));
+    $parts = explode('\\', $relativeClass);
+    $className = array_pop($parts);
+    $parts = array_map('strtolower', $parts);
+    array_push($parts, $className);
+    
+    $file = $baseDir . implode('/', $parts) . '.php';
     if (file_exists($file)) require_once $file;
 });
 
+set_error_handler(function ($severity, $message, $file, $line) {
+    if (!(error_reporting() & $severity)) return;
+    throw new \ErrorException($message, 0, $severity, $file, $line);
+});
+
+set_exception_handler(function (\Throwable $e) {
+    if (class_exists('App\\Core\\Logger')) {
+        \App\Core\Logger::error("Uncaught Exception: " . $e->getMessage(), [
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
+        ]);
+    }
+    http_response_code(500);
+    if (!headers_sent()) {
+        header('Content-Type: application/json');
+    }
+    echo json_encode(['ok' => false, 'error' => 'Internal Server Error']);
+    exit;
+});
+
 $coreFiles = [
+    APP_ROOT . '/app/core/Logger.php',
     APP_ROOT . '/app/core/Router.php',
     APP_ROOT . '/app/core/Database.php',
     APP_ROOT . '/app/core/Request.php',
     APP_ROOT . '/app/core/Response.php',
+    APP_ROOT . '/app/core/ImageProcessor.php',
     APP_ROOT . '/app/repositories/PerfumeRepository.php',
     APP_ROOT . '/app/controllers/PerfumeController.php',
     APP_ROOT . '/app/core/Auth.php',

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -860,9 +860,10 @@
           const formData = new FormData();
           formData.append('image', selectedFile);
           const uploadResponse = await fetch('/api/frascos/upload-image', { method: 'POST', body: formData });
-          if (!uploadResponse.ok) throw new Error('Error al subir la imagen');
-          const uploadData = await uploadResponse.json();
-          if(uploadData.error) throw new Error(uploadData.error);
+          let uploadData;
+          try { uploadData = await uploadResponse.json(); } catch(e) {}
+          if (!uploadResponse.ok) throw new Error((uploadData && uploadData.error) ? uploadData.error : 'Error interno al subir la imagen (Status: ' + uploadResponse.status + ')');
+          if(uploadData && uploadData.error) throw new Error(uploadData.error);
           rutaImagen = uploadData.path || '';
         } catch (error) {
           showMessage('Error al subir la imagen: ' + error.message, 'error');

@@ -52,6 +52,7 @@ class PerfumeController {
       $id = $repo->crearPerfume($data);
       Response::json(['ok' => true, 'id' => $id], 201);
     } catch (\Throwable $e) {
+      \App\Core\Logger::error("Error in store: " . $e->getMessage());
       Response::json(['ok' => false, 'error' => $e->getMessage()], 400);
     }
   }
@@ -81,6 +82,7 @@ class PerfumeController {
       $repo->updatePerfume($id, $data);
       Response::json(['ok' => true], 200);
     } catch (\Throwable $e) {
+      \App\Core\Logger::error("Error in update: " . $e->getMessage());
       Response::json(['ok' => false, 'error' => $e->getMessage()], 400);
     }
   }
@@ -121,6 +123,7 @@ class PerfumeController {
       Response::json(['ok' => true, 'ruta' => $rutaRelativa], 200);
 
     } catch (\Throwable $e) {
+      \App\Core\Logger::error("Error in uploadImage: " . $e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()]);
       Response::json(['ok' => false, 'error' => $e->getMessage()], 500);
     }
   }
@@ -132,6 +135,7 @@ class PerfumeController {
       $id = $repo->crearDesigner($data);
       Response::json(['ok' => true, 'id' => $id], 201);
     } catch (\Throwable $e) {
+      \App\Core\Logger::error("Error in storeDesigner: " . $e->getMessage());
       Response::json(['ok' => false, 'error' => $e->getMessage()], 400);
     }
   }
@@ -143,6 +147,7 @@ class PerfumeController {
       $id = $repo->crearComponente($data);
       Response::json(['ok' => true, 'id' => $id], 201);
     } catch (\Throwable $e) {
+      \App\Core\Logger::error("Error in storeComponente: " . $e->getMessage());
       Response::json(['ok' => false, 'error' => $e->getMessage()], 400);
     }
   }
@@ -154,6 +159,7 @@ class PerfumeController {
       $id = $repo->crearTipoAroma($data);
       Response::json(['ok' => true, 'id' => $id], 201);
     } catch (\Throwable $e) {
+      \App\Core\Logger::error("Error in storeTipoAroma: " . $e->getMessage());
       Response::json(['ok' => false, 'error' => $e->getMessage()], 400);
     }
   }
