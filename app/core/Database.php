@@ -18,6 +18,8 @@ class Database {
       $config['charset'] ?? 'utf8mb4'
     );
 
+    $timezone = $config['timezone'] ?? '-05:00';
+
     $pdo = new PDO(
       $dsn,
       $config['user'],
@@ -25,6 +27,7 @@ class Database {
       [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        \Pdo\Mysql::ATTR_INIT_COMMAND => "SET time_zone = '{$timezone}'",
       ]
     );
 

@@ -1428,58 +1428,6 @@ color: var(--color-text-secondary);
     });
   </script>
 
-<div class="login-overlay" id="login-overlay">
-  <div class="login-card">
-    <h3>BlooBelle</h3>
-    <p>Inicia sesión para administrar el catálogo o registrar ventas.</p>
-    <div class="err" id="login-err"></div>
-    <label>Usuario</label>
-    <input type="text" id="login-user" autocomplete="username">
-    <label>Contraseña</label>
-    <input type="password" id="login-pass" autocomplete="current-password">
-    <div class="actions">
-      <button class="b cancel" id="login-cancel">Cancelar</button>
-      <button class="b go" id="login-go">Entrar</button>
-    </div>
-  </div>
-</div>
-
-<script>
-(function () {
-  var ov = document.getElementById('login-overlay');
-  var open = document.getElementById('btn-open-login');
-  if (open) open.addEventListener('click', function () { ov.classList.add('open'); });
-  var cancel = document.getElementById('login-cancel');
-  if (cancel) cancel.addEventListener('click', function () { ov.classList.remove('open'); });
-  if (ov) ov.addEventListener('click', function (e) { if (e.target === ov) ov.classList.remove('open'); });
-
-  var go = document.getElementById('login-go');
-  if (go) go.addEventListener('click', async function () {
-    var err = document.getElementById('login-err');
-    err.style.display = 'none';
-    try {
-      var r = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          usuario: document.getElementById('login-user').value,
-          password: document.getElementById('login-pass').value
-        })
-      });
-      var data = await r.json();
-      if (r.ok && data.ok) {
-        location.reload();              // el header pasa al estado logueado
-      } else {
-        err.textContent = data.error || 'No se pudo iniciar sesión';
-        err.style.display = 'block';
-      }
-    } catch (e) {
-      err.textContent = 'Error de conexión';
-      err.style.display = 'block';
-    }
-  });
-})();
-</script>
 
 <div class="overlay" id="pm-overlay" role="dialog" aria-modal="true" aria-labelledby="pm-name">
   <div class="pm-modal">

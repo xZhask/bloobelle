@@ -144,6 +144,17 @@ class VentaRepository {
         $stmtP->execute($params);
         $topPerfumes = $stmtP->fetchAll();
 
+        // Desglose por tipo de pago
+        $stmtPago = $this->pdo->prepare("
+            SELECT metodo_pago, COALESCE(SUM(total),0) AS monto
+            FROM ventas
+            WHERE sucursal_id = :sucursal_id AND DATE(fecha) >= :desde AND DATE(fecha) <= :hasta
+            GROUP BY metodo_pago
+            ORDER BY monto DESC
+        ");
+        $stmtPago->execute($params);
+        $porPago = $stmtPago->fetchAll();
+
         // Ventas del rango
         $stmtV = $this->pdo->prepare("
             SELECT v.id, v.fecha, u.nombre as vendedora, v.metodo_pago, v.total,
@@ -171,6 +182,7 @@ class VentaRepository {
             ],
             'topFrascos'  => $topFrascos,
             'topPerfumes' => $topPerfumes,
+            'porPago'     => $porPago,
             'ventas'      => $ventas
         ];
     }

@@ -59,22 +59,16 @@ class FrascoController {
             return;
         }
 
-        $filename = uniqid('frasco_') . '.' . $ext;
-        $destPath = APP_ROOT . '/public/assets/images/frascos/' . $filename;
+        $destDir = APP_ROOT . '/public/assets/images/frascos';
+        $filename = \App\Core\ImageProcessor::processAndSave($file['tmp_name'], $destDir, 'frasco_');
 
-        // Ensure directory exists
-        $dir = dirname($destPath);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-
-        if (move_uploaded_file($file['tmp_name'], $destPath)) {
+        if ($filename) {
             Response::json([
                 'ok' => true,
                 'path' => '/assets/images/frascos/' . $filename
             ]);
         } else {
-            Response::json(['error' => 'Error al mover archivo'], 500);
+            Response::json(['error' => 'Error al procesar o guardar la imagen'], 500);
         }
     }
 

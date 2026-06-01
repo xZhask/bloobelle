@@ -106,6 +106,7 @@ if ($user && $user['rol'] === 'admin') {
     .btn-pass:hover{color:var(--color-accent)}
     .drawer-pass{background:transparent;border:none;color:var(--color-text-secondary);font-size:.85rem;text-align:left;padding:.3rem 0;cursor:pointer;flex-basis:100%}
     .drawer-pass:hover{color:var(--color-accent)}
+    .nav-link-on{color:var(--color-accent) !important}
 
     @media (max-width: 768px) {
       .header-content {
@@ -172,9 +173,9 @@ if ($user && $user['rol'] === 'admin') {
         <button class="btn-new" id="btn-open-login"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" style="vertical-align:text-bottom;margin-right:4px;"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg> Iniciar sesión</button>
 
       <?php elseif ($user['rol'] === 'admin'): ?>
-        <a href="/tienda/reporte" class="nav-link">Dashboard</a>
-        <a href="/tienda/stock" class="nav-link">Stock</a>
-        <a href="/tienda?pos=1" class="nav-link">Punto de Venta</a>
+        <a href="/tienda/reporte" class="nav-link<?= (isset($activeTab) && $activeTab === 'reporte') ? ' nav-link-on' : '' ?>">Dashboard</a>
+        <a href="/tienda/stock" class="nav-link<?= (isset($activeTab) && $activeTab === 'stock') ? ' nav-link-on' : '' ?>">Stock</a>
+        <a href="/tienda?pos=1" class="nav-link<?= (isset($activeTab) && $activeTab === 'venta') ? ' nav-link-on' : '' ?>">Punto de Venta</a>
         <?php if(!isset($hideNewPerfume)): ?>
         <a href="/perfumes/create" class="btn-new"><span>+</span> Nuevo Perfume</a>
         <?php endif; ?>
@@ -240,9 +241,9 @@ if ($user && $user['rol'] === 'admin') {
     </button>
   <?php elseif ($user['rol'] === 'admin'): ?>
     <nav class="drawer-nav">
-      <a href="/tienda/reporte" class="drawer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M4 20V10M10 20V4M16 20v-6M22 20H2"/></svg>Dashboard</a>
-      <a href="/tienda/stock" class="drawer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 3l9 4-9 4-9-4 9-4zM3 12l9 4 9-4M3 17l9 4 9-4"/></svg>Stock</a>
-      <a href="/tienda?pos=1" class="drawer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M5 3h14v18l-2.5-1.5L14 21l-2-1.5L10 21l-2.5-1.5L5 21V3z"/><path d="M9 8h6M9 12h6"/></svg>Punto de Venta</a>
+      <a href="/tienda/reporte" class="drawer-link<?= (isset($activeTab) && $activeTab === 'reporte') ? ' nav-link-on' : '' ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M4 20V10M10 20V4M16 20v-6M22 20H2"/></svg>Dashboard</a>
+      <a href="/tienda/stock" class="drawer-link<?= (isset($activeTab) && $activeTab === 'stock') ? ' nav-link-on' : '' ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 3l9 4-9 4-9-4 9-4zM3 12l9 4 9-4M3 17l9 4 9-4"/></svg>Stock</a>
+      <a href="/tienda?pos=1" class="drawer-link<?= (isset($activeTab) && $activeTab === 'venta') ? ' nav-link-on' : '' ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M5 3h14v18l-2.5-1.5L14 21l-2-1.5L10 21l-2.5-1.5L5 21V3z"/><path d="M9 8h6M9 12h6"/></svg>Punto de Venta</a>
       <a href="/perfumes" class="drawer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M9 2h6v3l1 2v12a2 2 0 01-2 2H10a2 2 0 01-2-2V7l1-2V2z"/><path d="M9 11h6"/></svg>Catálogo de Perfumes</a>
       <a href="/catalogo/frascos" class="drawer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M9 2h6v3l1 2v12a2 2 0 01-2 2H10a2 2 0 01-2-2V7l1-2V2z"/><path d="M7 7h10M7 11h10M7 15h6"/></svg>Catálogo de Frascos</a>
     </nav>
@@ -285,6 +286,9 @@ if ($user && $user['rol'] === 'admin') {
 </aside>
 
 <?php require APP_ROOT . '/app/views/partials/password_modal.php'; ?>
+<?php if ($user === null): ?>
+<?php require APP_ROOT . '/app/views/partials/login_modal.php'; ?>
+<?php endif; ?>
 <script>
 function getSucursalId() {
   return parseInt(localStorage.getItem('admin_sucursal') || 1);

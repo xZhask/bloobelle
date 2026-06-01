@@ -38,7 +38,6 @@ $user = Auth::user();
   .fcard.off { opacity: 0.5; }
   .fcard .top { display: flex; align-items: flex-start; gap: 0.7rem; }
   .fcard .thumb { width: 46px; height: 46px; border-radius: 10px; background: var(--color-bg); flex: none; display: flex; align-items: center; justify-content: center; }
-  .fcard .thumb.dis { background: #2A1D1B; }
   .fcard .thumb svg { height: 32px; width: 32px; }
   .fcard .info { flex: 1; min-width: 0; }
   .fcard .nm { font-weight: 500; font-size: 0.98rem; line-height: 1.2; color: var(--color-text-primary); }
@@ -79,7 +78,6 @@ $user = Auth::user();
   tr.grouprow td{background:var(--color-bg);font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:var(--color-text-secondary);padding:.6rem .8rem}
   
   .thumb{width:46px;height:46px;border-radius:10px;background:var(--color-bg);display:flex;align-items:center;justify-content:center}
-  .thumb.dis{background:#2A1D1B}
   .thumb svg{height:32px;width:32px;}
   .name{font-weight:500;font-size:.98rem;margin-bottom:.2rem}
   .chip{display:inline-block;font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;padding:.1rem .45rem;border-radius:999px}

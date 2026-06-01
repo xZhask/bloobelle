@@ -102,31 +102,22 @@ class PerfumeController {
         return;
       }
 
-      // Validar tamaño (2MB máximo)
-      if ($file['size'] > 2 * 1024 * 1024) {
-        Response::json(['ok' => false, 'error' => 'La imagen debe ser menor a 2MB'], 400);
+      // Validar tamaño (10MB máximo ahora que comprimimos)
+      if ($file['size'] > 10 * 1024 * 1024) {
+        Response::json(['ok' => false, 'error' => 'La imagen debe ser menor a 10MB'], 400);
         return;
       }
 
-      // Crear directorio si no existe
       $uploadDir = dirname(__DIR__, 2) . '/public/assets/images/perfumes';
-      if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
-      }
+      $filename = \App\Core\ImageProcessor::processAndSave($file['tmp_name'], $uploadDir, 'perfume_');
 
-      // Generar nombre único
-      $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-      $fileName = uniqid('perfume_') . '.' . $extension;
-      $targetPath = $uploadDir . '/' . $fileName;
-
-      // Mover archivo
-      if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-        Response::json(['ok' => false, 'error' => 'Error al guardar la imagen'], 500);
+      if (!$filename) {
+        Response::json(['ok' => false, 'error' => 'Error al procesar o guardar la imagen'], 500);
         return;
       }
 
       // Devolver ruta relativa
-      $rutaRelativa = '/assets/images/perfumes/' . $fileName;
+      $rutaRelativa = '/assets/images/perfumes/' . $filename;
       Response::json(['ok' => true, 'ruta' => $rutaRelativa], 200);
 
     } catch (\Throwable $e) {

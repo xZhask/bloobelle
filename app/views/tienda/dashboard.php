@@ -283,7 +283,7 @@ document.getElementById('btnPay').addEventListener('click', async () => {
     if(carrito.length === 0) return;
     const inpTotal = document.getElementById('inpTotal').value;
     if(inpTotal === '' || parseFloat(inpTotal) < 0) {
-        alert('Por favor ingrese un Total válido mayor o igual a 0.');
+        showToast('Por favor ingrese un Total válido mayor o igual a 0.', 'error');
         return;
     }
 
@@ -311,16 +311,16 @@ document.getElementById('btnPay').addEventListener('click', async () => {
         const data = await res.json();
         
         if(data.ok) {
-            alert('Venta registrada con éxito (ID: ' + data.venta_id + ')');
+            showToast('Venta registrada con éxito (ID: ' + data.venta_id + ')', 'success');
             carrito = [];
             document.getElementById('inpTotal').value = '';
             renderCart();
             await loadStock();
         } else {
-            alert('Error: ' + (data.error || 'Desconocido'));
+            showToast('Error: ' + (data.error || 'Desconocido'), 'error');
         }
     } catch(err) {
-        alert('Error de conexión al registrar venta');
+        showToast('Error de conexión al registrar venta', 'error');
     }
     btn.innerText = 'Registrar venta';
     btn.disabled = false;

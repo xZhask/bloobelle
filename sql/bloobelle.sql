@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 6.0.0-dev+20260324.466df794d2
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: May 30, 2026 at 09:36 AM
--- Server version: 11.8.2-MariaDB
--- PHP Version: 8.5.5
+-- Servidor: localhost:3306
+-- Tiempo de generación: 01-06-2026 a las 03:31:22
+-- Versión del servidor: 11.8.2-MariaDB
+-- Versión de PHP: 8.5.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,22 +18,22 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `bloobelle`
+-- Base de datos: `bloobelle`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `componentes`
+-- Estructura de tabla para la tabla `componentes`
 --
 
 CREATE TABLE `componentes` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `componentes`
+-- Volcado de datos para la tabla `componentes`
 --
 
 INSERT INTO `componentes` (`id`, `nombre`) VALUES
@@ -119,6 +119,7 @@ INSERT INTO `componentes` (`id`, `nombre`) VALUES
 (178, 'HIERBA VERDE'),
 (123, 'HIERBAS'),
 (137, 'HIGO'),
+(186, 'HOJAS DE VIOLETA'),
 (117, 'HOJAS MANZANO'),
 (79, 'HOJAS VERDES'),
 (29, 'INCIENSO'),
@@ -154,6 +155,7 @@ INSERT INTO `componentes` (`id`, `nombre`) VALUES
 (28, 'MENTA'),
 (140, 'MERENGUE'),
 (67, 'MIEL'),
+(187, 'MORA'),
 (75, 'MUSGO'),
 (87, 'MUSGO DE ROBLE'),
 (53, 'NARANJA'),
@@ -224,16 +226,16 @@ INSERT INTO `componentes` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `designers`
+-- Estructura de tabla para la tabla `designers`
 --
 
 CREATE TABLE `designers` (
   `id` int(11) NOT NULL,
   `nombre` varchar(150) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `designers`
+-- Volcado de datos para la tabla `designers`
 --
 
 INSERT INTO `designers` (`id`, `nombre`) VALUES
@@ -244,6 +246,7 @@ INSERT INTO `designers` (`id`, `nombre`) VALUES
 (3, 'AZZARO'),
 (51, 'BATH & BODY WORKS'),
 (28, 'BHARARA'),
+(56, 'BOND NO. 9'),
 (46, 'BURBERRY'),
 (5, 'BVLGARY'),
 (9, 'CALVIN KLEIN'),
@@ -273,6 +276,7 @@ INSERT INTO `designers` (`id`, `nombre`) VALUES
 (49, 'NINA RICCI'),
 (12, 'PACO RABANNE'),
 (37, 'PALOMA PICASSO'),
+(55, 'PARFUMS DE MARLY'),
 (30, 'PARIS HILTON'),
 (31, 'PRADA'),
 (15, 'RALPH LAUREN'),
@@ -295,7 +299,7 @@ INSERT INTO `designers` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `frascos`
+-- Estructura de tabla para la tabla `frascos`
 --
 
 CREATE TABLE `frascos` (
@@ -306,34 +310,46 @@ CREATE TABLE `frascos` (
   `imagen` varchar(255) DEFAULT NULL,
   `descripcion` varchar(255) DEFAULT NULL,
   `orden` int(11) NOT NULL DEFAULT 0,
-  `activo` tinyint(1) NOT NULL DEFAULT 1
+  `activo` tinyint(1) NOT NULL DEFAULT 1,
+  `controla_stock` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `frascos`
+-- Volcado de datos para la tabla `frascos`
 --
 
-INSERT INTO `frascos` (`id`, `nombre`, `categoria`, `capacidad_ml`, `imagen`, `descripcion`, `orden`, `activo`) VALUES
-(1, 'Genérico 30 ml', 'generico', 30, NULL, 'Frasco atomizador estándar', 1, 1),
-(2, 'Genérico 50 ml', 'generico', 50, NULL, 'Frasco atomizador estándar', 2, 1),
-(3, 'Genérico 100 ml', 'generico', 100, NULL, 'Frasco atomizador estándar', 3, 1),
-(4, 'Corazón', 'diseno', 50, NULL, 'Frasco decorativo en forma de corazón', 1, 1),
-(5, 'París', 'diseno', 75, NULL, 'Frasco edición París, estilo torre', 2, 1),
-(6, 'Cámara', 'diseno', 60, NULL, 'Frasco con diseño tipo cámara', 3, 1);
+INSERT INTO `frascos` (`id`, `nombre`, `categoria`, `capacidad_ml`, `imagen`, `descripcion`, `orden`, `activo`, `controla_stock`) VALUES
+(1, 'Frasco liso 30 ml', 'generico', 30, '/assets/images/frascos/frasco_6a1b8f3aa1c30.png', 'Frasco atomizador estándar', 1, 1, 1),
+(2, 'Frasco liso 50 ml', 'generico', 50, '/assets/images/frascos/frasco_6a1b8f4dc1e9d.png', 'Frasco atomizador estándar', 2, 1, 1),
+(3, 'Frasco Liso 100 ml', 'generico', 100, '/assets/images/frascos/frasco_6a1b8f64edb91.png', 'Frasco atomizador estándar', 3, 1, 1),
+(4, 'Corazón', 'diseno', 50, '/assets/images/frascos/frasco_6a1b9038431dc.png', 'Frasco decorativo en forma de corazón', 1, 1, 1),
+(5, 'París', 'diseno', 50, '/assets/images/frascos/frasco_6a1b907b93a55.png', 'Frasco edición París, estilo torre Eiffel', 2, 1, 1),
+(6, 'Taquito negro', 'diseno', 30, '/assets/images/frascos/frasco_6a1b90aa983ca.png', 'Frasco con diseño tipo Zapato mujer', 3, 1, 1),
+(7, 'Frasco tornillo 30 ml', 'generico', 30, '/assets/images/frascos/frasco_6a1b8f9fe8b9f.png', 'Frasco atomizador estándar', 4, 1, 1),
+(8, 'Tipo Chanel', 'diseno', 50, '/assets/images/frascos/frasco_6a1b90f9b9ab7.png', 'Frasco con diseño tipo Chanel', 4, 1, 1),
+(9, 'Osito', 'diseno', 50, '/assets/images/frascos/frasco_6a1b921e8643c.jpg', 'Frasco con diseño de Osito', 5, 1, 1),
+(10, 'Gato', 'diseno', 75, '/assets/images/frascos/frasco_6a1b92b2cdd62.png', 'Frasco con diseño de Gato', 6, 1, 1),
+(11, 'Scandal', 'diseno', 50, '/assets/images/frascos/frasco_6a1b92f3e20e7.png', 'Frasco con diseño de frasco Scandal', 7, 1, 1),
+(12, 'Con listón', 'diseno', 50, '/assets/images/frascos/frasco_6a1b9338bf130.png', 'Frasco con listón negro', 8, 1, 1),
+(13, 'Invictus 30 ml', 'diseno', 30, '/assets/images/frascos/frasco_6a1b936c53700.png', 'Frasco fragancia Invictus 30 ml', 9, 1, 1),
+(14, 'Invictus 50 ml', 'diseno', 50, '/assets/images/frascos/frasco_6a1b938402abd.png', 'Frasco fragancia Invictus 50 ml', 10, 1, 1),
+(15, 'Cuadrado Negro 30 ml', 'diseno', 30, '/assets/images/frascos/frasco_6a1b93c1b2d3a.png', 'Frasco cuadrado negro 30 ml', 11, 1, 1),
+(16, 'Cuadrado Negro 50 ml', 'diseno', 50, '/assets/images/frascos/frasco_6a1b944875edd.png', 'Frasco cuadrado negro 50 ml', 12, 1, 1),
+(17, 'Sin frasco', 'generico', NULL, NULL, NULL, 99, 1, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `generos`
+-- Estructura de tabla para la tabla `generos`
 --
 
 CREATE TABLE `generos` (
   `id` int(11) NOT NULL,
   `nombre` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `generos`
+-- Volcado de datos para la tabla `generos`
 --
 
 INSERT INTO `generos` (`id`, `nombre`) VALUES
@@ -344,7 +360,7 @@ INSERT INTO `generos` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `movimientos_stock`
+-- Estructura de tabla para la tabla `movimientos_stock`
 --
 
 CREATE TABLE `movimientos_stock` (
@@ -362,7 +378,7 @@ CREATE TABLE `movimientos_stock` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `perfumes`
+-- Estructura de tabla para la tabla `perfumes`
 --
 
 CREATE TABLE `perfumes` (
@@ -373,176 +389,182 @@ CREATE TABLE `perfumes` (
   `descripcion` text DEFAULT NULL,
   `genero_id` int(11) NOT NULL,
   `designer_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `perfumes`
+-- Volcado de datos para la tabla `perfumes`
 --
 
 INSERT INTO `perfumes` (`id`, `codigo`, `referencia`, `ruta_img`, `descripcion`, `genero_id`, `designer_id`) VALUES
-(1, 'CC001', '212 MEN', NULL, NULL, 1, 1),
-(2, 'CC004', '212 VIP MEN', NULL, NULL, 1, 1),
-(3, 'CC007', '212 HEROES FOREVER YOUNG', NULL, NULL, 1, 1),
-(4, 'CC008', 'ACQUA DI GIO MEN', NULL, NULL, 1, 2),
-(5, 'CC011', 'AZZARO MEN', NULL, NULL, 1, 3),
-(6, 'CC016', 'AQCUA DI GIO PROFONDO', NULL, NULL, 1, 2),
-(7, 'CC017', 'ARMANI CODE', NULL, NULL, 1, 2),
-(8, 'CC019', 'BLUE JEANS MEN', NULL, NULL, 1, 4),
-(9, 'CC022', 'MAN IN BLACK', NULL, NULL, 1, 5),
-(10, 'CC023', 'BLUE SEDUCTION', NULL, NULL, 1, 6),
-(11, 'CC024', 'BLEU', NULL, NULL, 1, 7),
-(12, 'CC025', 'BOSS', NULL, NULL, 1, 8),
-(13, 'CC026', 'BAD BOY', NULL, NULL, 1, 1),
-(14, 'CC029', 'CK ONE', NULL, NULL, 1, 9),
-(15, 'CC033', 'CH MEN', NULL, NULL, 1, 1),
-(16, 'CC035', 'DIESEL FUEL FOR LIFE', NULL, NULL, 1, 10),
-(17, 'CC041', 'EMPORIO', NULL, NULL, 1, 2),
-(18, 'CC047', 'EROS', NULL, NULL, 1, 4),
-(19, 'CC049', 'SCANDAL MEN', NULL, NULL, 1, 11),
-(20, 'CC055', 'PHANTOM', NULL, NULL, 1, 12),
-(21, 'CC069', 'HUGO ELEMENT', NULL, NULL, 1, 8),
-(22, 'CC073', 'INVICTUS MEN', NULL, NULL, 1, 12),
-(23, 'CC074', 'INVICTUS INTENSE', NULL, NULL, 1, 12),
-(24, 'CC075', 'INVICTUS VICTORY', NULL, NULL, 1, 12),
-(25, 'CC076', 'LE MALE', NULL, NULL, 1, 11),
-(26, 'CC085', 'LACOSTE RED MEN', NULL, NULL, 1, 13),
-(27, 'CC087', 'LIGHT BLUE MEN', NULL, NULL, 1, 14),
-(28, 'CC103', 'POLO BLACK MEN T', NULL, NULL, 1, 15),
-(29, 'CC104', 'POLO BLUE MEN', NULL, NULL, 1, 15),
-(30, 'CC106', 'POLO SPORT MEN', NULL, NULL, 1, 15),
-(31, 'CC115', 'SWISS ARMY MEN', NULL, NULL, 1, 16),
-(32, 'CC116', 'SAUVAGE', NULL, NULL, 1, 17),
-(33, 'CC119', 'TOMMY MEN', NULL, NULL, 1, 18),
-(34, 'CC122', 'ULTRAMALE', NULL, NULL, 1, 11),
-(35, 'CC126', 'ONE MILLON ELIXIR', NULL, NULL, 1, 12),
-(36, 'CC138', 'CLUB DE NUIT', NULL, NULL, 1, 19),
-(37, 'CC139', 'LE BEAU', NULL, NULL, 1, 11),
-(38, 'CC140', 'SAUVAGE ELIXIR', NULL, NULL, 1, 17),
-(39, 'CC144', 'LE MALE ELIXIR', NULL, NULL, 1, 11),
-(40, 'CC145', 'EROS FLAME', NULL, NULL, 1, 4),
-(41, 'CC146', 'ASAD', NULL, NULL, 1, 20),
-(42, 'CC149', '9PM', NULL, NULL, 1, 21),
-(43, 'CC153', 'ONE MILLION GOLD', NULL, NULL, 1, 12),
-(44, 'CC154', 'ONE MILLON LUCKY', NULL, NULL, 1, 12),
-(45, 'CC157', 'BORN IN ROMA INTENSE', NULL, NULL, 1, 22),
-(46, 'CC158', 'ODYSSEY MANDARIN SKY', NULL, NULL, 1, 19),
-(47, 'CC162', 'EROS ENERGY', NULL, NULL, 1, 4),
-(48, 'CC163', 'BORN IN ROMA UOMO', NULL, NULL, 1, 22),
-(49, 'CC165', 'STRONGER WITH YOU', NULL, NULL, 1, 2),
-(50, 'CC900', 'CR7', NULL, NULL, 1, 23),
-(51, 'CC901', 'NAUTICA VOYAGE', NULL, NULL, 1, 24),
-(52, 'CC902', 'ASAD BOURBON', NULL, NULL, 1, 20),
-(53, 'CC903', 'AMBER OUD', NULL, NULL, 1, 25),
-(54, 'CC905', 'OMBRE LEATHER', NULL, NULL, 1, 26),
-(55, 'CC906', 'FAHRENHEIT', NULL, NULL, 1, 17),
-(56, 'CC907', 'STRONGER WITH YOU ABSOLUTELY', NULL, NULL, 1, 2),
-(57, 'CC909', 'COSTA AZZURRA', NULL, NULL, 1, 26),
-(58, 'CC910', 'DYLAN BLUE', NULL, NULL, 1, 4),
-(59, 'CC912', 'VERSACE POUR HOMME', NULL, NULL, 1, 4),
-(60, 'CC913', 'PACO RABANNE POUR HOMME', NULL, NULL, 1, 12),
-(61, 'CC914', 'AVENTUS', NULL, NULL, 1, 27),
-(62, 'CC915', 'ONIX', NULL, NULL, 1, 28),
-(63, 'CC916', 'IMAGINATION', NULL, NULL, 1, 29),
-(64, 'CC918', 'WANTED', NULL, NULL, 1, 3),
-(65, 'UU005', 'TOBACCO VANILLE', NULL, NULL, 1, 26),
-(66, 'DD001', '212 NYC', '/assets/images/perfumes/212nyc.jpg', 'Fragancia elegante y moderna que captura la esencia vibrante de la ciudad de Nueva York. Crea un aroma sofisticado y versátil, ideal para mujeres dinámicas y seguras.', 2, 1),
-(67, 'DD006', '212 VIP ROSE', NULL, NULL, 2, 1),
-(68, 'DD007', 'ACQUA DI GIOIA', NULL, NULL, 2, 2),
-(69, 'DD029', 'CAN CAN', NULL, NULL, 2, 30),
-(70, 'DD030', 'CAROLINA HERRERA', NULL, NULL, 2, 1),
-(71, 'DD031', 'CH', NULL, NULL, 2, 1),
-(72, 'DD033', 'CHANEL NO 5', NULL, NULL, 2, 7),
-(73, 'DD037', 'CHANCE', NULL, NULL, 2, 7),
-(74, 'DD040', 'COCO MADEMOISELLE', NULL, NULL, 2, 7),
-(75, 'DD044', 'CANDY', NULL, NULL, 2, 31),
-(76, 'DD057', 'SCANDAL WOMAN', NULL, NULL, 2, 11),
-(77, 'DD059', 'FLOWER', NULL, NULL, 2, 32),
-(78, 'DD065', 'GOOD GIRL', NULL, NULL, 2, 1),
-(79, 'DD075', 'HEIRESS', NULL, NULL, 2, 30),
-(80, 'DD081', 'J\' ADORE', NULL, NULL, 2, 17),
-(81, 'DD089', 'LIGHT BLUE', NULL, NULL, 2, 14),
-(82, 'DD092', 'LADY MILLION', NULL, NULL, 2, 12),
-(83, 'DD093', 'LADY GAGA', NULL, NULL, 2, 33),
-(84, 'DD094', 'LA VIDA ES BELLA', NULL, NULL, 2, 34),
-(85, 'DD096', 'LIBRE', NULL, NULL, 2, 35),
-(86, 'DD100', 'MEOW', NULL, NULL, 2, 36),
-(87, 'DD101', 'MY WAY', NULL, NULL, 2, 2),
-(88, 'DD104', 'MISS DIOR (2012)', NULL, NULL, 2, 17),
-(89, 'DD110', 'OLYMPEA', NULL, NULL, 2, 12),
-(90, 'DD112', 'PALOMA PICASSO', NULL, NULL, 2, 37),
-(91, 'DD115', 'POISON', NULL, NULL, 2, 17),
-(92, 'DD118', 'PURE XS', NULL, NULL, 2, 12),
-(93, 'DD119', 'RALPH', NULL, NULL, 2, 15),
-(94, 'DD128', 'SHAKIRA S', NULL, NULL, 2, 38),
-(95, 'DD129', 'SOFIA VERGARA', NULL, NULL, 2, 39),
-(96, 'DD130', 'TOMMY GIRL', NULL, NULL, 2, 18),
-(97, 'DD133', 'TRESOR WOMAN', NULL, NULL, 2, 34),
-(98, 'DD141', 'VERY IRRESISTIBLE', NULL, NULL, 2, 40),
-(99, 'DD143', 'VERY GOOD GIRL', NULL, NULL, 2, 1),
-(100, 'DD144', '212 HEROES FOREVER YOUNG', NULL, NULL, 2, 1),
-(101, 'DD145', 'FAME', NULL, NULL, 2, 12),
-(102, 'DD146', 'SUCRE NOIR', NULL, NULL, 2, 41),
-(103, 'DD148', 'SWEET LIKE CANDY', NULL, NULL, 2, 42),
-(104, 'DD159', 'CLOUD', NULL, NULL, 2, 42),
-(105, 'DD160', 'TOY 2 BUBBLE GUM', NULL, NULL, 2, 43),
-(106, 'DD161', 'GOOD GIRL BLUSH', NULL, NULL, 2, 1),
-(107, 'DD163', 'YARA', NULL, NULL, 2, 20),
-(108, 'DD174', 'EROS POUR FEMME', NULL, NULL, 2, 4),
-(109, 'DD175', 'YARA CANDY', NULL, NULL, 2, 20),
-(110, 'DD177', 'SCANDAL', NULL, NULL, 2, 11),
-(111, 'DD178', 'BORN IN ROMA GREEN', NULL, NULL, 2, 22),
-(112, 'DD179', 'BADE\'E AL OUD (NOBLE BLUSH)', NULL, NULL, 2, 20),
-(113, 'DD181', 'ECLAIRE', NULL, NULL, 2, 20),
-(114, 'DD182', 'POUR ELLE SPARKLING', NULL, NULL, 2, 13),
-(115, 'DD187', 'YUM BOUJEE MARSHMALLOW', NULL, NULL, 2, 44),
-(116, 'DD900', 'SWEET TOOTH', NULL, NULL, 2, 45),
-(117, 'DD901', 'YARA TOUS', NULL, NULL, 2, 20),
-(118, 'DD902', 'BURBERRY HER', NULL, NULL, 2, 46),
-(119, 'DD903', 'ALIEN', NULL, NULL, 2, 47),
-(120, 'DD904', 'BORN IN ROMA EXTRADOSE', NULL, NULL, 2, 22),
-(121, 'DD905', 'AQUA KISS', NULL, NULL, 2, 48),
-(122, 'DD906', 'LOVE SPELL', NULL, NULL, 2, 48),
-(123, 'DD907', 'ARI', NULL, NULL, 2, 42),
-(124, 'DD908', 'BORN IN ROMA INTENSE', NULL, NULL, 2, 22),
-(125, 'DD909', 'VANILLA LACE', NULL, NULL, 2, 48),
-(126, 'DD911', 'DAZZLE', NULL, NULL, 2, 30),
-(127, 'DD912', 'MISS DIOR BLOOMING', NULL, NULL, 2, 17),
-(128, 'DD913', 'DIVINE', NULL, NULL, 2, 11),
-(129, 'DD914', 'ISLAND BLISS', NULL, NULL, 2, 19),
-(130, 'DD916', 'YUM YUM', NULL, NULL, 2, 19),
-(131, 'DD917', 'HYPNOTIC POISON', NULL, NULL, 2, 17),
-(132, 'DD918', 'THANK U NEXT', NULL, NULL, 2, 42),
-(133, 'DD919', 'LA BOMBA', NULL, NULL, 2, 1),
-(134, 'DD920', 'SI', NULL, NULL, 2, 2),
-(135, 'DD921', 'RICCI RICCI', NULL, NULL, 2, 49),
-(136, 'DD922', 'SCANDAL BY NIGHT', NULL, NULL, 2, 11),
-(137, 'DD923', 'BONBON', NULL, NULL, 2, 50),
-(138, 'XS001', 'PURE SEDUCTION', NULL, NULL, 2, 48),
-(139, 'XS003', 'COCONUT PASSION', NULL, NULL, 2, 48),
-(140, 'XS009', 'WILD MADAGASCAR', NULL, NULL, 2, 51),
-(141, 'CC908', 'CHERRY (LOST CHERRY)', NULL, NULL, 3, 26),
-(142, 'CC911', 'MILLESIME IMPERIAL', NULL, NULL, 3, 27),
-(143, 'CC917', 'KHAMRAH QHAWA', NULL, NULL, 3, 20),
-(144, 'DD915', 'KIRKE', '/assets/images/perfumes/kirke.png', 'Fragancia mágica, sensual y embriagadora, ideal para seducir, con un carácter cautivador y radiante. Las notas de salida de Kirke son una sinfonía de aromas frutales, donde la maracuyá, el durazno, la pera, la frambuesa, el casis y la arena se entrelazan', 3, 52),
-(145, 'UU003', 'BACCARAT ROUGE 540', NULL, NULL, 3, 53),
-(146, 'UU012', 'KHAMRAH', NULL, NULL, 3, 20),
-(147, 'UU019', 'ERBA PURA', NULL, NULL, 3, 54),
-(148, 'UU022', 'HONOR & GLORY', NULL, NULL, 3, 20),
-(149, 'UU023', 'SUBLIME', NULL, NULL, 3, 20);
+(1, 'CC001', '212 MEN', NULL, 'Una fragancia fresca y urbana con notas verdes, cítricas y un fondo de almizcle, ideal para el dinamismo diario.', 1, 1),
+(2, 'CC004', '212 VIP MEN', NULL, 'Aroma nocturno y fiestero con toques de lima, caviar y pimienta, acentuado por una nota distintiva de vodka.', 1, 1),
+(3, 'CC007', '212 HEROES FOREVER YOUNG', NULL, 'Fragancia juvenil y vibrante que celebra la libertad con notas de pera, jengibre y un fondo de cuero.', 1, 1),
+(4, 'CC008', 'ACQUA DI GIO MEN', NULL, 'Un clásico acuático y cítrico inspirado en el mar, que combina bergamota, jazmín y romero.', 1, 2),
+(5, 'CC011', 'AZZARO MEN', NULL, 'Aroma fougère clásico y elegante, caracterizado por su fuerte presencia de anís, lavanda y maderas nobles.', 1, 3),
+(6, 'CC016', 'AQCUA DI GIO PROFONDO', NULL, 'Una interpretación profunda y marina del clásico, con notas salinas, mandarina y esencias minerales.', 1, 2),
+(7, 'CC017', 'ARMANI CODE', NULL, 'Fragancia oriental y seductora que destaca por la flor de olivo, el haba tonka y el toque masculino del cuero.', 1, 2),
+(8, 'CC019', 'BLUE JEANS MEN', NULL, 'Un perfume juvenil y versátil que mezcla cítricos, lavanda y vainilla en una composición clásica de los 90.', 1, 4),
+(9, 'CC022', 'MAN IN BLACK', NULL, 'Una esencia intensa y carismática con notas de ron, especias y cuero, ideal para el hombre sofisticado.', 1, 5),
+(10, 'CC023', 'BLUE SEDUCTION', NULL, 'Aroma fresco y transparente con una mezcla de bergamota, menta y capuchino, perfecto para uso casual.', 1, 6),
+(11, 'CC024', 'BLEU', NULL, 'Fragancia amaderada aromática de Chanel que une la frescura de los cítricos con el vigor del incienso.', 1, 7),
+(12, 'CC025', 'BOSS', NULL, 'Perfume equilibrado y masculino que combina manzana, canela y maderas sensuales, un pilar de la elegancia diaria.', 1, 8),
+(13, 'CC026', 'BAD BOY', NULL, 'Una fragancia atrevida con contrastes de pimienta blanca, cacao y haba tonka, encerrada en un frasco icónico.', 1, 1),
+(14, 'CC029', 'CK ONE', NULL, 'El icónico perfume unisex que define la frescura con notas de té verde, papaya y bergamota en armonía.', 1, 9),
+(15, 'CC033', 'CH MEN', NULL, 'Un aroma sofisticado que evoca el cuero y el azúcar, equilibrado con notas frescas de hierba y violeta.', 1, 1),
+(16, 'CC035', 'DIESEL FUEL FOR LIFE', NULL, 'Fragancia energética y especiada con anís estrellado y frambuesa sobre un fondo amaderado seco.', 1, 10),
+(17, 'CC041', 'EMPORIO', NULL, 'Una esencia magnética con notas de salvia, cardamomo y maderas preciosas que proyecta confianza moderna.', 1, 2),
+(18, 'CC047', 'EROS', NULL, 'Perfume vibrante de Versace que destaca por su menta fresca, manzana verde y una envolvente vainilla de Madagascar.', 1, 4),
+(19, 'CC049', 'SCANDAL MEN', NULL, 'Una fragancia ambarina con notas de caramelo, salvia y vetiver, diseñada para el hombre audaz.', 1, 11),
+(20, 'CC055', 'PHANTOM', NULL, 'Aroma futurista que combina lavanda cremosa, limón energético y vainilla amaderada en una mezcla audaz.', 1, 12),
+(21, 'CC069', 'HUGO ELEMENT', NULL, 'Fragancia acuática diseñada para el entorno urbano, con notas de jengibre, cilantro y maderas frescas.', 1, 8),
+(22, 'CC073', 'INVICTUS MEN', NULL, 'Un aroma victorioso que fusiona la frescura de la toronja y notas marinas con la calidez del laurel.', 1, 12),
+(23, 'CC074', 'INVICTUS INTENSE', NULL, 'Una versión más profunda y ambarina del original, con notas de pimienta negra y maderas vibrantes.', 1, 12),
+(24, 'CC075', 'INVICTUS VICTORY', NULL, 'Perfume nocturno extremo que destaca por su potente mezcla de limón, incienso y vainilla dulce.', 1, 12),
+(25, 'CC076', 'LE MALE', NULL, 'El clásico de Jean Paul Gaultier que reinventa la lavanda con un toque de menta fresca y vainilla sensual.', 1, 11),
+(26, 'CC085', 'LACOSTE RED MEN', NULL, 'Fragancia dinámica con notas de manzana roja, pino y pachuli, ideal para un estilo de vida activo.', 1, 13),
+(27, 'CC087', 'LIGHT BLUE MEN', NULL, 'Un viaje al Mediterráneo con notas de mandarina siciliana, enebro y la frescura del romero.', 1, 14),
+(28, 'CC103', 'POLO BLACK MEN T', NULL, 'Aroma moderno y atrevido que destaca por el mango helado, la salvia y el pachuli negro.', 1, 15),
+(29, 'CC104', 'POLO BLUE MEN', NULL, 'Fragancia acuática refrescante con notas de melón, pepino y mandarina sobre un fondo suave de gamuza.', 1, 15),
+(30, 'CC106', 'POLO SPORT MEN', NULL, 'Un perfume energizante y limpio que combina notas marinas, menta y cítricos para el deportista.', 1, 15),
+(31, 'CC115', 'SWISS ARMY MEN', NULL, 'Aroma fresco y funcional inspirado en los Alpes, con notas de menta, bergamota y maderas claras.', 1, 16),
+(32, 'CC116', 'SAUVAGE', NULL, 'Fragancia cruda y noble que destaca por la bergamota de Calabria y el vigor amaderado del ambroxan.', 1, 17),
+(33, 'CC119', 'TOMMY MEN', NULL, 'El espíritu americano capturado en notas de manzana, arándanos y menta sobre un fondo de algodón.', 1, 18),
+(34, 'CC122', 'ULTRAMALE', NULL, 'Una interpretación intensa y dulce de Le Male, con pera, lavanda negra y una base potente de vainilla.', 1, 11),
+(35, 'CC126', 'ONE MILLON ELIXIR', NULL, 'La versión más rica y profunda de One Million, con notas de manzana, rosa damascena y vainilla negra.', 1, 12),
+(36, 'CC138', 'CLUB DE NUIT', NULL, 'Un aroma icónico y potente con notas cítricas intensas que evolucionan hacia un ahumado amaderado.', 1, 19),
+(37, 'CC139', 'LE BEAU', NULL, 'Fragancia tropical y sensual construida alrededor del coco, la bergamota y el haba tonka.', 1, 11),
+(38, 'CC140', 'SAUVAGE ELIXIR', NULL, 'Una concentración extrema de Sauvage con especias ricas, lavanda licorosa y maderas ambarinas.', 1, 17),
+(39, 'CC144', 'LE MALE ELIXIR', NULL, 'Aroma ardiente y adictivo que mezcla lavanda fresca con la calidez del benjuí y la miel.', 1, 11),
+(40, 'CC145', 'EROS FLAME', NULL, 'Fragancia ardiente de contrastes, con cítricos italianos, pimienta negra y maderas cálidas.', 1, 4),
+(41, 'CC146', 'ASAD', NULL, 'Perfume árabe intenso con notas de pimienta negra, tabaco y vainilla, conocido por su gran estela.', 1, 20),
+(42, 'CC149', '9PM', NULL, 'Aroma nocturno dulce y afrutado con manzana, canela y lavanda, ideal para salidas de noche.', 1, 21),
+(43, 'CC153', 'ONE MILLION GOLD', NULL, 'Fragancia opulenta con notas florales blancas, mandarina y un fondo amaderado dorado.', 1, 12),
+(44, 'CC154', 'ONE MILLON LUCKY', NULL, 'Aroma vibrante y optimista que combina avellana, ciruela y notas amaderadas de cedro.', 1, 12),
+(45, 'CC157', 'BORN IN ROMA INTENSE', NULL, 'Una versión potente con vainilla, lavanda y vetiver que rinde homenaje a la noche romana.', 1, 22),
+(46, 'CC158', 'ODYSSEY MANDARIN SKY', NULL, 'Fragancia cítrica y dulce con mandarina, caramelo y azafrán, que evoca un cielo atardecido.', 1, 19),
+(47, 'CC162', 'EROS ENERGY', NULL, 'Una explosión de frescura cítrica y vitalidad, con limón italiano y notas amaderadas solares.', 1, 4),
+(48, 'CC163', 'BORN IN ROMA UOMO', NULL, 'Aroma moderno que mezcla jengibre especiado, sales minerales y el toque clásico del vetiver.', 1, 22),
+(49, 'CC165', 'STRONGER WITH YOU', NULL, 'Fragancia cálida y magnética con notas de cardamomo, pimienta rosa y castaña glaseada.', 1, 2),
+(50, 'CC900', 'CR7', NULL, 'El perfume de Cristiano Ronaldo que ofrece frescura con bergamota, lavanda y un fondo de maderas clásicas.', 1, 23),
+(51, 'CC901', 'NAUTICA VOYAGE', NULL, 'Aroma acuático icónico con notas de manzana verde, loto y un fondo sereno de cedro y ámbar.', 1, 24),
+(52, 'CC902', 'ASAD BOURBON', NULL, 'Versión sofisticada de Asad con notas de ron, especias cálidas y un fondo amaderado ahumado.', 1, 20),
+(53, 'CC903', 'AMBER OUD', NULL, 'Fragancia lujosa que destaca por su ámbar rico, maderas de oud y un toque sutil de especias.', 1, 25),
+(54, 'CC905', 'OMBRE LEATHER', NULL, 'Aroma de cuero crudo y elegante con notas de jazmín sambac, ámbar y musgo blanco.', 1, 26),
+(55, 'CC906', 'FAHRENHEIT', NULL, 'Un clásico vanguardista de Dior que combina violeta, cuero y notas de mandarina en una mezcla única.', 1, 17),
+(56, 'CC907', 'STRONGER WITH YOU ABSOLUTELY', NULL, 'La versión más intensa de la línea, con ron, lavanda y castaña sobre un fondo de vainilla.', 1, 2),
+(57, 'CC909', 'COSTA AZZURRA', NULL, 'Fragancia marina y amaderada que captura la esencia del Mediterráneo con notas de ciprés y limón.', 1, 26),
+(58, 'CC910', 'DYLAN BLUE', NULL, 'Aroma masculino moderno con notas acuáticas, bergamota, higo y un fondo de incienso y pimienta.', 1, 4),
+(59, 'CC912', 'VERSACE POUR HOMME', NULL, 'Perfume mediterráneo esencial con notas de limón, neroli y cedro, ideal para la oficina.', 1, 4),
+(60, 'CC913', 'PACO RABANNE POUR HOMME', NULL, 'El clásico aromático por excelencia con notas de romero, salvia y lavanda en un fondo de musgo.', 1, 12),
+(61, 'CC914', 'AVENTUS', NULL, 'Fragancia de culto que abre con piña y bergamota, evolucionando hacia un corazón ahumado de abedul.', 1, 27),
+(62, 'CC915', 'ONIX', NULL, 'Aroma misterioso e intenso con maderas oscuras, especias y un toque de ámbar mineral.', 1, 28),
+(63, 'CC916', 'IMAGINATION', NULL, 'Perfume cítrico luminoso que utiliza té negro, neroli y jengibre para una sensación de frescura eterna.', 1, 29),
+(64, 'CC918', 'WANTED', NULL, 'Fragancia audaz y picante con notas de limón, jengibre y haba tonka, encerrada en un frasco único.', 1, 3),
+(65, 'UU005', 'TOBACCO VANILLE', NULL, 'Aroma opulento que fusiona el tabaco cremoso con la dulzura de la vainilla y especias aromáticas.', 1, 26),
+(66, 'DD001', '212 NYC', NULL, 'Un perfume floral y urbano con notas de azahar, camelia y gardenia sobre un fondo de sándalo.', 2, 1),
+(67, 'DD006', '212 VIP ROSE', NULL, 'Fragancia festiva y glamurosa con champaña rosada, notas frutales y un corazón de flor de durazno.', 2, 1),
+(68, 'DD007', 'ACQUA DI GIOIA', NULL, 'Aroma alegre y acuático que combina limón de Amalfi, menta fresca y jazmín de agua.', 2, 2),
+(69, 'DD029', 'CAN CAN', NULL, 'Perfume juguetón y dulce de Paris Hilton con notas de nectarina, flor de azahar y ámbar.', 2, 30),
+(70, 'DD030', 'CAROLINA HERRERA', NULL, 'La fragancia clásica de la diseñadora, un bouquet floral elegante con nardos y jazmín.', 2, 1),
+(71, 'DD031', 'CH', NULL, 'Aroma sofisticado que mezcla cítricos con notas dulces de praliné y un fondo de maderas y cuero.', 2, 1),
+(72, 'DD033', 'CHANEL NO 5', NULL, 'El perfume más famoso del mundo, un bouquet de aldehídos, rosa y jazmín que define la elegancia.', 2, 7),
+(73, 'DD037', 'CHANCE', NULL, 'Fragancia floral e impredecible con notas de pimienta rosa, jazmín y pachuli ambarino.', 2, 7),
+(74, 'DD040', 'COCO MADEMOISELLE', NULL, 'Esencia femenina moderna con naranja vibrante, rosa clara y pachuli refinado de Chanel.', 2, 7),
+(75, 'DD044', 'CANDY', NULL, 'Aroma gourmet centrado en el caramelo, el almizcle y el benjuí para una dulzura sofisticada.', 2, 31),
+(76, 'DD057', 'SCANDAL WOMAN', NULL, 'Fragancia chipre floral con miel fresca, gardenia y pachuli, diseñada para romper esquemas.', 2, 11),
+(77, 'DD059', 'FLOWER', NULL, 'Aroma poético de Kenzo con notas de amapola, violeta y vainilla sobre un fondo atalcado.', 2, 32),
+(78, 'DD065', 'GOOD GIRL', NULL, 'El icónico zapato que contiene una mezcla de nardo, jazmín, cacao y haba tonka.', 2, 1),
+(79, 'DD075', 'HEIRESS', NULL, 'Perfume frutal y floral muy femenino con notas de maracuyá, granadina y madreselva.', 2, 30),
+(80, 'DD081', 'J\' ADORE', NULL, 'Un tributo a las flores con esencia de ylang-ylang, rosa damascena y jazmín sambac de Dior.', 2, 17),
+(81, 'DD089', 'LIGHT BLUE', NULL, 'Fragancia fresca y mediterránea con manzana Granny Smith, limón siciliano y cedro.', 2, 14),
+(82, 'DD092', 'LADY MILLION', NULL, 'Aroma deslumbrante con notas de frambuesa, neroli y jazmín sobre un fondo de miel y pachuli.', 2, 12),
+(83, 'DD093', 'LADY GAGA', NULL, 'Fragancia audaz y oscura con notas de incienso, belladona, miel y azafrán.', 2, 33),
+(84, 'DD094', 'LA VIDA ES BELLA', NULL, 'Una declaración de felicidad basada en el iris, el pachuli y la dulzura del praliné.', 2, 34),
+(85, 'DD096', 'LIBRE', NULL, 'El perfume de la libertad con lavanda de Francia, flor de azahar de Marruecos y almizcle.', 2, 35),
+(86, 'DD100', 'MEOW', NULL, 'Fragancia dulce de Katy Perry con notas de pera, mandarina, gardenia y un fondo de vainilla.', 2, 36),
+(87, 'DD101', 'MY WAY', NULL, 'Aroma floral contemporáneo con bergamota, azahar, nardos y un fondo amaderado de cedro.', 2, 2),
+(88, 'DD104', 'MISS DIOR (2012)', NULL, 'Un chipre floral elegante con mandarina italiana, rosa de Grasse y pachuli indonesio.', 2, 17),
+(89, 'DD110', 'OLYMPEA', NULL, 'Fragancia de una diosa moderna con vainilla salada, jazmín de agua y mandarina verde.', 2, 12),
+(90, 'DD112', 'PALOMA PICASSO', NULL, 'Un aroma artístico y clásico con notas de cilantro, clavel y pachuli sobre musgo de roble.', 2, 37),
+(91, 'DD115', 'POISON', NULL, 'Esencia enigmática y audaz de Dior con notas de cilantro, bayas silvestres y miel de azahar.', 2, 17),
+(92, 'DD118', 'PURE XS', NULL, 'Fragancia provocativa con ylang-ylang, palomitas de maíz y vainilla caliente.', 2, 12),
+(93, 'DD119', 'RALPH', NULL, 'Aroma fresco y juvenil con manzana verde, mandarina italiana y magnolia blanca.', 2, 15),
+(94, 'DD128', 'SHAKIRA S', NULL, 'Fragancia oriental floral con notas de jazmín, sándalo y un fondo cálido de vainilla y resina.', 2, 38),
+(95, 'DD129', 'SOFIA VERGARA', NULL, 'Perfume glamuroso con moras, ciruela y orquídea colombiana sobre un fondo de vainilla.', 2, 39),
+(96, 'DD130', 'TOMMY GIRL', NULL, 'Aroma refrescante que evoca flores silvestres, camelias y notas cítricas de mandarina.', 2, 18),
+(97, 'DD133', 'TRESOR WOMAN', NULL, 'Un clásico romántico con notas de durazno, rosa, ámbar y sándalo envolvente.', 2, 34),
+(98, 'DD141', 'VERY IRRESISTIBLE', NULL, 'Fragancia centrada en la rosa, combinada con anís estrellado y verbena para un toque moderno.', 2, 40),
+(99, 'DD143', 'VERY GOOD GIRL', NULL, 'Una interpretación afrutada con grosella roja, lichi y la elegancia de la rosa.', 2, 1),
+(100, 'DD144', '212 HEROES FOREVER YOUNG', NULL, 'Aroma floral frutal juvenil con frambuesa, jazmín y sándalo para la mujer activa.', 2, 1),
+(101, 'DD145', 'FAME', NULL, 'Perfume vanguardista de Paco Rabanne con mango jugoso, jazmín puro e incienso cremoso.', 2, 12),
+(102, 'DD146', 'SUCRE NOIR', NULL, 'Esencia gourmet intensa centrada en el azúcar moreno, la vainilla y el toque de orquídea.', 2, 41),
+(103, 'DD148', 'SWEET LIKE CANDY', NULL, 'Aroma dulce de Ariana Grande con moras, malvavisco y crema batida.', 2, 42),
+(104, 'DD159', 'CLOUD', NULL, 'Fragancia soñadora que mezcla lavanda, pera, coco y praliné sobre un fondo amaderado.', 2, 42),
+(105, 'DD160', 'TOY 2 BUBBLE GUM', NULL, 'Aroma divertido que abre con goma de mascar y cítricos, evolucionando hacia la rosa y el durazno.', 2, 43),
+(106, 'DD161', 'GOOD GIRL BLUSH', NULL, 'Versión romántica con notas de peonía, agua de rosas y un fondo de vainilla sostenible.', 2, 1),
+(107, 'DD163', 'YARA', NULL, 'Perfume árabe viral con notas dulces de orquídea, mandarina y un fondo cremoso de vainilla.', 2, 20),
+(108, 'DD174', 'EROS POUR FEMME', NULL, 'Fragancia de seducción con limón siciliano, bergamota de Calabria y jazmín sambac.', 2, 4),
+(109, 'DD175', 'YARA CANDY', NULL, 'Una explosión de dulzura con notas de caramelos, frutas tropicales y vainilla cremosa.', 2, 20),
+(110, 'DD177', 'SCANDAL', NULL, 'El aroma original con miel, gardenia y pachuli que proyecta una feminidad poderosa.', 2, 11),
+(111, 'DD178', 'BORN IN ROMA GREEN', NULL, 'Fragancia fresca y floral con té lapsang souchong, jazmín y extracto de vainilla.', 2, 22),
+(112, 'DD179', 'BADE\'E AL OUD (NOBLE BLUSH)', NULL, 'Aroma lujoso con nardos, jazmín y un fondo amaderado de oud refinado.', 2, 20),
+(113, 'DD181', 'ECLAIRE', NULL, 'Perfume gourmet que evoca pastelería fina con notas de caramelo, leche y vainilla.', 2, 20),
+(114, 'DD182', 'POUR ELLE SPARKLING', NULL, 'Fragancia alegre con macarrón dulce, algodón de azúcar y notas frutales.', 2, 13),
+(115, 'DD187', 'YUM BOUJEE MARSHMALLOW', NULL, 'Aroma ultra-dulce con malvavisco, vainilla y un toque frutal de fresa.', 2, 44),
+(116, 'DD900', 'SWEET TOOTH', NULL, 'Fragancia inspirada en golosinas con chocolate blanco, malvavisco y crema de vainilla.', 2, 45),
+(117, 'DD901', 'YARA TOUS', NULL, 'Versión tropical de Yara con mango jugoso, coco y flor de azahar.', 2, 20),
+(118, 'DD902', 'BURBERRY HER', NULL, 'Aroma urbano de Londres con frutos rojos, jazmín y notas amaderadas de ámbar.', 2, 46),
+(119, 'DD903', 'ALIEN', NULL, 'Fragancia solar y misteriosa con jazmín sambac, notas amaderadas y ámbar blanco.', 2, 47),
+(120, 'DD904', 'BORN IN ROMA EXTRADOSE', NULL, 'Versión intensificada con notas florales potentes y un fondo de maderas preciosas.', 2, 22),
+(121, 'DD905', 'AQUA KISS', NULL, 'Aroma fresco y marino de Victoria\'s Secret con notas de freesia y margarita bajo la lluvia.', 2, 48),
+(122, 'DD906', 'LOVE SPELL', NULL, 'Fragancia icónica frutal con flor de cerezo y durazno, un clásico de frescura diaria.', 2, 48),
+(123, 'DD907', 'ARI', NULL, 'El primer perfume de Ariana Grande, dulce con pera, malvavisco y maderas claras.', 2, 42),
+(124, 'DD908', 'BORN IN ROMA INTENSE', NULL, 'Fragancia floral ambarina con jazmín y vainilla bourbon para una noche inolvidable.', 2, 22),
+(125, 'DD909', 'VANILLA LACE', NULL, 'Aroma clásico de vainilla pura y orquídea, cálido y reconfortante.', 2, 48),
+(126, 'DD911', 'DAZZLE', NULL, 'Perfume brillante de Paris Hilton con cereza ácida, manzana roja y orquídea.', 2, 30),
+(127, 'DD912', 'MISS DIOR BLOOMING', NULL, 'Bouquet floral delicado con peonía, rosa damascena y almizcle blanco.', 2, 17),
+(128, 'DD913', 'DIVINE', NULL, 'Fragancia floral marina de Jean Paul Gaultier con notas solares y lirio blanco.', 2, 11),
+(129, 'DD914', 'ISLAND BLISS', NULL, 'Aroma tropical que evoca vacaciones con coco, frutas exóticas y flores blancas.', 2, 19),
+(130, 'DD916', 'YUM YUM', NULL, 'Fragancia divertida y golosa con notas de frutas dulces y un fondo de vainilla.', 2, 19),
+(131, 'DD917', 'HYPNOTIC POISON', NULL, 'Esencia magnética de Dior con almendra amarga, jazmín sambac y vainilla.', 2, 17),
+(132, 'DD918', 'THANK U NEXT', NULL, 'Perfume audaz con pera blanca, frambuesa silvestre y coco cremoso.', 2, 42),
+(133, 'DD919', 'LA BOMBA', NULL, 'Aroma explosivo y floral con notas de jazmín, rosa y un fondo dulce amaderado.', 2, 1),
+(134, 'DD920', 'SI', NULL, 'Fragancia elegante de Giorgio Armani con néctar de grosella negra y maderas claras.', 2, 2),
+(135, 'DD921', 'RICCI RICCI', NULL, 'Aroma chic con notas de ruibarbo, bergamota y flor de dondiego de noche.', 2, 49),
+(136, 'DD922', 'SCANDAL BY NIGHT', NULL, 'Una versión más profunda y amielada del original, con nardos y haba tonka.', 2, 11),
+(137, 'DD923', 'BONBON', '/assets/images/perfumes/perfume_6a1cf68c88192.webp', 'Perfume gourmet de lujo centrado en el caramelo crujiente, mandarina y azahar.', 2, 50),
+(138, 'XS001', 'PURE SEDUCTION', NULL, 'Fragancia frutal clásica de Victoria\'s Secret con ciruela roja y freesia.', 2, 48),
+(139, 'XS003', 'COCONUT PASSION', '/assets/images/perfumes/perfume_6a1bd1e5aa758.png', 'Aroma cálido y tropical que mezcla coco, vainilla y lirio de los valles.', 2, 48),
+(140, 'XS009', 'WILD MADAGASCAR', '/assets/images/perfumes/perfume_6a1bcf788b961.png', 'Fragancia exótica con notas de vainilla de Madagascar, pera y flores blancas.', 2, 51),
+(141, 'CC908', 'CHERRY (LOST CHERRY)', '/assets/images/perfumes/perfume_6a1bcae349800.png', 'Viaje prohibido por los sentidos con cereza exótica, licor y almendra amarga.', 3, 26),
+(142, 'CC911', 'MILLESIME IMPERIAL', '/assets/images/perfumes/perfume_6a1bc7532171c.png', 'Fragancia real que evoca jardines cítricos y paisajes costeros con notas salinas.', 3, 27),
+(143, 'CC917', 'KHAMRAH QHAWA', '/assets/images/perfumes/perfume_6a1bc6c1e2597.png', 'Versión de Khamrah con una nota intensa de café arábica, canela y dátiles dulces.', 3, 20),
+(144, 'DD915', 'KIRKE', '/assets/images/perfumes/kirke.png', 'Extracto de perfume mágico con maracuyá, durazno y un fondo de almizcle blanco.', 3, 52),
+(145, 'UU003', 'BACCARAT ROUGE 540', '/assets/images/perfumes/perfume_6a1bc61a6a69f.png', 'Alquimia poética de jazmín, azafrán, ámbar gris y resina de abeto.', 3, 53),
+(146, 'UU012', 'KHAMRAH', '/assets/images/perfumes/perfume_6a1bc4e316761.png', 'Aroma opulento con dátiles, canela, vainilla y notas amaderadas de sándalo.', 3, 20),
+(147, 'UU019', 'ERBA PURA', '/assets/images/perfumes/erba_pura.webp', 'Una cesta de frutas cítricas sicilianas y mediterráneas con un fondo de ámbar y almizcle.', 3, 54),
+(148, 'UU022', 'HONOR & GLORY', '/assets/images/perfumes/perfume_6a1bc584a6ee5.png', 'Fragancia prestigiosa con piña, especias orientales y un fondo de maderas ricas.', 3, 20),
+(149, 'UU023', 'SUBLIME', '/assets/images/perfumes/perfume_6a1bb45873521.png', 'Aroma sofisticado que mezcla notas florales y frutales con una elegancia atemporal.', 3, 20),
+(150, 'CC919', 'PEGASUS', '/assets/images/perfumes/pegasus.png', 'Fragancia oriental elegante con almendra, vainilla y sándalo; cremosa, sofisticada y de alta duración.', 1, 55),
+(151, 'UU020', 'BLEECKER STREET', '/assets/images/perfumes/bleecker.png', 'Aroma fresco amaderado con notas verdes, arándanos y pachulí; moderno y distintivo.', 3, 56),
+(152, 'CC137', 'TOY BOY', '/assets/images/perfumes/TOYBOY.png', 'Perfume especiado y floral con rosa, pimienta y vetiver; masculino, moderno y atrevido.', 1, 43),
+(153, 'DD147', 'DELINA', '/assets/images/perfumes/DELINA.png', 'Fragancia floral frutal con rosa turca, lichi y vainilla; femenina, elegante y envolvente.', 2, 55),
+(154, 'DD925', 'MALLOW MADNESS', '/assets/images/perfumes/mallow.png', 'Aroma gourmand dulce con malvavisco, vainilla y notas cremosas; cálido y adictivo.', 2, 20),
+(155, 'DD926', 'MOD VANILLA', '/assets/images/perfumes/MOD.png', 'Perfume suave y moderno con vainilla, cacao y almizcle; dulce, limpio y reconfortante.', 2, 42);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `perfume_componentes`
+-- Estructura de tabla para la tabla `perfume_componentes`
 --
 
 CREATE TABLE `perfume_componentes` (
   `perfume_id` int(11) NOT NULL,
   `componente_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `perfume_componentes`
+-- Volcado de datos para la tabla `perfume_componentes`
 --
 
 INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
@@ -565,6 +587,7 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (106, 2),
 (127, 2),
 (142, 2),
+(153, 2),
 (1, 3),
 (11, 3),
 (21, 3),
@@ -583,6 +606,7 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (128, 4),
 (129, 4),
 (147, 4),
+(154, 4),
 (2, 5),
 (2, 6),
 (8, 6),
@@ -634,6 +658,9 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (147, 6),
 (148, 6),
 (149, 6),
+(150, 6),
+(154, 6),
+(155, 6),
 (2, 7),
 (98, 7),
 (3, 8),
@@ -643,6 +670,7 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (132, 8),
 (140, 8),
 (144, 8),
+(152, 8),
 (3, 9),
 (3, 10),
 (4, 11),
@@ -683,6 +711,7 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (131, 13),
 (137, 13),
 (145, 13),
+(151, 13),
 (5, 14),
 (5, 15),
 (5, 16),
@@ -723,6 +752,7 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (60, 22),
 (64, 22),
 (85, 22),
+(150, 22),
 (9, 24),
 (120, 24),
 (9, 25),
@@ -743,6 +773,7 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (58, 29),
 (83, 29),
 (91, 29),
+(153, 29),
 (12, 30),
 (20, 30),
 (33, 30),
@@ -770,6 +801,7 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (17, 33),
 (65, 33),
 (78, 33),
+(155, 33),
 (13, 34),
 (145, 34),
 (14, 35),
@@ -840,6 +872,7 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (140, 52),
 (144, 52),
 (148, 52),
+(150, 52),
 (28, 53),
 (74, 53),
 (86, 53),
@@ -879,6 +912,8 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (105, 64),
 (123, 64),
 (149, 64),
+(152, 64),
+(153, 64),
 (37, 65),
 (74, 65),
 (92, 65),
@@ -906,6 +941,7 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (81, 70),
 (100, 70),
 (142, 70),
+(151, 70),
 (44, 71),
 (91, 71),
 (95, 71),
@@ -914,8 +950,10 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (46, 73),
 (145, 73),
 (47, 74),
+(152, 74),
 (47, 75),
 (54, 75),
+(151, 75),
 (48, 76),
 (52, 76),
 (48, 77),
@@ -1001,18 +1039,22 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (118, 125),
 (132, 125),
 (144, 125),
+(154, 125),
 (102, 126),
 (109, 126),
 (102, 127),
 (103, 128),
 (104, 128),
+(154, 128),
 (104, 129),
 (143, 129),
+(155, 129),
 (105, 130),
 (105, 131),
 (143, 131),
 (106, 132),
 (112, 132),
+(150, 132),
 (107, 133),
 (126, 133),
 (108, 134),
@@ -1038,6 +1080,7 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (144, 148),
 (118, 149),
 (134, 149),
+(154, 149),
 (118, 150),
 (141, 150),
 (118, 151),
@@ -1076,21 +1119,23 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 (142, 182),
 (143, 183),
 (143, 184),
-(148, 185);
+(148, 185),
+(151, 186),
+(151, 187);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `perfume_tipos_aroma`
+-- Estructura de tabla para la tabla `perfume_tipos_aroma`
 --
 
 CREATE TABLE `perfume_tipos_aroma` (
   `perfume_id` int(11) NOT NULL,
   `tipo_aroma_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `perfume_tipos_aroma`
+-- Volcado de datos para la tabla `perfume_tipos_aroma`
 --
 
 INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
@@ -1143,10 +1188,12 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (63, 2),
 (68, 2),
 (81, 2),
+(151, 2),
 (1, 3),
 (2, 4),
 (16, 4),
 (2, 5),
+(12, 5),
 (18, 5),
 (19, 5),
 (20, 5),
@@ -1162,6 +1209,9 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (48, 5),
 (65, 5),
 (84, 5),
+(86, 5),
+(89, 5),
+(92, 5),
 (94, 5),
 (99, 5),
 (101, 5),
@@ -1175,6 +1225,8 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (131, 5),
 (146, 5),
 (149, 5),
+(150, 5),
+(155, 5),
 (2, 6),
 (4, 6),
 (7, 6),
@@ -1191,6 +1243,7 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (45, 6),
 (63, 6),
 (64, 6),
+(151, 6),
 (2, 7),
 (14, 7),
 (17, 7),
@@ -1210,6 +1263,8 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (138, 7),
 (140, 7),
 (145, 7),
+(153, 7),
+(155, 7),
 (2, 8),
 (9, 8),
 (15, 8),
@@ -1244,6 +1299,7 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (128, 8),
 (136, 8),
 (145, 8),
+(153, 8),
 (3, 9),
 (15, 9),
 (16, 9),
@@ -1292,6 +1348,8 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (146, 9),
 (147, 9),
 (148, 9),
+(150, 9),
+(155, 9),
 (3, 10),
 (12, 10),
 (26, 10),
@@ -1341,6 +1399,8 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (147, 10),
 (148, 10),
 (149, 10),
+(151, 10),
+(154, 10),
 (3, 11),
 (3, 12),
 (4, 12),
@@ -1364,6 +1424,8 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (143, 12),
 (146, 12),
 (147, 12),
+(151, 12),
+(152, 12),
 (3, 13),
 (4, 13),
 (6, 13),
@@ -1393,6 +1455,7 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (129, 13),
 (147, 13),
 (149, 13),
+(150, 13),
 (4, 14),
 (10, 14),
 (21, 14),
@@ -1442,6 +1505,8 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (111, 15),
 (119, 15),
 (148, 15),
+(151, 15),
+(152, 15),
 (5, 16),
 (26, 16),
 (28, 16),
@@ -1482,6 +1547,8 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (136, 17),
 (141, 17),
 (146, 17),
+(152, 17),
+(154, 17),
 (7, 18),
 (9, 18),
 (15, 18),
@@ -1518,10 +1585,6 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (60, 22),
 (11, 23),
 (94, 23),
-(12, 24),
-(86, 24),
-(89, 24),
-(92, 24),
 (17, 25),
 (19, 26),
 (46, 26),
@@ -1594,6 +1657,8 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (139, 31),
 (141, 31),
 (145, 31),
+(153, 31),
+(154, 31),
 (29, 32),
 (29, 33),
 (121, 33),
@@ -1603,6 +1668,7 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (65, 34),
 (98, 34),
 (143, 34),
+(152, 34),
 (35, 35),
 (74, 35),
 (88, 35),
@@ -1626,6 +1692,7 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (143, 37),
 (145, 37),
 (146, 37),
+(154, 37),
 (44, 38),
 (50, 39),
 (72, 39),
@@ -1657,38 +1724,14 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 (113, 52),
 (115, 52),
 (125, 52),
+(155, 52),
 (115, 53),
 (141, 54);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `precios`
---
-
-CREATE TABLE `precios` (
-  `id` int(11) NOT NULL,
-  `sucursal_id` int(11) NOT NULL,
-  `frasco_id` int(11) NOT NULL,
-  `precio` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `precios`
---
-
-INSERT INTO `precios` (`id`, `sucursal_id`, `frasco_id`, `precio`) VALUES
-(1, 1, 1, 45.00),
-(2, 1, 2, 69.00),
-(3, 1, 3, 110.00),
-(4, 1, 4, 95.00),
-(5, 1, 5, 120.00),
-(6, 1, 6, 105.00);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `stock`
+-- Estructura de tabla para la tabla `stock`
 --
 
 CREATE TABLE `stock` (
@@ -1699,22 +1742,10 @@ CREATE TABLE `stock` (
   `umbral_bajo` int(11) NOT NULL DEFAULT 5
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `stock`
---
-
-INSERT INTO `stock` (`id`, `sucursal_id`, `frasco_id`, `cantidad`, `umbral_bajo`) VALUES
-(1, 1, 1, 0, 5),
-(2, 1, 2, 0, 5),
-(3, 1, 3, 0, 5),
-(4, 1, 4, 0, 5),
-(5, 1, 5, 0, 5),
-(6, 1, 6, 0, 5);
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sucursales`
+-- Estructura de tabla para la tabla `sucursales`
 --
 
 CREATE TABLE `sucursales` (
@@ -1725,7 +1756,7 @@ CREATE TABLE `sucursales` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `sucursales`
+-- Volcado de datos para la tabla `sucursales`
 --
 
 INSERT INTO `sucursales` (`id`, `nombre`, `ciudad`, `activo`) VALUES
@@ -1734,17 +1765,17 @@ INSERT INTO `sucursales` (`id`, `nombre`, `ciudad`, `activo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tipos_aroma`
+-- Estructura de tabla para la tabla `tipos_aroma`
 --
 
 CREATE TABLE `tipos_aroma` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `categoria` varchar(50) DEFAULT NULL COMMENT 'aroma | etiqueta | sensacion | perfil'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tipos_aroma`
+-- Volcado de datos para la tabla `tipos_aroma`
 --
 
 INSERT INTO `tipos_aroma` (`id`, `nombre`, `categoria`) VALUES
@@ -1771,7 +1802,6 @@ INSERT INTO `tipos_aroma` (`id`, `nombre`, `categoria`) VALUES
 (21, 'CALIDO ESPECIADO', 'perfil'),
 (22, 'ULTRAMACHO', 'perfil'),
 (23, 'BALSAMICO', 'perfil'),
-(24, 'AVANILLADO', 'perfil'),
 (25, 'CACAO', 'perfil'),
 (26, 'CARAMELO', 'perfil'),
 (27, 'LAVANDA', 'perfil'),
@@ -1806,7 +1836,7 @@ INSERT INTO `tipos_aroma` (`id`, `nombre`, `categoria`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `usuarios`
+-- Estructura de tabla para la tabla `usuarios`
 --
 
 CREATE TABLE `usuarios` (
@@ -1821,17 +1851,17 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `usuarios`
+-- Volcado de datos para la tabla `usuarios`
 --
 
 INSERT INTO `usuarios` (`id`, `nombre`, `usuario`, `password_hash`, `rol`, `sucursal_id`, `activo`, `creado_en`) VALUES
 (1, 'Admin', 'admin', '$2y$12$JcDadm8TWuOURQu1g1QPs.uMKvdK8RGSjPIlQYu4DhGcwoihig5y2', 'admin', NULL, 1, '2026-05-29 23:07:10'),
-(2, 'Yanella', 'chiclayo', '$2y$12$aVEFjUFtZGNg0DXy14oNc.GuSmlLKGgaq.s17oXjxU448ffHxZbOm', 'vendedor', 1, 1, '2026-05-29 23:07:10');
+(2, 'Yanella', 'chiclayo', '$2y$12$JcDadm8TWuOURQu1g1QPs.uMKvdK8RGSjPIlQYu4DhGcwoihig5y2', 'vendedor', 1, 1, '2026-05-29 23:07:10');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ventas`
+-- Estructura de tabla para la tabla `ventas`
 --
 
 CREATE TABLE `ventas` (
@@ -1847,7 +1877,7 @@ CREATE TABLE `ventas` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `venta_items`
+-- Estructura de tabla para la tabla `venta_items`
 --
 
 CREATE TABLE `venta_items` (
@@ -1855,17 +1885,15 @@ CREATE TABLE `venta_items` (
   `venta_id` int(11) NOT NULL,
   `perfume_id` int(11) NOT NULL,
   `frasco_id` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL,
-  `precio_unitario` decimal(10,2) NOT NULL,
-  `subtotal` decimal(10,2) NOT NULL
+  `cantidad` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `componentes`
+-- Indices de la tabla `componentes`
 --
 ALTER TABLE `componentes`
   ADD PRIMARY KEY (`id`),
@@ -1873,28 +1901,28 @@ ALTER TABLE `componentes`
   ADD KEY `idx_componentes_nombre` (`nombre`);
 
 --
--- Indexes for table `designers`
+-- Indices de la tabla `designers`
 --
 ALTER TABLE `designers`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `nombre` (`nombre`);
 
 --
--- Indexes for table `frascos`
+-- Indices de la tabla `frascos`
 --
 ALTER TABLE `frascos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_frasco_cat` (`categoria`,`orden`);
 
 --
--- Indexes for table `generos`
+-- Indices de la tabla `generos`
 --
 ALTER TABLE `generos`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `nombre` (`nombre`);
 
 --
--- Indexes for table `movimientos_stock`
+-- Indices de la tabla `movimientos_stock`
 --
 ALTER TABLE `movimientos_stock`
   ADD PRIMARY KEY (`id`),
@@ -1903,7 +1931,7 @@ ALTER TABLE `movimientos_stock`
   ADD KEY `fk_mov_frasco` (`frasco_id`);
 
 --
--- Indexes for table `perfumes`
+-- Indices de la tabla `perfumes`
 --
 ALTER TABLE `perfumes`
   ADD PRIMARY KEY (`id`),
@@ -1914,29 +1942,25 @@ ALTER TABLE `perfumes`
   ADD KEY `idx_perfumes_referencia` (`referencia`);
 
 --
--- Indexes for table `perfume_componentes`
+-- Indices de la tabla `perfume_componentes`
 --
 ALTER TABLE `perfume_componentes`
   ADD PRIMARY KEY (`perfume_id`,`componente_id`),
-  ADD KEY `componente_id` (`componente_id`);
+  ADD KEY `componente_id` (`componente_id`),
+  ADD KEY `idx_pc_perfume` (`perfume_id`),
+  ADD KEY `idx_pc_componente` (`componente_id`);
 
 --
--- Indexes for table `perfume_tipos_aroma`
+-- Indices de la tabla `perfume_tipos_aroma`
 --
 ALTER TABLE `perfume_tipos_aroma`
   ADD PRIMARY KEY (`perfume_id`,`tipo_aroma_id`),
-  ADD KEY `tipo_aroma_id` (`tipo_aroma_id`);
+  ADD KEY `tipo_aroma_id` (`tipo_aroma_id`),
+  ADD KEY `idx_pta_perfume` (`perfume_id`),
+  ADD KEY `idx_pta_tipo` (`tipo_aroma_id`);
 
 --
--- Indexes for table `precios`
---
-ALTER TABLE `precios`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `uq_precio` (`sucursal_id`,`frasco_id`),
-  ADD KEY `fk_precio_frasco` (`frasco_id`);
-
---
--- Indexes for table `stock`
+-- Indices de la tabla `stock`
 --
 ALTER TABLE `stock`
   ADD PRIMARY KEY (`id`),
@@ -1944,21 +1968,22 @@ ALTER TABLE `stock`
   ADD KEY `fk_stock_frasco` (`frasco_id`);
 
 --
--- Indexes for table `sucursales`
+-- Indices de la tabla `sucursales`
 --
 ALTER TABLE `sucursales`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tipos_aroma`
+-- Indices de la tabla `tipos_aroma`
 --
 ALTER TABLE `tipos_aroma`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `nombre` (`nombre`),
+  ADD UNIQUE KEY `nombre_2` (`nombre`),
   ADD KEY `idx_tipos_aroma_nombre` (`nombre`);
 
 --
--- Indexes for table `usuarios`
+-- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id`),
@@ -1966,7 +1991,7 @@ ALTER TABLE `usuarios`
   ADD KEY `fk_usuarios_sucursal` (`sucursal_id`);
 
 --
--- Indexes for table `ventas`
+-- Indices de la tabla `ventas`
 --
 ALTER TABLE `ventas`
   ADD PRIMARY KEY (`id`),
@@ -1975,7 +2000,7 @@ ALTER TABLE `ventas`
   ADD KEY `fk_ventas_vendedor` (`vendedor_id`);
 
 --
--- Indexes for table `venta_items`
+-- Indices de la tabla `venta_items`
 --
 ALTER TABLE `venta_items`
   ADD PRIMARY KEY (`id`),
@@ -1984,148 +2009,135 @@ ALTER TABLE `venta_items`
   ADD KEY `fk_items_frasco` (`frasco_id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `componentes`
+-- AUTO_INCREMENT de la tabla `componentes`
 --
 ALTER TABLE `componentes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=188;
 
 --
--- AUTO_INCREMENT for table `designers`
+-- AUTO_INCREMENT de la tabla `designers`
 --
 ALTER TABLE `designers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
--- AUTO_INCREMENT for table `frascos`
+-- AUTO_INCREMENT de la tabla `frascos`
 --
 ALTER TABLE `frascos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT for table `generos`
+-- AUTO_INCREMENT de la tabla `generos`
 --
 ALTER TABLE `generos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `movimientos_stock`
+-- AUTO_INCREMENT de la tabla `movimientos_stock`
 --
 ALTER TABLE `movimientos_stock`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `perfumes`
+-- AUTO_INCREMENT de la tabla `perfumes`
 --
 ALTER TABLE `perfumes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
 
 --
--- AUTO_INCREMENT for table `precios`
---
-ALTER TABLE `precios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `stock`
+-- AUTO_INCREMENT de la tabla `stock`
 --
 ALTER TABLE `stock`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `sucursales`
+-- AUTO_INCREMENT de la tabla `sucursales`
 --
 ALTER TABLE `sucursales`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `tipos_aroma`
+-- AUTO_INCREMENT de la tabla `tipos_aroma`
 --
 ALTER TABLE `tipos_aroma`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
--- AUTO_INCREMENT for table `usuarios`
+-- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `ventas`
+-- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `venta_items`
+-- AUTO_INCREMENT de la tabla `venta_items`
 --
 ALTER TABLE `venta_items`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Constraints for dumped tables
+-- Restricciones para tablas volcadas
 --
 
 --
--- Constraints for table `movimientos_stock`
+-- Filtros para la tabla `movimientos_stock`
 --
 ALTER TABLE `movimientos_stock`
   ADD CONSTRAINT `fk_mov_frasco` FOREIGN KEY (`frasco_id`) REFERENCES `frascos` (`id`),
   ADD CONSTRAINT `fk_mov_sucursal` FOREIGN KEY (`sucursal_id`) REFERENCES `sucursales` (`id`);
 
 --
--- Constraints for table `perfumes`
+-- Filtros para la tabla `perfumes`
 --
 ALTER TABLE `perfumes`
   ADD CONSTRAINT `perfumes_ibfk_1` FOREIGN KEY (`genero_id`) REFERENCES `generos` (`id`),
   ADD CONSTRAINT `perfumes_ibfk_2` FOREIGN KEY (`designer_id`) REFERENCES `designers` (`id`);
 
 --
--- Constraints for table `perfume_componentes`
+-- Filtros para la tabla `perfume_componentes`
 --
 ALTER TABLE `perfume_componentes`
   ADD CONSTRAINT `perfume_componentes_ibfk_1` FOREIGN KEY (`perfume_id`) REFERENCES `perfumes` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `perfume_componentes_ibfk_2` FOREIGN KEY (`componente_id`) REFERENCES `componentes` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `perfume_tipos_aroma`
+-- Filtros para la tabla `perfume_tipos_aroma`
 --
 ALTER TABLE `perfume_tipos_aroma`
   ADD CONSTRAINT `perfume_tipos_aroma_ibfk_1` FOREIGN KEY (`perfume_id`) REFERENCES `perfumes` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `perfume_tipos_aroma_ibfk_2` FOREIGN KEY (`tipo_aroma_id`) REFERENCES `tipos_aroma` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `precios`
---
-ALTER TABLE `precios`
-  ADD CONSTRAINT `fk_precio_frasco` FOREIGN KEY (`frasco_id`) REFERENCES `frascos` (`id`),
-  ADD CONSTRAINT `fk_precio_sucursal` FOREIGN KEY (`sucursal_id`) REFERENCES `sucursales` (`id`);
-
---
--- Constraints for table `stock`
+-- Filtros para la tabla `stock`
 --
 ALTER TABLE `stock`
   ADD CONSTRAINT `fk_stock_frasco` FOREIGN KEY (`frasco_id`) REFERENCES `frascos` (`id`),
   ADD CONSTRAINT `fk_stock_sucursal` FOREIGN KEY (`sucursal_id`) REFERENCES `sucursales` (`id`);
 
 --
--- Constraints for table `usuarios`
+-- Filtros para la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD CONSTRAINT `fk_usuarios_sucursal` FOREIGN KEY (`sucursal_id`) REFERENCES `sucursales` (`id`);
 
 --
--- Constraints for table `ventas`
+-- Filtros para la tabla `ventas`
 --
 ALTER TABLE `ventas`
   ADD CONSTRAINT `fk_ventas_sucursal` FOREIGN KEY (`sucursal_id`) REFERENCES `sucursales` (`id`),
   ADD CONSTRAINT `fk_ventas_vendedor` FOREIGN KEY (`vendedor_id`) REFERENCES `usuarios` (`id`);
 
 --
--- Constraints for table `venta_items`
+-- Filtros para la tabla `venta_items`
 --
 ALTER TABLE `venta_items`
   ADD CONSTRAINT `fk_items_frasco` FOREIGN KEY (`frasco_id`) REFERENCES `frascos` (`id`),

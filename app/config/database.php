@@ -6,4 +6,5 @@ return [
   'user' => 'root',
   'pass' => '',
   'charset' => 'utf8mb4',
+  'timezone' => '-05:00',
 ];

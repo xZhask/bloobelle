@@ -1,4 +1,6 @@
 :root{
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Jost', sans-serif;
   --color-bg:#faf9f7;
   --color-surface:#ffffff;
   --color-elevated:#ffffff;
