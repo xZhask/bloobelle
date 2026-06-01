@@ -43,6 +43,11 @@ class FrascoRepository {
     }
 
     public function update(int $id, array $d): void {
+        // Obtener la imagen anterior para eliminarla si cambia
+        $stmtOld = $this->pdo->prepare("SELECT imagen FROM frascos WHERE id = ?");
+        $stmtOld->execute([$id]);
+        $oldImg = $stmtOld->fetchColumn();
+
         $stmt = $this->pdo->prepare("
             UPDATE frascos 
             SET nombre = :nombre, 
@@ -62,6 +67,14 @@ class FrascoRepository {
             'descripcion' => $d['descripcion'] ?? null,
             'orden' => $d['orden'] ?? 0
         ]);
+
+        // Si se guardó correctamente y se pasó una imagen nueva diferente a la anterior, la borramos
+        if (!empty($d['imagen']) && $oldImg && $oldImg !== $d['imagen']) {
+            $oldImgPath = dirname(__DIR__, 2) . '/public' . $oldImg;
+            if (file_exists($oldImgPath) && is_file($oldImgPath)) {
+                @unlink($oldImgPath);
+            }
+        }
     }
 
     public function setActivo(int $id, bool $activo): void {

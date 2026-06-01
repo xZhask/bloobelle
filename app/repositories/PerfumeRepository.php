@@ -170,8 +170,21 @@ class PerfumeRepository {
     $this->db->beginTransaction();
     try {
       if ($rutaImg !== '') {
+          // Obtener la imagen anterior para eliminarla si cambia
+          $stmtOld = $this->db->prepare("SELECT ruta_img FROM perfumes WHERE id = ?");
+          $stmtOld->execute([$id]);
+          $oldImg = $stmtOld->fetchColumn();
+
           $stmt = $this->db->prepare("UPDATE perfumes SET codigo=?, referencia=?, ruta_img=?, descripcion=?, genero_id=?, designer_id=? WHERE id=?");
           $stmt->execute([$codigo, $ref, $rutaImg, $descripcion ?: null, $generoId, $designerId, $id]);
+
+          // Si se guardó correctamente y hay una imagen vieja diferente, la borramos del servidor
+          if ($oldImg && $oldImg !== $rutaImg) {
+              $oldImgPath = dirname(__DIR__, 2) . '/public' . $oldImg;
+              if (file_exists($oldImgPath) && is_file($oldImgPath)) {
+                  @unlink($oldImgPath);
+              }
+          }
       } else {
           $stmt = $this->db->prepare("UPDATE perfumes SET codigo=?, referencia=?, descripcion=?, genero_id=?, designer_id=? WHERE id=?");
           $stmt->execute([$codigo, $ref, $descripcion ?: null, $generoId, $designerId, $id]);
