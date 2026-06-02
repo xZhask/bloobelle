@@ -109,9 +109,12 @@ if ($user && $user['rol'] === 'admin') {
     .nav-link-on{color:var(--color-accent) !important}
 
     @media (max-width: 768px) {
+      .header {
+        padding: 0 0.75rem;
+      }
       .header-content {
         height: 70px;
-        padding: 0 1rem;
+        padding: 0;
       }
       .logo {
         font-size: 22px;
@@ -178,11 +181,11 @@ if ($user && $user['rol'] === 'admin') {
         <a href="/tienda?pos=1" class="nav-link<?= (isset($activeTab) && $activeTab === 'venta') ? ' nav-link-on' : '' ?>">Punto de Venta</a>
         <?php if(!isset($hideNewPerfume)): ?>
         <a href="/perfumes/create" class="btn-new"><span>+</span> Nuevo Perfume</a>
-        <?php endif; ?>
-        <?php if(isset($hideNewPerfume)): ?>
-        <a href="/perfumes" class="btn-new" style="background:var(--color-surface); color:var(--color-accent); border:1px solid var(--color-accent); margin-right:1rem;">Catálogo de Perfumes</a>
         <?php else: ?>
-        <a href="/catalogo/frascos" class="btn-new" style="background:var(--color-surface); color:var(--color-accent); border:1px solid var(--color-accent); margin-right:1rem;">Catálogo de Frascos</a>
+        <a href="/perfumes" class="btn-new">Catálogo de Perfumes</a>
+        <?php endif; ?>
+        <?php if(!isset($hideFrascosBtn)): ?>
+        <a href="/catalogo/frascos" class="btn-new" style="background:var(--color-surface); color:var(--color-accent); border:1px solid var(--color-accent);">Catálogo de Frascos</a>
         <?php endif; ?>
         <?php if(!isset($hideStoreSwitcher)): ?>
         <select class="store-select" id="header-sucursal-selector" style="background:var(--color-surface); border:1px solid var(--color-border); color:var(--color-text-primary); border-radius:6px; padding:0.4rem 0.6rem; font-family:var(--font-body); font-size:0.85rem; outline:none; cursor:pointer;">
@@ -204,6 +207,7 @@ if ($user && $user['rol'] === 'admin') {
         <a href="/logout" class="btn-logout">Salir</a>
 
       <?php else: /* vendedor */ ?>
+        <a href="/tienda/reporte" class="nav-link<?= (isset($activeTab) && $activeTab === 'reporte') ? ' nav-link-on' : '' ?>">Reporte</a>
         <a href="/tienda?pos=1" class="btn-new"><span>+</span> Registrar venta</a>
         <a href="/tienda/stock" class="btn-new">Stock</a>
         <span class="user-chip">
@@ -269,6 +273,7 @@ if ($user && $user['rol'] === 'admin') {
     </div>
   <?php else: /* vendedor */ ?>
     <nav class="drawer-nav">
+      <a href="/tienda/reporte" class="drawer-link<?= (isset($activeTab) && $activeTab === 'reporte') ? ' nav-link-on' : '' ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M4 20V10M10 20V4M16 20v-6M22 20H2"/></svg>Reporte</a>
       <a href="/tienda?pos=1" class="drawer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M5 3h14v18l-2.5-1.5L14 21l-2-1.5L10 21l-2.5-1.5L5 21V3z"/><path d="M9 8h6M9 12h6"/></svg>Registrar venta</a>
       <a href="/tienda/stock" class="drawer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 3l9 4-9 4-9-4 9-4zM3 12l9 4 9-4M3 17l9 4 9-4"/></svg>Stock</a>
     </nav>

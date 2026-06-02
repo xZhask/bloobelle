@@ -2,7 +2,7 @@
 namespace App\Core;
 
 class Auth {
-    private const TIMEOUT = 1800; // 30 minutos de inactividad
+    private const TIMEOUT = 3600; // 60 minutos de inactividad
 
     public static function login(array $user): void {
         $_SESSION['user_id']          = $user['id'];
@@ -43,7 +43,7 @@ class Auth {
                 Response::json(['error' => 'No autenticado'], 401);
                 exit;
             }
-            header('Location: /login');
+            header('Location: /perfumes');
             exit;
         }
     }

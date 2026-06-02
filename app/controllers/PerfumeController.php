@@ -16,6 +16,7 @@ class PerfumeController {
   }
 
   public function create(): void {
+    \App\Core\Auth::requireRole('admin');
     $repo = new PerfumeRepository();
     $generos = $repo->getGeneros();
     $designers = $repo->getDesigners();
@@ -46,6 +47,7 @@ class PerfumeController {
   }
 
   public function store(): void {
+    \App\Core\Auth::requireRole('admin');
     $data = Request::json();
     $repo = new PerfumeRepository();
     try {
@@ -58,6 +60,7 @@ class PerfumeController {
   }
 
   public function edit(): void {
+    \App\Core\Auth::requireRole('admin');
     $id = (int)($_GET['id'] ?? 0);
     if ($id <= 0) {
         die('ID de perfume inválido');
@@ -75,6 +78,7 @@ class PerfumeController {
   }
 
   public function update(): void {
+    \App\Core\Auth::requireRole('admin');
     $data = Request::json();
     $id = (int)($data['id'] ?? 0);
     $repo = new PerfumeRepository();
@@ -88,6 +92,7 @@ class PerfumeController {
   }
 
   public function uploadImage(): void {
+    \App\Core\Auth::requireRole('admin');
     try {
       // Verificar que se subió un archivo
       if (!isset($_FILES['imagen']) || $_FILES['imagen']['error'] !== UPLOAD_ERR_OK) {
@@ -129,6 +134,7 @@ class PerfumeController {
   }
 
   public function storeDesigner(): void {
+    \App\Core\Auth::requireRole('admin');
     $data = Request::json();
     $repo = new PerfumeRepository();
     try {
@@ -141,6 +147,7 @@ class PerfumeController {
   }
 
   public function storeComponente(): void {
+    \App\Core\Auth::requireRole('admin');
     $data = Request::json();
     $repo = new PerfumeRepository();
     try {
@@ -153,6 +160,7 @@ class PerfumeController {
   }
 
   public function storeTipoAroma(): void {
+    \App\Core\Auth::requireRole('admin');
     $data = Request::json();
     $repo = new PerfumeRepository();
     try {

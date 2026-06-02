@@ -1,53 +1,98 @@
+/* =====================================================================
+   BlooBelle — Sistema de temas (claro / oscuro)
+   Paleta basada en la identidad de marca tomada del logotipo:
+     · Crema    #FBF7EB   (fondo del logo)
+     · Tinta    #070A24   (negro azul-noche del aro y "Bloo Belle")
+     · Vino     #543A38 → enriquecido a #7C403B  (subtítulo "Perfumería")
+   Concepto: crema + tinta como base; el vino actúa como color "joya"
+   (precios, etiquetas, foco, estados activos). Elegante, profesional, mínimo.
+   ===================================================================== */
+
 :root{
   --font-display: 'Playfair Display', serif;
   --font-body: 'Jost', sans-serif;
-  --color-bg:#faf9f7;
-  --color-surface:#ffffff;
-  --color-elevated:#ffffff;
-  --color-soft:#f3efe9;
-  --color-text-primary:#1a1614;
-  --color-text-secondary:#766f68;
-  --color-text-tertiary:#a89f94;
-  --color-accent:#b88e5d;
-  --color-accent-hover:#a07a4d;
-  --color-accent-light:rgba(184,142,93,0.08);
-  --color-on-accent:#ffffff;
-  --color-border:#e8e3dc;
-  --color-border-strong:#d8d2c8;
-  --color-overlay:rgba(26,22,20,0.45);
-  --color-success:#4a7c59;
-  --color-success-light:rgba(74,124,89,0.10);
-  --color-warn:#c9892f;
-  --color-warn-light:rgba(201,137,47,0.12);
-  --color-error:#c44536;
-  --color-error-light:rgba(196,69,54,0.10);
-  --shadow-sm:0 2px 8px rgba(0,0,0,0.04);
-  --shadow-md:0 8px 24px rgba(0,0,0,0.08);
+
+  /* Superficies — crema de marca */
+  --color-bg:#FBF7EB;            /* fondo de página = crema exacta del logo */
+  --color-surface:#FFFDF7;       /* tarjetas */
+  --color-elevated:#FFFFFF;      /* modales / popovers */
+  --color-soft:#F2EBD9;          /* relleno suave / hover */
+
+  /* Texto — tinta de marca */
+  --color-text-primary:#0D0E29;  /* tinta (negro azulado del logo) */
+  --color-text-secondary:#6B6457;/* taupe cálido */
+  --color-text-tertiary:#A89F8E; /* taupe claro */
+
+  /* Acento — vino / oxblood del subtítulo "Perfumería" */
+  --color-accent:#7C403B;
+  --color-accent-hover:#66302C;
+  --color-accent-light:rgba(124,64,59,0.09);
+  --color-on-accent:#FBF7EB;     /* crema sobre tinta o vino */
+
+  /* Bordes y velos */
+  --color-border:#E8DFCD;
+  --color-border-strong:#D7CBB3;
+  --color-overlay:rgba(13,14,41,0.48);
+
+  /* Estados — tonos sobrios afines a la marca */
+  --color-success:#4E7A57;
+  --color-success-light:rgba(78,122,87,0.12);
+  --color-warn:#B07B2E;          /* ámbar / oro antiguo, guiño a perfumería */
+  --color-warn-light:rgba(176,123,46,0.14);
+  --color-error:#BC3B2F;         /* rojo limpio, distinto del vino del acento */
+  --color-error-light:rgba(188,59,47,0.10);
+
+  /* Verde salvia (positivo/ingresos) y terracota (negativo/gastos) */
+  --color-pos-text:#5a7857;
+  --color-pos-bg:#f1f5ec;
+  --color-neg-text:#b56b50;
+  --color-neg-bg:#f6ece6;
+
+  --shadow-sm:0 2px 8px rgba(13,14,41,0.05);
+  --shadow-md:0 10px 28px rgba(13,14,41,0.10);
+
+  --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 :root[data-theme="dark"]{
-  --color-bg:#14110D;
-  --color-surface:#1E1A14;
-  --color-elevated:#292319;
-  --color-soft:#2E2820;
-  --color-text-primary:#ECE6DC;
-  --color-text-secondary:#A79E90;
-  --color-text-tertiary:#6E665B;
-  --color-accent:#C9A36A;
-  --color-accent-hover:#D9B57D;
-  --color-accent-light:rgba(201,163,106,0.14);
-  --color-on-accent:#14110D;
-  --color-border:#3A332A;
-  --color-border-strong:#4A4137;
-  --color-overlay:rgba(0,0,0,0.6);
-  --color-success:#74B58C;
-  --color-success-light:rgba(116,181,140,0.16);
-  --color-warn:#E2A85A;
-  --color-warn-light:rgba(226,168,90,0.16);
-  --color-error:#E07065;
-  --color-error-light:rgba(224,112,101,0.16);
-  --shadow-sm:0 2px 8px rgba(0,0,0,0.4);
-  --shadow-md:0 12px 28px rgba(0,0,0,0.5);
+  /* Superficies — tinta de marca como lienzo */
+  --color-bg:#080A1C;            /* tinta profunda del logo */
+  --color-surface:#10122A;       /* tarjetas */
+  --color-elevated:#181A38;      /* modales / popovers */
+  --color-soft:#1D1F3E;          /* relleno suave / hover */
+
+  /* Texto — crema de marca */
+  --color-text-primary:#F1EBDD;
+  --color-text-secondary:#ADA593;
+  --color-text-tertiary:#6E6757;
+
+  /* Acento — vino aclarado (terracota-rosado) para resaltar sobre tinta */
+  --color-accent:#CD8C84;
+  --color-accent-hover:#DCA39B;
+  --color-accent-light:rgba(205,140,132,0.16);
+  --color-on-accent:#0B0C1F;     /* tinta sobre el vino claro / sobre crema */
+
+  /* Bordes y velos */
+  --color-border:#282B4B;
+  --color-border-strong:#383C60;
+  --color-overlay:rgba(0,0,0,0.62);
+
+  /* Estados */
+  --color-success:#7FB389;
+  --color-success-light:rgba(127,179,137,0.16);
+  --color-warn:#DDA85B;
+  --color-warn-light:rgba(221,168,91,0.16);
+  --color-error:#E07A6F;
+  --color-error-light:rgba(224,122,111,0.16);
+
+  /* Verde salvia / terracota — dark */
+  --color-pos-text:#9cc09c;
+  --color-pos-bg:rgba(122,160,122,.16);
+  --color-neg-text:#d49b82;
+  --color-neg-bg:rgba(181,107,80,.16);
+
+  --shadow-sm:0 2px 10px rgba(0,0,0,0.45);
+  --shadow-md:0 14px 30px rgba(0,0,0,0.55);
 }
 
 html, body {

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="/assets/images/marca/favicon-2.png">
-  <link rel="stylesheet" href="/assets/css/theme.css">
+  <link rel="stylesheet" href="/assets/css/theme.css?v=<?= filemtime(APP_ROOT . '/public/assets/css/theme.css') ?>">
   <script>
   (function(){try{
     var t=localStorage.getItem('bb-theme');
@@ -500,18 +500,25 @@
     }
 
     .product-badge {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
       background: var(--color-accent);
-      padding: 0.4rem 0.875rem;
-      border-radius: 8px;
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
       font-size: 9px;
       text-transform: uppercase;
       letter-spacing: 1.5px;
       font-weight: 600;
       color: var(--color-surface);
-      z-index: 10;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .product-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--color-border);
     }
 
     .product-info {
@@ -557,8 +564,6 @@
       font-size: 12px;
       color: var(--color-text-secondary);
       font-family: 'Courier New', monospace;
-      padding-top: 0.75rem;
-      border-top: 1px solid var(--color-border);
       opacity: 0.7;
     }
 
@@ -1088,13 +1093,15 @@ color: var(--color-text-secondary);
               <?php endif; ?>
             </div>
             <div class="product-info">
-              <span class="product-badge"><?= htmlspecialchars($p['genero']) ?></span>
               <div class="product-designer"><?= htmlspecialchars($p['marca']) ?></div>
               <h3 class="product-name"><?= htmlspecialchars($p['referencia']) ?></h3>
               <?php if (!empty($p['descripcion'])): ?>
                 <p class="product-description"><?= htmlspecialchars($p['descripcion']) ?></p>
               <?php endif; ?>
-              <p class="product-code"><?= htmlspecialchars($p['codigo']) ?></p>
+              <div class="product-footer">
+                <p class="product-code"><?= htmlspecialchars($p['codigo']) ?></p>
+                <span class="product-badge"><?= htmlspecialchars($p['genero']) ?></span>
+              </div>
             </div>
           </div>
         <?php endforeach; ?>
@@ -1288,11 +1295,13 @@ color: var(--color-text-secondary);
             ${imagen}
           </div>
           <div class="product-info">
-            <span class="product-badge">${this.escapeHtml(p.genero)}</span>
             <div class="product-designer">${this.escapeHtml(p.marca)}</div>
             <h3 class="product-name">${this.escapeHtml(p.referencia)}</h3>
             ${descripcion}
-            <p class="product-code">${this.escapeHtml(p.codigo)}</p>
+            <div class="product-footer">
+              <p class="product-code">${this.escapeHtml(p.codigo)}</p>
+              <span class="product-badge">${this.escapeHtml(p.genero)}</span>
+            </div>
           </div>
         `;
         return card;

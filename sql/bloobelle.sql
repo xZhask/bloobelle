@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.3
+-- version 6.0.0-dev+20260324.466df794d2
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost:3306
--- Tiempo de generación: 01-06-2026 a las 03:31:22
--- Versión del servidor: 11.8.2-MariaDB
--- Versión de PHP: 8.5.5
+-- Host: localhost:3306
+-- Generation Time: Jun 02, 2026 at 04:54 AM
+-- Server version: 11.8.2-MariaDB
+-- PHP Version: 8.5.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `bloobelle`
+-- Database: `bloobelle`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `componentes`
+-- Table structure for table `componentes`
 --
 
 CREATE TABLE `componentes` (
@@ -33,7 +33,7 @@ CREATE TABLE `componentes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `componentes`
+-- Dumping data for table `componentes`
 --
 
 INSERT INTO `componentes` (`id`, `nombre`) VALUES
@@ -226,7 +226,7 @@ INSERT INTO `componentes` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `designers`
+-- Table structure for table `designers`
 --
 
 CREATE TABLE `designers` (
@@ -235,7 +235,7 @@ CREATE TABLE `designers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `designers`
+-- Dumping data for table `designers`
 --
 
 INSERT INTO `designers` (`id`, `nombre`) VALUES
@@ -299,7 +299,7 @@ INSERT INTO `designers` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `frascos`
+-- Table structure for table `frascos`
 --
 
 CREATE TABLE `frascos` (
@@ -315,7 +315,7 @@ CREATE TABLE `frascos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `frascos`
+-- Dumping data for table `frascos`
 --
 
 INSERT INTO `frascos` (`id`, `nombre`, `categoria`, `capacidad_ml`, `imagen`, `descripcion`, `orden`, `activo`, `controla_stock`) VALUES
@@ -335,12 +335,35 @@ INSERT INTO `frascos` (`id`, `nombre`, `categoria`, `capacidad_ml`, `imagen`, `d
 (14, 'Invictus 50 ml', 'diseno', 50, '/assets/images/frascos/frasco_6a1b938402abd.png', 'Frasco fragancia Invictus 50 ml', 10, 1, 1),
 (15, 'Cuadrado Negro 30 ml', 'diseno', 30, '/assets/images/frascos/frasco_6a1b93c1b2d3a.png', 'Frasco cuadrado negro 30 ml', 11, 1, 1),
 (16, 'Cuadrado Negro 50 ml', 'diseno', 50, '/assets/images/frascos/frasco_6a1b944875edd.png', 'Frasco cuadrado negro 50 ml', 12, 1, 1),
-(17, 'Sin frasco', 'generico', NULL, NULL, NULL, 99, 1, 0);
+(17, 'Sin frasco', 'generico', NULL, NULL, NULL, 99, 1, 0),
+(18, 'Frasco liso 10 ml', 'generico', 10, '/assets/images/frascos/frasco_6a1e0bd8632d2.webp', 'Frasco liso de 10 ml', 1, 1, 1);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `generos`
+-- Table structure for table `gastos`
+--
+
+CREATE TABLE `gastos` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `sucursal_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `descripcion` varchar(255) NOT NULL,
+  `monto` decimal(10,2) NOT NULL,
+  `fecha` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `gastos`
+--
+
+INSERT INTO `gastos` (`id`, `sucursal_id`, `usuario_id`, `descripcion`, `monto`, `fecha`) VALUES
+(1, 1, 2, 'Alcohol', 7.00, '2026-06-01 22:47:49');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `generos`
 --
 
 CREATE TABLE `generos` (
@@ -349,7 +372,7 @@ CREATE TABLE `generos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `generos`
+-- Dumping data for table `generos`
 --
 
 INSERT INTO `generos` (`id`, `nombre`) VALUES
@@ -360,7 +383,7 @@ INSERT INTO `generos` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `movimientos_stock`
+-- Table structure for table `movimientos_stock`
 --
 
 CREATE TABLE `movimientos_stock` (
@@ -375,10 +398,18 @@ CREATE TABLE `movimientos_stock` (
   `fecha` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `movimientos_stock`
+--
+
+INSERT INTO `movimientos_stock` (`id`, `sucursal_id`, `frasco_id`, `tipo`, `cantidad`, `motivo`, `usuario_id`, `venta_id`, `fecha`) VALUES
+(1, 1, 18, 'entrada', 50, 'Entrada de stock', 1, NULL, '2026-06-01 20:15:09'),
+(2, 1, 18, 'venta', -1, 'Venta POS', 1, 1, '2026-06-01 20:15:25');
+
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `perfumes`
+-- Table structure for table `perfumes`
 --
 
 CREATE TABLE `perfumes` (
@@ -392,7 +423,7 @@ CREATE TABLE `perfumes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `perfumes`
+-- Dumping data for table `perfumes`
 --
 
 INSERT INTO `perfumes` (`id`, `codigo`, `referencia`, `ruta_img`, `descripcion`, `genero_id`, `designer_id`) VALUES
@@ -532,7 +563,7 @@ INSERT INTO `perfumes` (`id`, `codigo`, `referencia`, `ruta_img`, `descripcion`,
 (134, 'DD920', 'SI', NULL, 'Fragancia elegante de Giorgio Armani con néctar de grosella negra y maderas claras.', 2, 2),
 (135, 'DD921', 'RICCI RICCI', NULL, 'Aroma chic con notas de ruibarbo, bergamota y flor de dondiego de noche.', 2, 49),
 (136, 'DD922', 'SCANDAL BY NIGHT', NULL, 'Una versión más profunda y amielada del original, con nardos y haba tonka.', 2, 11),
-(137, 'DD923', 'BONBON', '/assets/images/perfumes/perfume_6a1cf68c88192.webp', 'Perfume gourmet de lujo centrado en el caramelo crujiente, mandarina y azahar.', 2, 50),
+(137, 'DD923', 'BONBON', '/assets/images/perfumes/perfume_6a1d3cc657602.webp', 'Perfume gourmet de lujo centrado en el caramelo crujiente, mandarina y azahar.', 2, 50),
 (138, 'XS001', 'PURE SEDUCTION', NULL, 'Fragancia frutal clásica de Victoria\'s Secret con ciruela roja y freesia.', 2, 48),
 (139, 'XS003', 'COCONUT PASSION', '/assets/images/perfumes/perfume_6a1bd1e5aa758.png', 'Aroma cálido y tropical que mezcla coco, vainilla y lirio de los valles.', 2, 48),
 (140, 'XS009', 'WILD MADAGASCAR', '/assets/images/perfumes/perfume_6a1bcf788b961.png', 'Fragancia exótica con notas de vainilla de Madagascar, pera y flores blancas.', 2, 51),
@@ -555,7 +586,7 @@ INSERT INTO `perfumes` (`id`, `codigo`, `referencia`, `ruta_img`, `descripcion`,
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `perfume_componentes`
+-- Table structure for table `perfume_componentes`
 --
 
 CREATE TABLE `perfume_componentes` (
@@ -564,7 +595,7 @@ CREATE TABLE `perfume_componentes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `perfume_componentes`
+-- Dumping data for table `perfume_componentes`
 --
 
 INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
@@ -1126,7 +1157,7 @@ INSERT INTO `perfume_componentes` (`perfume_id`, `componente_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `perfume_tipos_aroma`
+-- Table structure for table `perfume_tipos_aroma`
 --
 
 CREATE TABLE `perfume_tipos_aroma` (
@@ -1135,7 +1166,7 @@ CREATE TABLE `perfume_tipos_aroma` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `perfume_tipos_aroma`
+-- Dumping data for table `perfume_tipos_aroma`
 --
 
 INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
@@ -1731,7 +1762,7 @@ INSERT INTO `perfume_tipos_aroma` (`perfume_id`, `tipo_aroma_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `stock`
+-- Table structure for table `stock`
 --
 
 CREATE TABLE `stock` (
@@ -1742,10 +1773,17 @@ CREATE TABLE `stock` (
   `umbral_bajo` int(11) NOT NULL DEFAULT 5
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `stock`
+--
+
+INSERT INTO `stock` (`id`, `sucursal_id`, `frasco_id`, `cantidad`, `umbral_bajo`) VALUES
+(1, 1, 18, 49, 5);
+
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `sucursales`
+-- Table structure for table `sucursales`
 --
 
 CREATE TABLE `sucursales` (
@@ -1756,7 +1794,7 @@ CREATE TABLE `sucursales` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `sucursales`
+-- Dumping data for table `sucursales`
 --
 
 INSERT INTO `sucursales` (`id`, `nombre`, `ciudad`, `activo`) VALUES
@@ -1765,7 +1803,7 @@ INSERT INTO `sucursales` (`id`, `nombre`, `ciudad`, `activo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tipos_aroma`
+-- Table structure for table `tipos_aroma`
 --
 
 CREATE TABLE `tipos_aroma` (
@@ -1775,7 +1813,7 @@ CREATE TABLE `tipos_aroma` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `tipos_aroma`
+-- Dumping data for table `tipos_aroma`
 --
 
 INSERT INTO `tipos_aroma` (`id`, `nombre`, `categoria`) VALUES
@@ -1836,7 +1874,7 @@ INSERT INTO `tipos_aroma` (`id`, `nombre`, `categoria`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuarios`
+-- Table structure for table `usuarios`
 --
 
 CREATE TABLE `usuarios` (
@@ -1851,7 +1889,7 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `usuarios`
+-- Dumping data for table `usuarios`
 --
 
 INSERT INTO `usuarios` (`id`, `nombre`, `usuario`, `password_hash`, `rol`, `sucursal_id`, `activo`, `creado_en`) VALUES
@@ -1861,7 +1899,7 @@ INSERT INTO `usuarios` (`id`, `nombre`, `usuario`, `password_hash`, `rol`, `sucu
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `ventas`
+-- Table structure for table `ventas`
 --
 
 CREATE TABLE `ventas` (
@@ -1874,10 +1912,17 @@ CREATE TABLE `ventas` (
   `nota` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `ventas`
+--
+
+INSERT INTO `ventas` (`id`, `sucursal_id`, `vendedor_id`, `fecha`, `total`, `metodo_pago`, `nota`) VALUES
+(1, 1, 1, '2026-06-01 20:15:25', 15.00, 'efectivo', NULL);
+
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `venta_items`
+-- Table structure for table `venta_items`
 --
 
 CREATE TABLE `venta_items` (
@@ -1889,11 +1934,18 @@ CREATE TABLE `venta_items` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Índices para tablas volcadas
+-- Dumping data for table `venta_items`
+--
+
+INSERT INTO `venta_items` (`id`, `venta_id`, `perfume_id`, `frasco_id`, `cantidad`) VALUES
+(1, 1, 147, 18, 1);
+
+--
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `componentes`
+-- Indexes for table `componentes`
 --
 ALTER TABLE `componentes`
   ADD PRIMARY KEY (`id`),
@@ -1901,28 +1953,35 @@ ALTER TABLE `componentes`
   ADD KEY `idx_componentes_nombre` (`nombre`);
 
 --
--- Indices de la tabla `designers`
+-- Indexes for table `designers`
 --
 ALTER TABLE `designers`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `nombre` (`nombre`);
 
 --
--- Indices de la tabla `frascos`
+-- Indexes for table `frascos`
 --
 ALTER TABLE `frascos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_frasco_cat` (`categoria`,`orden`);
 
 --
--- Indices de la tabla `generos`
+-- Indexes for table `gastos`
+--
+ALTER TABLE `gastos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_sucursal_fecha` (`sucursal_id`,`fecha`);
+
+--
+-- Indexes for table `generos`
 --
 ALTER TABLE `generos`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `nombre` (`nombre`);
 
 --
--- Indices de la tabla `movimientos_stock`
+-- Indexes for table `movimientos_stock`
 --
 ALTER TABLE `movimientos_stock`
   ADD PRIMARY KEY (`id`),
@@ -1931,7 +1990,7 @@ ALTER TABLE `movimientos_stock`
   ADD KEY `fk_mov_frasco` (`frasco_id`);
 
 --
--- Indices de la tabla `perfumes`
+-- Indexes for table `perfumes`
 --
 ALTER TABLE `perfumes`
   ADD PRIMARY KEY (`id`),
@@ -1942,7 +2001,7 @@ ALTER TABLE `perfumes`
   ADD KEY `idx_perfumes_referencia` (`referencia`);
 
 --
--- Indices de la tabla `perfume_componentes`
+-- Indexes for table `perfume_componentes`
 --
 ALTER TABLE `perfume_componentes`
   ADD PRIMARY KEY (`perfume_id`,`componente_id`),
@@ -1951,7 +2010,7 @@ ALTER TABLE `perfume_componentes`
   ADD KEY `idx_pc_componente` (`componente_id`);
 
 --
--- Indices de la tabla `perfume_tipos_aroma`
+-- Indexes for table `perfume_tipos_aroma`
 --
 ALTER TABLE `perfume_tipos_aroma`
   ADD PRIMARY KEY (`perfume_id`,`tipo_aroma_id`),
@@ -1960,7 +2019,7 @@ ALTER TABLE `perfume_tipos_aroma`
   ADD KEY `idx_pta_tipo` (`tipo_aroma_id`);
 
 --
--- Indices de la tabla `stock`
+-- Indexes for table `stock`
 --
 ALTER TABLE `stock`
   ADD PRIMARY KEY (`id`),
@@ -1968,13 +2027,13 @@ ALTER TABLE `stock`
   ADD KEY `fk_stock_frasco` (`frasco_id`);
 
 --
--- Indices de la tabla `sucursales`
+-- Indexes for table `sucursales`
 --
 ALTER TABLE `sucursales`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `tipos_aroma`
+-- Indexes for table `tipos_aroma`
 --
 ALTER TABLE `tipos_aroma`
   ADD PRIMARY KEY (`id`),
@@ -1983,7 +2042,7 @@ ALTER TABLE `tipos_aroma`
   ADD KEY `idx_tipos_aroma_nombre` (`nombre`);
 
 --
--- Indices de la tabla `usuarios`
+-- Indexes for table `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id`),
@@ -1991,7 +2050,7 @@ ALTER TABLE `usuarios`
   ADD KEY `fk_usuarios_sucursal` (`sucursal_id`);
 
 --
--- Indices de la tabla `ventas`
+-- Indexes for table `ventas`
 --
 ALTER TABLE `ventas`
   ADD PRIMARY KEY (`id`),
@@ -2000,7 +2059,7 @@ ALTER TABLE `ventas`
   ADD KEY `fk_ventas_vendedor` (`vendedor_id`);
 
 --
--- Indices de la tabla `venta_items`
+-- Indexes for table `venta_items`
 --
 ALTER TABLE `venta_items`
   ADD PRIMARY KEY (`id`),
@@ -2009,135 +2068,141 @@ ALTER TABLE `venta_items`
   ADD KEY `fk_items_frasco` (`frasco_id`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de la tabla `componentes`
+-- AUTO_INCREMENT for table `componentes`
 --
 ALTER TABLE `componentes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=188;
 
 --
--- AUTO_INCREMENT de la tabla `designers`
+-- AUTO_INCREMENT for table `designers`
 --
 ALTER TABLE `designers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
--- AUTO_INCREMENT de la tabla `frascos`
+-- AUTO_INCREMENT for table `frascos`
 --
 ALTER TABLE `frascos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
--- AUTO_INCREMENT de la tabla `generos`
+-- AUTO_INCREMENT for table `gastos`
+--
+ALTER TABLE `gastos`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `generos`
 --
 ALTER TABLE `generos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de la tabla `movimientos_stock`
+-- AUTO_INCREMENT for table `movimientos_stock`
 --
 ALTER TABLE `movimientos_stock`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `perfumes`
+-- AUTO_INCREMENT for table `perfumes`
 --
 ALTER TABLE `perfumes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
 
 --
--- AUTO_INCREMENT de la tabla `stock`
+-- AUTO_INCREMENT for table `stock`
 --
 ALTER TABLE `stock`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de la tabla `sucursales`
+-- AUTO_INCREMENT for table `sucursales`
 --
 ALTER TABLE `sucursales`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de la tabla `tipos_aroma`
+-- AUTO_INCREMENT for table `tipos_aroma`
 --
 ALTER TABLE `tipos_aroma`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
--- AUTO_INCREMENT de la tabla `usuarios`
+-- AUTO_INCREMENT for table `usuarios`
 --
 ALTER TABLE `usuarios`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `ventas`
+-- AUTO_INCREMENT for table `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de la tabla `venta_items`
+-- AUTO_INCREMENT for table `venta_items`
 --
 ALTER TABLE `venta_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- Restricciones para tablas volcadas
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `movimientos_stock`
+-- Constraints for table `movimientos_stock`
 --
 ALTER TABLE `movimientos_stock`
   ADD CONSTRAINT `fk_mov_frasco` FOREIGN KEY (`frasco_id`) REFERENCES `frascos` (`id`),
   ADD CONSTRAINT `fk_mov_sucursal` FOREIGN KEY (`sucursal_id`) REFERENCES `sucursales` (`id`);
 
 --
--- Filtros para la tabla `perfumes`
+-- Constraints for table `perfumes`
 --
 ALTER TABLE `perfumes`
   ADD CONSTRAINT `perfumes_ibfk_1` FOREIGN KEY (`genero_id`) REFERENCES `generos` (`id`),
   ADD CONSTRAINT `perfumes_ibfk_2` FOREIGN KEY (`designer_id`) REFERENCES `designers` (`id`);
 
 --
--- Filtros para la tabla `perfume_componentes`
+-- Constraints for table `perfume_componentes`
 --
 ALTER TABLE `perfume_componentes`
   ADD CONSTRAINT `perfume_componentes_ibfk_1` FOREIGN KEY (`perfume_id`) REFERENCES `perfumes` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `perfume_componentes_ibfk_2` FOREIGN KEY (`componente_id`) REFERENCES `componentes` (`id`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `perfume_tipos_aroma`
+-- Constraints for table `perfume_tipos_aroma`
 --
 ALTER TABLE `perfume_tipos_aroma`
   ADD CONSTRAINT `perfume_tipos_aroma_ibfk_1` FOREIGN KEY (`perfume_id`) REFERENCES `perfumes` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `perfume_tipos_aroma_ibfk_2` FOREIGN KEY (`tipo_aroma_id`) REFERENCES `tipos_aroma` (`id`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `stock`
+-- Constraints for table `stock`
 --
 ALTER TABLE `stock`
   ADD CONSTRAINT `fk_stock_frasco` FOREIGN KEY (`frasco_id`) REFERENCES `frascos` (`id`),
   ADD CONSTRAINT `fk_stock_sucursal` FOREIGN KEY (`sucursal_id`) REFERENCES `sucursales` (`id`);
 
 --
--- Filtros para la tabla `usuarios`
+-- Constraints for table `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD CONSTRAINT `fk_usuarios_sucursal` FOREIGN KEY (`sucursal_id`) REFERENCES `sucursales` (`id`);
 
 --
--- Filtros para la tabla `ventas`
+-- Constraints for table `ventas`
 --
 ALTER TABLE `ventas`
   ADD CONSTRAINT `fk_ventas_sucursal` FOREIGN KEY (`sucursal_id`) REFERENCES `sucursales` (`id`),
   ADD CONSTRAINT `fk_ventas_vendedor` FOREIGN KEY (`vendedor_id`) REFERENCES `usuarios` (`id`);
 
 --
--- Filtros para la tabla `venta_items`
+-- Constraints for table `venta_items`
 --
 ALTER TABLE `venta_items`
   ADD CONSTRAINT `fk_items_frasco` FOREIGN KEY (`frasco_id`) REFERENCES `frascos` (`id`),

@@ -14,7 +14,7 @@ class VentaController {
     }
 
     public function reportePage(): void {
-        Auth::requireRole('admin');
+        Auth::requireLogin();
         require APP_ROOT . '/app/views/tienda/reporte.php';
     }
 
@@ -80,11 +80,15 @@ class VentaController {
         $sucursal_id = $user['rol'] === 'vendedor' ? $user['sucursal_id'] : ($data['sucursal_id'] ?? 1); // fallback 1
         $desde = $data['desde'] ?? date('Y-m-d');
         $hasta = $data['hasta'] ?? date('Y-m-d');
+        if ($user['rol'] === 'vendedor') {
+            $desde = $hasta = date('Y-m-d');
+        }
 
         try {
             $reporte = $this->repo->reporte((int)$sucursal_id, $desde, $hasta);
             Response::json($reporte);
         } catch (\Exception $e) {
+            \App\Core\Logger::error('reporte() falló: ' . $e->getMessage());
             Response::json(['error' => $e->getMessage()], 500);
         }
     }

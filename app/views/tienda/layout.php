@@ -16,8 +16,8 @@ $activeTab = $activeTab ?? 'venta';
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/tienda.css">
-<link rel="stylesheet" href="/assets/css/theme.css">
+<link rel="stylesheet" href="/assets/css/tienda.css?v=<?= filemtime(APP_ROOT . '/public/assets/css/tienda.css') ?>">
+<link rel="stylesheet" href="/assets/css/theme.css?v=<?= filemtime(APP_ROOT . '/public/assets/css/theme.css') ?>">
 <script>
 (function(){try{
   var t=localStorage.getItem('bb-theme');
@@ -28,7 +28,7 @@ $activeTab = $activeTab ?? 'venta';
 </head>
 <body>
 
-<?php require APP_ROOT . '/app/views/partials/app_header.php'; ?>
+<?php $hideNewPerfume = true; require APP_ROOT . '/app/views/partials/app_header.php'; ?>
 <?php if (!$isAdmin): ?>
 <script>function getSucursalId() { return <?= (int)($user['sucursal_id'] ?? 1) ?>; }</script>
 <?php endif; ?>
@@ -43,9 +43,7 @@ $activeTab = $activeTab ?? 'venta';
       <button onclick="window.location.href='/perfumes'">Catálogo</button>
       <button class="<?= $activeTab === 'venta' ? 'on' : '' ?>" onclick="window.location.href='/tienda<?= $isAdmin ? '?pos=1' : '' ?>'">Venta</button>
       <button class="<?= $activeTab === 'stock' ? 'on' : '' ?>" onclick="window.location.href='/tienda/stock'">Stock</button>
-      <?php if ($isAdmin): ?>
       <button class="<?= $activeTab === 'reporte' ? 'on' : '' ?>" onclick="window.location.href='/tienda/reporte'">Reporte</button>
-      <?php endif; ?>
     </div>
 
     <!-- MAIN CONTENT INJECTED HERE -->
@@ -78,17 +76,42 @@ $activeTab = $activeTab ?? 'venta';
 </div>
 <script>
 (function () {
-  var WARN_AFTER  = 29 * 60 * 1000; // mostrar aviso a los 29 min
-  var EXPIRE_AFTER = 60 * 1000;     // cerrar 60 s después del aviso
+  var WARN_AFTER   = 59 * 60 * 1000; // mostrar aviso a los 59 min
+  var EXPIRE_AFTER = 60 * 1000;      // cerrar 60 s después del aviso
+  var PING_INTERVAL = 10 * 60 * 1000; // ping al servidor cada 10 min de actividad
 
   var overlay     = document.getElementById('session-expire-overlay');
   var countdownEl = document.getElementById('session-countdown');
   var continueBtn = document.getElementById('session-continue');
-  var warnTimer, expireInterval, secsLeft;
+  var warnTimer, expireInterval, pingTimer, secsLeft;
+  var lastActivity = Date.now();
+
+  function pingServer() {
+    return fetch('/api/auth/ping', { method: 'POST' })
+      .then(function (r) {
+        if (r.status === 401) {
+          // sesión ya expiró en el servidor
+          window.location.href = '/perfumes';
+        }
+      })
+      .catch(function () { /* ignorar errores de red */ });
+  }
 
   function startWarnTimer() {
     clearTimeout(warnTimer);
     warnTimer = setTimeout(showWarning, WARN_AFTER);
+  }
+
+  function schedulePing() {
+    clearTimeout(pingTimer);
+    pingTimer = setTimeout(function () {
+      // Solo hacer ping si hubo actividad del usuario en los últimos 10 min
+      if (Date.now() - lastActivity < PING_INTERVAL) {
+        pingServer().then(function () { schedulePing(); });
+      } else {
+        schedulePing();
+      }
+    }, PING_INTERVAL);
   }
 
   function showWarning() {
@@ -101,12 +124,13 @@ $activeTab = $activeTab ?? 'venta';
       countdownEl.textContent = secsLeft;
       if (secsLeft <= 0) {
         clearInterval(expireInterval);
-        window.location.href = '/login';
+        window.location.href = '/perfumes';
       }
     }, 1000);
   }
 
   function keepAlive() {
+    lastActivity = Date.now();
     if (overlay.style.display === 'flex') return; // no interrumpir el countdown
     startWarnTimer();
   }
@@ -114,7 +138,10 @@ $activeTab = $activeTab ?? 'venta';
   continueBtn.addEventListener('click', function () {
     clearInterval(expireInterval);
     overlay.style.display = 'none';
-    startWarnTimer();
+    pingServer().then(function () {
+      startWarnTimer();
+      schedulePing();
+    });
   });
 
   ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function (evt) {
@@ -122,6 +149,7 @@ $activeTab = $activeTab ?? 'venta';
   });
 
   startWarnTimer();
+  schedulePing();
 })();
 </script>
 <?php endif; ?>

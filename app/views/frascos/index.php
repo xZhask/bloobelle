@@ -10,7 +10,7 @@ $user = Auth::user();
 <title>BlooBelle · Gestión de frascos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/theme.css">
+  <link rel="stylesheet" href="/assets/css/theme.css?v=<?= filemtime(APP_ROOT . '/public/assets/css/theme.css') ?>">
   <script>
   (function(){try{
     var t=localStorage.getItem('bb-theme');
@@ -149,7 +149,7 @@ $user = Auth::user();
 </style>
 </head>
 <body>
-  <?php $showFilters = false; $hideNewPerfume = true; $hideStoreSwitcher = true; include __DIR__ . '/../partials/app_header.php'; ?>
+  <?php $showFilters = false; $hideNewPerfume = true; $hideStoreSwitcher = true; $hideFrascosBtn = true; include __DIR__ . '/../partials/app_header.php'; ?>
 
   <div class="wrap">
     <div class="crumb-bar">Catálogo › <b>Frascos</b></div>

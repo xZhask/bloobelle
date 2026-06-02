@@ -4,6 +4,7 @@ use App\Controllers\AuthController;
 use App\Controllers\FrascoController;
 use App\Controllers\StockController;
 use App\Controllers\VentaController;
+use App\Controllers\GastoController;
 
 $router->post('/api/perfumes/filter', [PerfumeController::class, 'filter']);
 $router->post('/api/perfumes/detalle', [PerfumeController::class, 'detalle']);
@@ -16,6 +17,7 @@ $router->post('/api/tipos-aroma', [PerfumeController::class, 'storeTipoAroma']);
 
 // Tienda API routes
 $router->post('/api/auth/login', [AuthController::class, 'login']);
+$router->post('/api/auth/ping', [AuthController::class, 'ping']);
 $router->post('/api/auth/password', [AuthController::class, 'cambiarPassword']);
 $router->post('/api/frascos', [FrascoController::class, 'store']);
 $router->post('/api/frascos/update', [FrascoController::class, 'update']);
@@ -27,3 +29,5 @@ $router->post('/api/stock/entrada', [StockController::class, 'entrada']);
 $router->post('/api/stock/ajuste', [StockController::class, 'ajuste']);
 $router->post('/api/ventas', [VentaController::class, 'store']);
 $router->post('/api/ventas/reporte', [VentaController::class, 'reporte']);
+$router->post('/api/gastos', [GastoController::class, 'store']);
+$router->post('/api/gastos/listar', [GastoController::class, 'listar']);

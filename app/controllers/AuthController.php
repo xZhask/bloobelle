@@ -7,14 +7,6 @@ use App\Core\Response;
 use App\Core\Database;
 
 class AuthController {
-    public function showLogin(): void {
-        if (Auth::check()) {
-            header('Location: /tienda');
-            exit;
-        }
-        require APP_ROOT . '/app/views/auth/login.php';
-    }
-
     public function login(): void {
         $data = Request::json();
         $usuario = $data['usuario'] ?? '';
@@ -43,6 +35,14 @@ class AuthController {
         } else {
             Response::json(['error' => 'Usuario o contraseña incorrectos'], 401);
         }
+    }
+
+    public function ping(): void {
+        if (!Auth::check()) {
+            Response::json(['ok' => false, 'expired' => true], 401);
+            return;
+        }
+        Response::json(['ok' => true]);
     }
 
     public function logout(): void {

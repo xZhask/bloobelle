@@ -125,7 +125,7 @@ class VentaRepository {
             JOIN frascos f ON f.id = vi.frasco_id
             WHERE v.sucursal_id = :sucursal_id AND DATE(v.fecha) >= :desde AND DATE(v.fecha) <= :hasta
               AND f.controla_stock = 1
-            GROUP BY vi.frasco_id
+            GROUP BY vi.frasco_id, f.nombre
             ORDER BY cantidad DESC LIMIT 5
         ");
         $stmtF->execute($params);
@@ -138,7 +138,7 @@ class VentaRepository {
             JOIN ventas v  ON v.id = vi.venta_id
             JOIN perfumes p ON p.id = vi.perfume_id
             WHERE v.sucursal_id = :sucursal_id AND DATE(v.fecha) >= :desde AND DATE(v.fecha) <= :hasta
-            GROUP BY vi.perfume_id
+            GROUP BY vi.perfume_id, p.referencia
             ORDER BY cantidad DESC LIMIT 5
         ");
         $stmtP->execute($params);

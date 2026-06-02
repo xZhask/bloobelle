@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 date_default_timezone_set('America/Lima');
-ini_set('session.gc_maxlifetime', 1800);
-session_set_cookie_params(['lifetime' => 1800, 'samesite' => 'Lax']);
+ini_set('session.gc_maxlifetime', 3600);
+session_set_cookie_params(['lifetime' => 3600, 'samesite' => 'Lax']);
 session_start();
 
 define('APP_ROOT', dirname(__DIR__));
@@ -60,6 +60,8 @@ $coreFiles = [
     APP_ROOT . '/app/controllers/VentaController.php',
     APP_ROOT . '/app/controllers/AuthController.php',
     APP_ROOT . '/app/controllers/TiendaController.php',
+    APP_ROOT . '/app/repositories/GastoRepository.php',
+    APP_ROOT . '/app/controllers/GastoController.php',
 ];
 
 foreach ($coreFiles as $file) {
