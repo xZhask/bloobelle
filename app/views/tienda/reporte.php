@@ -81,12 +81,20 @@ ob_start();
       <div class="stat a"><div class="num" id="statFrascos">0</div><div class="lbl">Frascos</div></div>
       <div class="stat"><div class="num" id="statRellenos">0</div><div class="lbl">Rellenos</div></div>
       <div class="stat"><div class="num" id="statVentas">0</div><div class="lbl">Ventas</div></div>
-      <div class="stat"><div class="num" id="statIngresos">0</div><div class="lbl">S/ ingresos</div></div>
     </div>
 
     <div class="por-pago-row" id="porPagoMovil"></div>
 
-    <div class="ct" style="margin-bottom:.6rem">Frascos más vendidos</div>
+    <div class="rd-card" id="netoMovilCard" style="margin-top:.75rem;display:none"></div>
+
+    <div class="rep-section-head" style="margin-top:1rem">
+      <span class="ct">Gastos</span>
+      <button class="btn-gasto-m" onclick="openGastoModal()">+ Registrar gasto</button>
+    </div>
+    <div id="gastosMovilList"></div>
+    <div class="por-pago-row" id="gastosTotalMovil"></div>
+
+    <div class="ct" style="margin:1rem 0 .6rem">Frascos más vendidos</div>
     <div id="topFrascosMovil"></div>
 
     <div class="ct" style="margin:1rem 0 .6rem">Perfumes más vendidos</div>
@@ -94,14 +102,6 @@ ob_start();
 
     <div class="ct" style="margin:1rem 0 .6rem">Ventas del día</div>
     <div id="ventasMovilList"></div>
-
-    <div class="rep-section-head">
-      <span class="ct">Gastos</span>
-      <button class="btn-gasto-m" onclick="openGastoModal()">+ Registrar gasto</button>
-    </div>
-    <div id="gastosMovilList"></div>
-    <div class="por-pago-row" id="gastosTotalMovil"></div>
-    <div class="rd-card" id="netoMovilCard" style="margin-top:.75rem;display:none"></div>
   </div>
 </div>
 
@@ -148,9 +148,6 @@ async function loadReporteMovil() {
     document.getElementById('statRellenos').innerText = data.resumen.rellenos ?? 0;
     document.getElementById('statVentas').innerText   = data.resumen.ventas;
     window._ingresosMovil = data.resumen.ingresos;
-    document.getElementById('statIngresos').innerText = (data.resumen.ingresos / 1000 >= 1)
-      ? (data.resumen.ingresos / 1000).toFixed(1) + 'k'
-      : data.resumen.ingresos.toFixed(0);
 
     const pagoTxt = (data.porPago || [])
       .filter(p => parseFloat(p.monto) > 0)
@@ -200,13 +197,27 @@ if ($isAdmin) {
     <div class="stats">
       <div class="stat a"><div class="num" id="dStatFrascos">0</div><div class="lbl">Frascos vendidos</div></div>
       <div class="stat"><div class="num" id="dStatVentas">0</div><div class="lbl">Ventas</div></div>
-      <div class="stat"><div class="num" id="dStatIngresos">S/ 0</div><div class="lbl">Ingresos</div></div>
-      <div class="stat"><div class="num" id="dStatStock">-</div><div class="lbl">Stock Actual</div></div>
+      <div class="stat"><div class="num" id="dStatRellenos">0</div><div class="lbl">Frascos rellenados</div></div>
     </div>
 
     <p id="dPorPago" style="font-size:.85rem;color:var(--color-text-secondary);margin-bottom:1.2rem;min-height:1.2rem"></p>
 
     <div class="cols">
+      <div class="card full" id="netoDesktopCard" style="padding:1.1rem 1.3rem;display:none"></div>
+
+      <div class="card full">
+        <div class="chead"><h2>Gastos del periodo</h2></div>
+        <div class="cbody">
+          <table>
+            <thead><tr><th>Hora</th><th>Registrado por</th><th>Descripción</th><th style="text-align:right">Monto</th></tr></thead>
+            <tbody id="gastosDesktopTabla">
+              <tr><td colspan="4" style="text-align:center">Cargando...</td></tr>
+            </tbody>
+          </table>
+          <div id="gastosTotalDesktop" style="text-align:right;margin-top:.6rem;font-size:.88rem;color:var(--color-text-secondary)"></div>
+        </div>
+      </div>
+
       <div class="card">
         <div class="chead"><h2>Frascos más vendidos</h2></div>
         <div class="cbody" id="dTopFrascos"></div>
@@ -228,21 +239,6 @@ if ($isAdmin) {
           </table>
         </div>
       </div>
-
-      <div class="card full">
-        <div class="chead"><h2>Gastos del periodo</h2></div>
-        <div class="cbody">
-          <table>
-            <thead><tr><th>Hora</th><th>Registrado por</th><th>Descripción</th><th style="text-align:right">Monto</th></tr></thead>
-            <tbody id="gastosDesktopTabla">
-              <tr><td colspan="4" style="text-align:center">Cargando...</td></tr>
-            </tbody>
-          </table>
-          <div id="gastosTotalDesktop" style="text-align:right;margin-top:.6rem;font-size:.88rem;color:var(--color-text-secondary)"></div>
-        </div>
-      </div>
-
-      <div class="card full" id="netoDesktopCard" style="padding:1.1rem 1.3rem;display:none"></div>
     </div>
 
     <script>
@@ -285,10 +281,10 @@ if ($isAdmin) {
         const data = await res.json();
         if (data.error) return;
 
-        document.getElementById('dStatFrascos').innerText  = data.resumen.frascos;
-        document.getElementById('dStatVentas').innerText   = data.resumen.ventas;
+        document.getElementById('dStatFrascos').innerText   = data.resumen.frascos;
+        document.getElementById('dStatVentas').innerText    = data.resumen.ventas;
+        document.getElementById('dStatRellenos').innerText  = data.resumen.rellenos ?? 0;
         window._ingresosDesktop = parseFloat(data.resumen.ingresos);
-        document.getElementById('dStatIngresos').innerText = 'S/ ' + window._ingresosDesktop.toFixed(0);
 
         const pagoTxt = (data.porPago || [])
           .filter(p => parseFloat(p.monto) > 0)
@@ -329,14 +325,6 @@ if ($isAdmin) {
                 <td class="num">S/ ${parseFloat(v.total).toFixed(2)}</td>
             </tr>`;
         }).join('') || '<tr><td colspan="5" style="text-align:center">Sin ventas</td></tr>';
-
-        const resStock = await fetch('/api/stock', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ sucursal_id: getSucursalId() })
-        });
-        const stockData = await resStock.json();
-        document.getElementById('dStatStock').innerText = stockData.reduce((acc, curr) => acc + curr.cantidad, 0);
 
         if (window.loadGastos) loadGastos();
     }

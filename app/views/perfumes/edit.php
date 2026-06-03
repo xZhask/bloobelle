@@ -731,7 +731,7 @@
                   </svg>
                 </div>
                 <p class="file-upload-text">Arrastra una imagen o haz click aquí</p>
-                <p class="file-upload-formats">JPG, PNG o WebP · máx. 2MB</p>
+                <p class="file-upload-formats">JPG, PNG o WebP · máx. 3MB</p>
               </div>
               <div class="file-preview" id="file-preview" <?= !empty($perfume['ruta_img']) ? 'style="display:flex;"' : 'style="display:none;"' ?>>
                 <img id="preview-image" src="<?= htmlspecialchars($perfume['ruta_img'] ?? '') ?>" alt="Preview" />
@@ -883,7 +883,7 @@
 
     function handleFile(file) {
       if (!file) return;
-      if (file.size > 2 * 1024 * 1024) { showToast('La imagen debe ser menor a 2MB', true); return; }
+      if (file.size > 3 * 1024 * 1024) { showToast('La imagen debe ser menor a 3MB', true); return; }
       if (!file.type.match('image/(jpeg|jpg|png|webp)')) { showToast('Solo se permiten JPG, PNG o WebP', true); return; }
       selectedFile = file;
       const reader = new FileReader();

@@ -109,9 +109,9 @@ class PerfumeController {
         return;
       }
 
-      // Validar tamaño (10MB máximo ahora que comprimimos)
-      if ($file['size'] > 10 * 1024 * 1024) {
-        Response::json(['ok' => false, 'error' => 'La imagen debe ser menor a 10MB'], 400);
+      // Validar tamaño (3MB máximo)
+      if ($file['size'] > 3 * 1024 * 1024) {
+        Response::json(['ok' => false, 'error' => 'La imagen debe ser menor a 3MB'], 400);
         return;
       }
 
